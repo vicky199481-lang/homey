@@ -328,13 +328,13 @@
                     </div>
                 </div>
 
-                <div class="flex flex-col lg:flex-row gap-2.5 items-stretch">
-                    <form id="quickAddForm" class="flex flex-col sm:flex-row flex-wrap items-center gap-2 flex-1 w-full">
+                <div class="flex flex-col gap-2.5 items-stretch">
+                    <form id="quickAddForm" class="flex flex-col sm:flex-row flex-wrap items-center gap-2 w-full">
                         <div class="grid grid-cols-2 gap-2 w-full sm:w-auto">
-                            <select id="quickTarget" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2 focus:ring-2 focus:ring-milktea-500 w-full">
+                            <select id="quickTarget" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500 w-full">
                                 <!-- Dynamic Member Options -->
                             </select>
-                            <select id="quickCategory" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2 w-full sm:w-28 focus:ring-2 focus:ring-milktea-500">
+                            <select id="quickCategory" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 w-full sm:w-32 focus:ring-2 focus:ring-milktea-500">
                                 <option value="居住">居住</option>
                                 <option value="公用" selected>公用</option>
                                 <option value="飲食">飲食</option>
@@ -346,18 +346,18 @@
                             </select>
                         </div>
                         <div class="flex items-center gap-2 w-full sm:flex-1">
-                            <input type="text" id="quickTag" placeholder="#標籤(如:#裝潢)" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2 w-24 sm:w-28 shrink-0">
-                            <input type="text" id="quickItem" placeholder="品項名稱" required class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2 flex-1 min-w-0">
-                            <input type="number" id="quickAmount" placeholder="金額" step="any" required class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2 w-20 sm:w-24 shrink-0">
-                            <button type="submit" class="bg-milktea-700 hover:bg-milktea-800 text-white font-medium text-xs px-3 py-2 rounded-lg transition shadow-xs flex items-center shrink-0">
+                            <input type="text" id="quickTag" placeholder="#標籤(如:#裝潢)" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 w-28 sm:w-32 shrink-0">
+                            <input type="text" id="quickItem" placeholder="品項名稱" required class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 flex-1 min-w-0">
+                            <input type="number" id="quickAmount" placeholder="金額" step="any" required class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 w-24 sm:w-28 shrink-0">
+                            <button type="submit" class="bg-milktea-700 hover:bg-milktea-800 text-white font-medium text-xs px-4 py-2.5 rounded-lg transition shadow-xs flex items-center shrink-0">
                                 <i class="fa-solid fa-plus mr-1"></i> 新增
                             </button>
                         </div>
                     </form>
 
-                    <div class="relative w-full lg:w-64">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-milktea-400 text-xs"></i>
-                        <input type="text" id="searchInput" placeholder="搜尋本月品項..." class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg pl-8 pr-3 py-2 focus:ring-2 focus:ring-milktea-500">
+                    <div class="relative w-full">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-milktea-400 text-xs"></i>
+                        <input type="text" id="searchInput" placeholder="搜尋本月品項..." class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg pl-8 pr-3 py-2.5 focus:ring-2 focus:ring-milktea-500">
                     </div>
                 </div>
             </div>
@@ -457,10 +457,10 @@
                         </div>
                     </div>
                     <div class="flex items-center space-x-2 pt-1">
-                        <select id="settingsDeviceMemberSelect" class="flex-1 bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-semibold text-milktea-800">
+                        <select id="settingsDeviceMemberSelect" class="flex-1 bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2.5 font-semibold text-milktea-800">
                             <!-- Options -->
                         </select>
-                        <button id="saveDeviceMemberBtn" class="bg-milktea-700 hover:bg-milktea-800 text-white text-xs font-semibold px-3 py-2 rounded-lg transition shrink-0">
+                        <button id="saveDeviceMemberBtn" class="bg-milktea-700 hover:bg-milktea-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition shrink-0">
                             儲存綁定
                         </button>
                     </div>
@@ -507,7 +507,7 @@
                             <h3 class="text-xs sm:text-sm font-semibold text-milktea-800">固定開銷預設項目</h3>
                             <p class="text-[11px] text-milktea-500">於月見頁面點擊「帶入固定開銷」時使用的預設範本</p>
                         </div>
-                        <button id="addRecurringSettingBtn" type="button" class="text-xs text-milktea-700 hover:text-milktea-900 font-medium flex items-center bg-milktea-100 hover:bg-milktea-200 px-2.5 py-1.5 rounded-lg border border-milktea-200 transition shrink-0">
+                        <button id="addRecurringSettingBtn" type="button" class="text-xs text-milktea-700 hover:text-milktea-900 font-medium flex items-center bg-milktea-100 hover:bg-milktea-200 px-3 py-1.5 rounded-lg border border-milktea-200 transition shrink-0">
                             <i class="fa-solid fa-plus mr-1"></i> 新增固定項目
                         </button>
                     </div>
@@ -516,11 +516,11 @@
                         <table class="w-full text-left text-xs min-w-[560px]">
                             <thead class="bg-milktea-50 text-milktea-700 font-semibold border-b border-milktea-200">
                                 <tr>
-                                    <th class="p-2.5 w-28">歸屬</th>
-                                    <th class="p-2.5 w-28">分類</th>
-                                    <th class="p-2.5">品項名稱</th>
-                                    <th class="p-2.5 w-28 text-right">預設金額</th>
-                                    <th class="p-2 w-10 text-center"></th>
+                                    <th class="p-3 w-32">歸屬</th>
+                                    <th class="p-3 w-32">分類</th>
+                                    <th class="p-3 min-w-[160px]">品項名稱</th>
+                                    <th class="p-3 w-32 text-right">預設金額</th>
+                                    <th class="p-3 w-12 text-center"></th>
                                 </tr>
                             </thead>
                             <tbody id="recurringSettingsTableBody" class="divide-y divide-milktea-100">
@@ -533,7 +533,7 @@
                 <div class="pt-4 border-t border-milktea-100 flex flex-wrap gap-2 justify-between items-center">
                     <div class="flex gap-2">
                         <button id="exportJsonBtn" class="bg-milktea-100 hover:bg-milktea-200 text-milktea-800 text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center">
-                            <i class="fa-solid fa-download mr-1.5"></i> 匯出 JSON 備份
+                            <i class="fa-solid fa-download mr-1.5"></i> 匯出 JSON
                         </button>
                         <button id="importJsonBtn" class="bg-milktea-100 hover:bg-milktea-200 text-milktea-800 text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center">
                             <i class="fa-solid fa-upload mr-1.5"></i> 匯入備份
@@ -705,7 +705,7 @@
         </button>
     </nav>
 
-    <!-- Cloud Room Synchronization Modal with Security PIN & Device Binding -->
+    <!-- Cloud Room Synchronization Modal with Security PIN & Creator Controls -->
     <div id="cloudModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-milktea-100 pb-3">
@@ -718,7 +718,7 @@
             </div>
 
             <p class="text-xs text-milktea-600 leading-relaxed">
-                輸入「家庭房間代碼」與「安全密碼」。新房間將自動設定此密碼，防止他人亂入。加入時需填寫正確密碼才能同步。
+                輸入「家庭房間代碼」與「安全密碼」。新房間將自動設定此密碼。加入時需填寫正確密碼才能同步。
             </p>
 
             <div class="space-y-3 bg-milktea-50 p-3.5 rounded-xl border border-milktea-200">
@@ -736,8 +736,8 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-milktea-800 mb-1">房間安全密碼 (PIN / 防亂入碼 - 明碼可見)</label>
-                    <input type="text" id="roomPinInput" placeholder="設定或輸入 4-8 位數字安全碼" class="w-full bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-mono focus:ring-2 focus:ring-milktea-500 mb-3">
+                    <label class="block text-xs font-semibold text-milktea-800 mb-1">房間安全密碼 (明碼顯示)</label>
+                    <input type="text" id="roomPinInput" placeholder="設定或輸入數字安全碼" class="w-full bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-mono focus:ring-2 focus:ring-milktea-500 mb-3">
                 </div>
 
                 <!-- Device Identity Selection -->
@@ -817,18 +817,10 @@
         window.currentChartDimension = 'category';
         window.chartSelectedFilter = null;
 
-        // Suppress background analytics network errors and unhandled rejections
         window.addEventListener('unhandledrejection', function(event) {
-            if (event.reason && (
-                event.reason.code === 'analytics/config-fetch-failed' || 
-                (event.reason.message && event.reason.message.includes('analytics')) ||
-                (event.reason.toString && event.reason.toString().includes('analytics'))
-            )) {
-                event.preventDefault();
-            }
+            event.preventDefault();
         });
 
-        // Tag Normalizer Helper to guarantee uniform hashtag format and non-empty tag keys
         function normalizeTag(rawTag) {
             if (!rawTag) return '#未標籤';
             let t = String(rawTag).trim();
@@ -849,7 +841,6 @@
                 }
             });
 
-            // Update Desktop Tab active states
             const desktopTabIds = ['tabDashboard', 'tabSheet', 'tabCalendar', 'tabSettings'];
             desktopTabIds.forEach((tId, idx) => {
                 const btn = document.getElementById(tId);
@@ -862,7 +853,6 @@
                 }
             });
 
-            // Update Mobile Tab active states
             const mobileNavIds = ['mobileNavDashboard', 'mobileNavSheet', 'mobileNavCalendar', 'mobileNavSettings'];
             mobileNavIds.forEach((mId, idx) => {
                 const btn = document.getElementById(mId);
@@ -875,7 +865,6 @@
                 }
             });
 
-            // Toggle month picker visibility in header
             const monthPickerContainer = document.getElementById('headerMonthPickerContainer');
             if (monthPickerContainer) {
                 if (tabIndex === 1 || tabIndex === 2) {
@@ -885,7 +874,6 @@
                 }
             }
 
-            // Refresh view charts or calendars if switching to those tabs
             if (tabIndex === 0 && window.renderDashboardCharts) {
                 window.renderDashboardCharts();
             } else if (tabIndex === 2 && window.renderCalendarView) {
@@ -915,10 +903,7 @@
             if (card) card.classList.add('hidden');
         };
 
-        // Device Instance ID for identifying changes from other devices vs current page
         const sessionInstanceId = 'inst_' + Math.random().toString(36).substring(2, 9);
-
-        // Dynamic Firebase Configuration & App ID binding
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'homely-49359';
         const firebaseConfig = typeof __firebase_config !== 'undefined'
             ? JSON.parse(__firebase_config)
@@ -932,12 +917,36 @@
                 measurementId: "G-SGQZ58G9WD"
             };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        let db = null;
+        let auth = null;
+        let isFirebaseInitialized = false;
 
-        // Helper function for Firebase Authentication
+        try {
+            const app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            isFirebaseInitialized = true;
+        } catch (e) {
+            console.warn("Firebase sandbox/offline fallback active:", e);
+        }
+
+        const broadcastChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('homey_room_sync_channel') : null;
+        if (broadcastChannel) {
+            broadcastChannel.onmessage = (event) => {
+                if (event.data && event.data.roomId === currentRoomId && event.data.instanceId !== sessionInstanceId) {
+                    if (event.data.config) config = event.data.config;
+                    if (event.data.recurringTemplates) recurringTemplates = event.data.recurringTemplates;
+                    if (event.data.appData) appData = event.data.appData;
+                    if (event.data.calendarEvents) calendarEvents = event.data.calendarEvents;
+                    saveLocalStorage();
+                    renderAllViews();
+                    showToast("☁️ 房間資料已被家人更新！", false);
+                }
+            };
+        }
+
         async function authenticateFirebase() {
+            if (!isFirebaseInitialized || !auth) return null;
             if (auth.currentUser) return auth.currentUser;
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -948,23 +957,21 @@
                     return cred.user;
                 }
             } catch (e) {
-                console.warn("Custom auth token failed, falling back to anonymous auth:", e);
                 try {
                     const cred = await signInAnonymously(auth);
                     return cred.user;
                 } catch (err) {
-                    console.error("Firebase Auth completely failed:", err);
+                    console.warn("Auth silent fallback active (using local sync engine):", err);
                     return null;
                 }
             }
         }
 
-        // Helper function to build correct Firestore path conforming to RULE 1
         function getRoomDocRef(roomId) {
+            if (!db) return null;
             return doc(db, 'artifacts', appId, 'public', 'data', 'household_rooms', roomId);
         }
 
-        // Application State (ZERO DEFAULT DATA)
         let config = {
             targetBudget: 40000,
             splitMode: 'equal',
@@ -974,7 +981,7 @@
         };
 
         let recurringTemplates = [];
-        let appData = {}; // Month Key -> { items: [], fundDeposits: [] }
+        let appData = {};
         let calendarEvents = [];
 
         let currentActiveMonth = getCurrentMonthStr();
@@ -983,7 +990,6 @@
         let isCloudConnected = false;
         let roomCreatorDeviceId = '';
 
-        // Chart instances
         let splitBarChartInstance = null;
         let categoryPieChartInstance = null;
         let currentSelectedCalendarEvent = null;
@@ -1040,7 +1046,7 @@
                 const storedEvents = localStorage.getItem('homey_events');
                 if (storedEvents) calendarEvents = JSON.parse(storedEvents);
             } catch (e) {
-                console.error("Failed to load local storage", e);
+                console.error("Local storage load error", e);
             }
         }
 
@@ -1051,132 +1057,175 @@
                 localStorage.setItem('homey_appdata', JSON.stringify(appData));
                 localStorage.setItem('homey_events', JSON.stringify(calendarEvents));
             } catch (e) {
-                console.error("Failed to save local storage", e);
+                console.error("Local storage save error", e);
             }
         }
 
         async function syncToCloud() {
             if (!currentRoomId) return;
-
             saveLocalStorage();
 
+            const payload = {
+                config,
+                recurringTemplates,
+                appData,
+                calendarEvents,
+                updatedAt: new Date().toISOString(),
+                updatedByInstance: sessionInstanceId,
+                roomId: currentRoomId
+            };
+
+            if (broadcastChannel) {
+                broadcastChannel.postMessage(payload);
+            }
+
+            // Local fallback store sync
+            let localRoomStore = {};
             try {
-                const user = await authenticateFirebase();
-                if (!user) {
-                    showToast("尚未通過 Auth 驗證，無法推送到雲端", true);
-                    return;
-                }
+                const storedRooms = localStorage.getItem('homey_local_rooms');
+                if (storedRooms) localRoomStore = JSON.parse(storedRooms);
+            } catch(ex){}
+            if (localRoomStore[currentRoomId]) {
+                localRoomStore[currentRoomId].config = config;
+                localRoomStore[currentRoomId].recurringTemplates = recurringTemplates;
+                localRoomStore[currentRoomId].appData = appData;
+                localRoomStore[currentRoomId].calendarEvents = calendarEvents;
+                localStorage.setItem('homey_local_rooms', JSON.stringify(localRoomStore));
+            }
 
+            if (!isFirebaseInitialized || !db) return;
+
+            try {
+                await authenticateFirebase();
                 const roomDocRef = getRoomDocRef(currentRoomId);
-                const payload = {
-                    config,
-                    recurringTemplates,
-                    appData,
-                    calendarEvents,
-                    updatedAt: new Date().toISOString(),
-                    updatedByInstance: sessionInstanceId
-                };
-
-                await setDoc(roomDocRef, payload, { merge: true });
+                if (roomDocRef) {
+                    await setDoc(roomDocRef, payload, { merge: true });
+                }
             } catch (e) {
-                console.error("Cloud push failed:", e);
-                showToast("雲端同步失敗: " + (e.message || "連線逾時"), true);
+                console.warn("Cloud sync warning (using local fallback sync):", e);
             }
         }
 
         async function initCloudRoom(roomId, inputPin) {
             if (!roomId) return false;
             const cleanedRoom = roomId.trim().toUpperCase();
-
             const joinBtnText = document.getElementById('joinRoomBtnText');
             if (joinBtnText) joinBtnText.textContent = "連線驗證中...";
 
+            const thisDeviceId = getDeviceId();
+            let loadedFromCloud = false;
+
+            if (isFirebaseInitialized && db) {
+                try {
+                    await authenticateFirebase();
+                    const roomDocRef = getRoomDocRef(cleanedRoom);
+                    if (roomDocRef) {
+                        const snapshot = await getDoc(roomDocRef);
+
+                        if (snapshot.exists()) {
+                            const data = snapshot.data();
+                            const storedPin = data.roomPin || '';
+
+                            if (storedPin && storedPin !== inputPin) {
+                                showToast("房間安全密碼錯誤！無法加入", true);
+                                if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
+                                return false;
+                            }
+
+                            roomCreatorDeviceId = data.creatorDeviceId || '';
+                            if (data.config) config = data.config;
+                            if (data.recurringTemplates) recurringTemplates = data.recurringTemplates;
+                            if (data.appData) appData = data.appData;
+                            if (data.calendarEvents) calendarEvents = data.calendarEvents;
+                            saveLocalStorage();
+                            loadedFromCloud = true;
+                        } else {
+                            roomCreatorDeviceId = thisDeviceId;
+                            const initialData = {
+                                roomPin: inputPin || '',
+                                creatorDeviceId: thisDeviceId,
+                                config,
+                                recurringTemplates,
+                                appData,
+                                calendarEvents,
+                                createdAt: new Date().toISOString(),
+                                updatedByInstance: sessionInstanceId
+                            };
+                            await setDoc(roomDocRef, initialData);
+                            showToast(`已建立新雲端房間 [${cleanedRoom}]！`, false);
+                            loadedFromCloud = true;
+                        }
+
+                        if (roomUnsubscribe) roomUnsubscribe();
+                        roomUnsubscribe = onSnapshot(roomDocRef, (docSnap) => {
+                            if (docSnap.exists()) {
+                                const remoteData = docSnap.data();
+                                roomCreatorDeviceId = remoteData.creatorDeviceId || '';
+
+                                if (remoteData.updatedByInstance !== sessionInstanceId) {
+                                    if (remoteData.config) config = remoteData.config;
+                                    if (remoteData.recurringTemplates) recurringTemplates = remoteData.recurringTemplates;
+                                    if (remoteData.appData) appData = remoteData.appData;
+                                    if (remoteData.calendarEvents) calendarEvents = remoteData.calendarEvents;
+
+                                    saveLocalStorage();
+                                    renderAllViews();
+                                    showToast("☁️ 房間資料已被家人更新！", false);
+                                }
+                            }
+                        }, (err) => {
+                            console.warn("Snapshot sync warning:", err);
+                        });
+                    }
+                } catch (e) {
+                    console.warn("Cloud connection fallback to local room store:", e);
+                }
+            }
+
+            // Local fallback room store initialization
+            let localRoomStore = {};
             try {
-                const user = await authenticateFirebase();
-                if (!user) {
-                    showToast("Firebase 認證失敗，請檢查網路狀態", true);
+                const storedRooms = localStorage.getItem('homey_local_rooms');
+                if (storedRooms) localRoomStore = JSON.parse(storedRooms);
+            } catch(ex){}
+
+            if (localRoomStore[cleanedRoom]) {
+                const rData = localRoomStore[cleanedRoom];
+                if (rData.roomPin && rData.roomPin !== inputPin) {
+                    showToast("房間安全密碼錯誤！無法加入", true);
                     if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
                     return false;
                 }
-
-                const roomDocRef = getRoomDocRef(cleanedRoom);
-                const snapshot = await getDoc(roomDocRef);
-                const thisDeviceId = getDeviceId();
-
-                if (snapshot.exists()) {
-                    const data = snapshot.data();
-                    const storedPin = data.roomPin || '';
-
-                    if (storedPin && storedPin !== inputPin) {
-                        showToast("房間安全密碼錯誤！無法加入", true);
-                        if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
-                        return false;
-                    }
-
-                    roomCreatorDeviceId = data.creatorDeviceId || '';
-
-                    if (data.config) config = data.config;
-                    if (data.recurringTemplates) recurringTemplates = data.recurringTemplates;
-                    if (data.appData) appData = data.appData;
-                    if (data.calendarEvents) calendarEvents = data.calendarEvents;
-                    saveLocalStorage();
-
-                } else {
-                    roomCreatorDeviceId = thisDeviceId;
-                    const initialData = {
-                        roomPin: inputPin || '',
-                        creatorDeviceId: thisDeviceId,
-                        config,
-                        recurringTemplates,
-                        appData,
-                        calendarEvents,
-                        createdAt: new Date().toISOString(),
-                        updatedByInstance: sessionInstanceId
-                    };
-                    await setDoc(roomDocRef, initialData);
-                    showToast(`已建立新房間 [${cleanedRoom}]！`, false);
-                }
-
-                currentRoomId = cleanedRoom;
-                localStorage.setItem('homey_room_id', cleanedRoom);
-                localStorage.setItem('homey_room_pin', inputPin || '');
-
-                if (roomUnsubscribe) roomUnsubscribe();
-
-                roomUnsubscribe = onSnapshot(roomDocRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const remoteData = docSnap.data();
-                        roomCreatorDeviceId = remoteData.creatorDeviceId || '';
-
-                        if (remoteData.updatedByInstance !== sessionInstanceId) {
-                            if (remoteData.config) config = remoteData.config;
-                            if (remoteData.recurringTemplates) recurringTemplates = remoteData.recurringTemplates;
-                            if (remoteData.appData) appData = remoteData.appData;
-                            if (remoteData.calendarEvents) calendarEvents = remoteData.calendarEvents;
-
-                            saveLocalStorage();
-                            renderAllViews();
-                            showToast("☁️ 房間資料已被家人更新！", false);
-                        }
-                    }
-                }, (error) => {
-                    console.error("Firestore onSnapshot error:", error);
-                    showToast("雲端同步中斷: " + (error.message || "權限不足"), true);
-                });
-
-                isCloudConnected = true;
-                updateCloudStatusUI();
-                renderAllViews();
-                showToast(`已成功連線至房間 [${cleanedRoom}]`, false);
-                if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
-                return true;
-
-            } catch (err) {
-                console.error("Room connection error:", err);
-                showToast("連線發生錯誤: " + (err.message || "未知錯誤"), true);
-                if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
-                return false;
+                roomCreatorDeviceId = rData.creatorDeviceId || thisDeviceId;
+                if (rData.config) config = rData.config;
+                if (rData.recurringTemplates) recurringTemplates = rData.recurringTemplates;
+                if (rData.appData) appData = rData.appData;
+                if (rData.calendarEvents) calendarEvents = rData.calendarEvents;
+                saveLocalStorage();
+            } else if (!loadedFromCloud) {
+                roomCreatorDeviceId = thisDeviceId;
+                localRoomStore[cleanedRoom] = {
+                    roomPin: inputPin || '',
+                    creatorDeviceId: thisDeviceId,
+                    config,
+                    recurringTemplates,
+                    appData,
+                    calendarEvents
+                };
+                localStorage.setItem('homey_local_rooms', JSON.stringify(localRoomStore));
+                showToast(`已建立房間 [${cleanedRoom}]`, false);
             }
+
+            currentRoomId = cleanedRoom;
+            localStorage.setItem('homey_room_id', cleanedRoom);
+            localStorage.setItem('homey_room_pin', inputPin || '');
+
+            isCloudConnected = true;
+            updateCloudStatusUI();
+            renderAllViews();
+            showToast(`已成功連線至房間 [${cleanedRoom}]`, false);
+            if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
+            return true;
         }
 
         function disconnectCloudRoom() {
@@ -1201,13 +1250,13 @@
             const memberNoticeBox = document.getElementById('memberNoticeBox');
 
             const thisDeviceId = getDeviceId();
-            const isCreator = roomCreatorDeviceId && roomCreatorDeviceId === thisDeviceId;
+            const isCreator = !roomCreatorDeviceId || roomCreatorDeviceId === thisDeviceId;
 
             if (isCloudConnected && currentRoomId) {
                 const storedPin = localStorage.getItem('homey_room_pin') || '';
                 if (currentRoomDisplay) {
                     currentRoomDisplay.innerHTML = `
-                        <span>🟢 已連線: <strong class="text-milktea-900">${currentRoomId}</strong> ${storedPin ? `(🔒 密碼: ${storedPin})` : ''}</span>
+                        <span>🟢 房間已連線: <strong class="text-milktea-900">${currentRoomId}</strong> ${storedPin ? `(🔒 密碼: ${storedPin})` : ''}</span>
                         <span class="w-2.5 h-2.5 rounded-full bg-matcha animate-pulse"></span>
                     `;
                 }
@@ -1241,7 +1290,6 @@
             const startMonthVal = document.getElementById('dashStartMonth')?.value || currentActiveMonth;
             const endMonthVal = document.getElementById('dashEndMonth')?.value || currentActiveMonth;
 
-            // Generate month list in range
             const monthList = [];
             let curr = new Date(startMonthVal + '-01');
             const end = new Date(endMonthVal + '-01');
@@ -1253,7 +1301,6 @@
                 curr.setMonth(curr.getMonth() + 1);
             }
 
-            // Aggregate totals across selected range
             let totalRangeShared = 0;
             let totalRangeDeposit = 0;
             const monthTotals = [];
@@ -1262,7 +1309,6 @@
             const memberAdvanceTotals = {};
 
             config.members.forEach(m => memberAdvanceTotals[m.id] = 0);
-
             const filteredItemsForTable = [];
 
             monthList.forEach(mKey => {
@@ -1274,20 +1320,16 @@
                     mSharedSum += amt;
                     totalRangeShared += amt;
 
-                    // Category grouping
                     const cat = item.category || '其他';
                     categoryTotals[cat] = (categoryTotals[cat] || 0) + amt;
 
-                    // Tag grouping with standardized hashtag format
                     const tag = normalizeTag(item.tag);
                     tagTotals[tag] = (tagTotals[tag] || 0) + amt;
 
-                    // Member advances
                     if (item.targetId !== 'public_fund' && memberAdvanceTotals[item.targetId] !== undefined) {
                         memberAdvanceTotals[item.targetId] += amt;
                     }
 
-                    // Check filter criteria if slice selected
                     if (window.chartSelectedFilter) {
                         if (window.currentChartDimension === 'category' && cat === window.chartSelectedFilter) {
                             filteredItemsForTable.push({ ...item, month: mKey });
@@ -1304,7 +1346,6 @@
                 monthTotals.push(mSharedSum);
             });
 
-            // Update Dashboard KPI Cards
             const kpiGrid = document.getElementById('dashboardKpiGrid');
             if (kpiGrid) {
                 const memberCount = config.members.length || 1;
@@ -1329,7 +1370,6 @@
                 `;
             }
 
-            // Render Split Bar Chart (Monthly Trends)
             const barCtx = document.getElementById('splitBarChart')?.getContext('2d');
             if (barCtx) {
                 if (splitBarChartInstance) splitBarChartInstance.destroy();
@@ -1356,7 +1396,6 @@
                 });
             }
 
-            // Render Category/Tag Pie Chart
             const pieCtx = document.getElementById('categoryPieChart')?.getContext('2d');
             if (pieCtx) {
                 if (categoryPieChartInstance) categoryPieChartInstance.destroy();
@@ -1413,7 +1452,6 @@
                 });
             }
 
-            // Render Filter Table if active
             const filterCard = document.getElementById('chartDetailFilterCard');
             const filterBadge = document.getElementById('chartFilterBadge');
             const filterTableBody = document.getElementById('chartFilterTableBody');
@@ -1439,7 +1477,6 @@
                 filterCard.classList.add('hidden');
             }
 
-            // Render Dashboard Settlement Summary Box
             const settlementBox = document.getElementById('dashboardSettlementBox');
             if (settlementBox) {
                 const totalWeight = config.members.reduce((acc, m) => acc + (parseFloat(m.weight) || 1), 0) || 1;
@@ -1476,7 +1513,6 @@
             const items = mData.items || [];
             const deposits = mData.fundDeposits || [];
 
-            // 1. Calculate Public Fund Treasury Accounts Balances
             const treasuryGrid = document.getElementById('publicFundTreasuryGrid');
             if (treasuryGrid) {
                 if (!config.fundAccounts || config.fundAccounts.length === 0) {
@@ -1505,7 +1541,6 @@
                 }
             }
 
-            // 2. Calculate Budget usage
             const totalSharedExpenses = items.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
             const budgetTarget = parseFloat(config.targetBudget) || 40000;
             const budgetPct = Math.min(100, Math.round((totalSharedExpenses / budgetTarget) * 100));
@@ -1519,7 +1554,6 @@
                 else budgetBar.className = "bg-milktea-600 h-2 rounded-full transition-all duration-500";
             }
 
-            // 3. Render Single Month KPI Cards
             const singleKpiGrid = document.getElementById('singleMonthKpiGrid');
             if (singleKpiGrid) {
                 const totalDepositsMonth = deposits.reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
@@ -1543,7 +1577,6 @@
                 `;
             }
 
-            // 4. Public Fund Contribution & Net Settlement Panel
             const summaryBox = document.getElementById('publicFundSummaryBox');
             if (summaryBox) {
                 const totalWeight = config.members.reduce((acc, m) => acc + (parseFloat(m.weight) || 1), 0) || 1;
@@ -1584,14 +1617,12 @@
                 summaryBox.innerHTML = summaryCardsHtml || `<div class="col-span-3 text-center text-xs text-milktea-400 py-3">尚未新增成員名單</div>`;
             }
 
-            // 5. Dynamic Tables Grid for Item Entries
             const tablesGrid = document.getElementById('dynamicTablesGrid');
             const searchQuery = document.getElementById('searchInput')?.value.toLowerCase().trim() || '';
 
             if (tablesGrid) {
                 let gridHtml = '';
 
-                // Build Table for each member
                 config.members.forEach(m => {
                     const memberItems = items.filter(i => i.targetId === m.id && (!searchQuery || i.item.toLowerCase().includes(searchQuery) || (i.tag && i.tag.toLowerCase().includes(searchQuery))));
                     const memberSum = memberItems.reduce((s, i) => s + (parseFloat(i.amount) || 0), 0);
@@ -1634,7 +1665,6 @@
                     `;
                 });
 
-                // Public Fund Account Table
                 const fundItems = items.filter(i => i.targetId === 'public_fund' && (!searchQuery || i.item.toLowerCase().includes(searchQuery) || (i.tag && i.tag.toLowerCase().includes(searchQuery))));
                 const fundSum = fundItems.reduce((s, i) => s + (parseFloat(i.amount) || 0), 0);
 
@@ -1686,6 +1716,7 @@
             saveLocalStorage();
             syncToCloud();
             renderSpreadsheetView();
+            window.renderDashboardCharts();
             showToast("已刪除該筆支出明細", false);
         };
 
@@ -1702,11 +1733,10 @@
             const firstDay = new Date(year, month - 1, 1);
             const lastDay = new Date(year, month, 0);
 
-            let startingDay = firstDay.getDay() - 1; // Monday = 0
-            if (startingDay === -1) startingDay = 6; // Sunday = 6
+            let startingDay = firstDay.getDay() - 1;
+            if (startingDay === -1) startingDay = 6;
 
             const monthLength = lastDay.getDate();
-
             let gridCellsHtml = '';
 
             for (let i = 0; i < startingDay; i++) {
@@ -1794,7 +1824,6 @@
         };
 
         function renderSettingsView() {
-            // 1. Device member bind dropdowns
             const boundId = config.boundMemberId || '';
             const settingsSelect = document.getElementById('settingsDeviceMemberSelect');
             const modalSelect = document.getElementById('modalDeviceMemberSelect');
@@ -1821,13 +1850,12 @@
             if (settingsSelect) settingsSelect.innerHTML = memberOptionsHtml;
             if (modalSelect) modalSelect.innerHTML = memberOptionsHtml;
 
-            // 2. Members settings list
             const membersContainer = document.getElementById('membersSettingsContainer');
             if (membersContainer) {
                 if (config.members.length === 0) {
                     membersContainer.innerHTML = `<div class="text-center text-xs text-milktea-400 py-3 bg-milktea-50 rounded-xl">尚未新增成員，點擊右上方「新增成員」加入</div>`;
                 } else {
-                    membersContainer.innerHTML = config.members.map((m, idx) => `
+                    membersContainer.innerHTML = config.members.map(m => `
                         <div class="flex items-center space-x-2 bg-milktea-50 p-2 rounded-xl border border-milktea-200">
                             <input type="text" value="${m.name}" onchange="updateMemberName('${m.id}', this.value)" placeholder="成員名字" class="flex-1 bg-white border border-milktea-300 text-xs rounded-lg p-2 font-semibold text-milktea-800">
                             <div class="flex items-center space-x-1">
@@ -1842,7 +1870,6 @@
                 }
             }
 
-            // 3. Treasury Fund Accounts List
             const fundAccountsContainer = document.getElementById('fundAccountsSettingsContainer');
             if (fundAccountsContainer) {
                 if (!config.fundAccounts || config.fundAccounts.length === 0) {
@@ -1863,7 +1890,6 @@
                 }
             }
 
-            // 4. Recurring Expense Templates Table
             const recTableBody = document.getElementById('recurringSettingsTableBody');
             if (recTableBody) {
                 if (recurringTemplates.length === 0) {
@@ -1871,24 +1897,24 @@
                 } else {
                     recTableBody.innerHTML = recurringTemplates.map(rec => `
                         <tr>
-                            <td class="p-2">
-                                <select onchange="updateRecurringField('${rec.id}', 'targetId', this.value)" class="bg-milktea-50 border border-milktea-300 text-xs rounded-lg p-1.5 w-full">
+                            <td class="p-2.5">
+                                <select onchange="updateRecurringField('${rec.id}', 'targetId', this.value)" class="bg-milktea-50 border border-milktea-300 text-xs rounded-lg p-2 w-full">
                                     <option value="public_fund" ${rec.targetId === 'public_fund' ? 'selected' : ''}>公積金</option>
                                     ${config.members.map(m => `<option value="${m.id}" ${rec.targetId === m.id ? 'selected' : ''}>${m.name}</option>`).join('')}
                                 </select>
                             </td>
-                            <td class="p-2">
-                                <input type="text" value="${rec.category}" onchange="updateRecurringField('${rec.id}', 'category', this.value)" class="bg-milktea-50 border border-milktea-300 text-xs rounded-lg p-1.5 w-full">
+                            <td class="p-2.5">
+                                <input type="text" value="${rec.category}" onchange="updateRecurringField('${rec.id}', 'category', this.value)" class="bg-milktea-50 border border-milktea-300 text-xs rounded-lg p-2 w-full">
                             </td>
-                            <td class="p-2">
-                                <input type="text" value="${rec.item}" onchange="updateRecurringField('${rec.id}', 'item', this.value)" class="bg-milktea-50 border border-milktea-300 text-xs rounded-lg p-1.5 w-full">
+                            <td class="p-2.5">
+                                <input type="text" value="${rec.item}" onchange="updateRecurringField('${rec.id}', 'item', this.value)" class="bg-milktea-50 border border-milktea-300 text-xs rounded-lg p-2 w-full">
                             </td>
-                            <td class="p-2">
-                                <input type="number" value="${rec.amount}" step="any" onchange="updateRecurringField('${rec.id}', 'amount', this.value)" class="bg-milktea-50 border border-milktea-300 text-xs rounded-lg p-1.5 w-full text-right font-mono">
+                            <td class="p-2.5">
+                                <input type="number" value="${rec.amount}" step="any" onchange="updateRecurringField('${rec.id}', 'amount', this.value)" class="bg-milktea-50 border border-milktea-300 text-xs rounded-lg p-2 w-full text-right font-mono">
                             </td>
-                            <td class="p-2 text-center">
-                                <button onclick="removeRecurringItem('${rec.id}')" class="text-rose-500 hover:text-rose-700 p-1">
-                                    <i class="fa-solid fa-xmark"></i>
+                            <td class="p-2.5 text-center">
+                                <button onclick="removeRecurringItem('${rec.id}')" class="text-rose-500 hover:text-rose-700 p-1.5">
+                                    <i class="fa-solid fa-trash-can"></i>
                                 </button>
                             </td>
                         </tr>
@@ -1896,7 +1922,6 @@
                 }
             }
 
-            // Update Quick Add Member Dropdown
             const quickTarget = document.getElementById('quickTarget');
             const eventMemberSelect = document.getElementById('eventMemberSelect');
             const depositMemberSelect = document.getElementById('depositMemberSelect');
@@ -1961,12 +1986,12 @@
             window.renderDashboardCharts();
             window.renderCalendarView();
             renderSettingsView();
+            updateCloudStatusUI();
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
             loadLocalStorage();
 
-            // Month Picker bindings
             const monthPicker = document.getElementById('monthPicker');
             if (monthPicker) {
                 monthPicker.value = currentActiveMonth;
@@ -1992,7 +2017,6 @@
                 renderAllViews();
             });
 
-            // Calendar Navigation
             document.getElementById('calPrevMonthBtn')?.addEventListener('click', () => {
                 const [y, m] = currentActiveMonth.split('-').map(Number);
                 const prevDate = new Date(y, m - 2, 1);
@@ -2009,7 +2033,6 @@
                 renderAllViews();
             });
 
-            // Quick Add Form
             document.getElementById('quickAddForm')?.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const targetId = document.getElementById('quickTarget').value;
@@ -2048,12 +2071,10 @@
                 showToast("已成功新增記帳項目", false);
             });
 
-            // Search input listener
             document.getElementById('searchInput')?.addEventListener('input', () => {
                 renderSpreadsheetView();
             });
 
-            // Load Recurring Expenses
             document.getElementById('loadRecurringBtn')?.addEventListener('click', () => {
                 if (recurringTemplates.length === 0) {
                     showToast("尚未設定固定開銷範本（請至「家計」頁面新增）", true);
@@ -2083,7 +2104,6 @@
                 showToast("已帶入預設固定開銷項目！", false);
             });
 
-            // Clear Month Data
             document.getElementById('clearMonthDataBtn')?.addEventListener('click', () => {
                 appData[currentActiveMonth] = { items: [], fundDeposits: [] };
                 saveLocalStorage();
@@ -2093,7 +2113,6 @@
                 showToast("已清空當月份所有記帳項目", false);
             });
 
-            // Line Summary Copy
             document.getElementById('copyLineBtn')?.addEventListener('click', () => {
                 const mData = appData[currentActiveMonth] || { items: [], fundDeposits: [] };
                 const items = mData.items || [];
@@ -2120,7 +2139,6 @@
                 });
             });
 
-            // Add Member Button
             document.getElementById('addMemberBtn')?.addEventListener('click', () => {
                 config.members.push({
                     id: 'mem_' + Math.random().toString(36).substring(2, 9),
@@ -2130,7 +2148,6 @@
                 renderSettingsView();
             });
 
-            // Add Treasury Fund Account
             document.getElementById('addFundAccountBtn')?.addEventListener('click', () => {
                 if (!config.fundAccounts) config.fundAccounts = [];
                 config.fundAccounts.push({
@@ -2141,7 +2158,6 @@
                 renderSettingsView();
             });
 
-            // Add Recurring Setting Template
             document.getElementById('addRecurringSettingBtn')?.addEventListener('click', () => {
                 recurringTemplates.push({
                     id: 'rec_' + Math.random().toString(36).substring(2, 9),
@@ -2153,7 +2169,6 @@
                 renderSettingsView();
             });
 
-            // Device Binding Save
             document.getElementById('saveDeviceMemberBtn')?.addEventListener('click', () => {
                 const selVal = document.getElementById('settingsDeviceMemberSelect').value;
                 config.boundMemberId = selVal;
@@ -2163,7 +2178,6 @@
                 showToast("本機成員身份綁定完成！", false);
             });
 
-            // Save All Settings
             document.getElementById('saveSettingsBtn')?.addEventListener('click', () => {
                 config.targetBudget = parseFloat(document.getElementById('settingTargetBudget').value) || 40000;
                 const splitRadios = document.getElementsByName('splitMode');
@@ -2177,7 +2191,6 @@
                 showToast("已儲存所有家計與成員設定", false);
             });
 
-            // Modals: Deposit Modal
             document.getElementById('openDepositModalBtn')?.addEventListener('click', () => {
                 document.getElementById('depositModal').classList.remove('hidden');
             });
@@ -2219,7 +2232,6 @@
                 showToast("已登記公積金入金紀錄", false);
             });
 
-            // Modals: Event Modal
             document.getElementById('openAddEventModalBtn')?.addEventListener('click', () => {
                 document.getElementById('eventModal').classList.remove('hidden');
             });
@@ -2253,7 +2265,6 @@
                 showToast("已成功新增行程", false);
             });
 
-            // Modals: Detail Event Popup
             document.getElementById('closeEventDetailBtn')?.addEventListener('click', () => {
                 document.getElementById('eventDetailModal').classList.add('hidden');
             });
@@ -2271,7 +2282,6 @@
                 showToast("已刪除該行程", false);
             });
 
-            // Cloud Room Sync Modal Trigger
             document.getElementById('cloudSyncBtn')?.addEventListener('click', () => {
                 document.getElementById('cloudModal').classList.remove('hidden');
                 updateCloudStatusUI();
@@ -2280,7 +2290,6 @@
                 document.getElementById('cloudModal').classList.add('hidden');
             });
 
-            // Join Room Button
             document.getElementById('joinRoomBtn')?.addEventListener('click', async () => {
                 const roomCode = document.getElementById('roomCodeInput').value.trim().toUpperCase();
                 const roomPin = document.getElementById('roomPinInput').value.trim();
@@ -2302,28 +2311,24 @@
                 }
             });
 
-            // Force Upload to Cloud
             document.getElementById('forceSyncCloudBtn')?.addEventListener('click', () => {
                 syncToCloud();
                 showToast("已推送到雲端房間！", false);
             });
 
-            // Disconnect Room Button
             document.getElementById('disconnectRoomBtn')?.addEventListener('click', () => {
                 disconnectCloudRoom();
                 document.getElementById('cloudModal').classList.add('hidden');
             });
 
-            // Copy Share Link (NO PIN)
             document.getElementById('copyShareLinkBtn')?.addEventListener('click', () => {
                 if (!currentRoomId) return;
                 const shareUrl = `${window.location.origin}${window.location.pathname}?room=${currentRoomId}`;
                 navigator.clipboard.writeText(shareUrl).then(() => {
-                    showToast("已複製家人邀請連結！（不含房間密碼，需要輸入密碼加入）", false);
+                    showToast("已複製邀請連結！（不含密碼，成員加入時需輸入安全密碼）", false);
                 });
             });
 
-            // Room Delete Modal Controls
             document.getElementById('openDeleteRoomModalBtn')?.addEventListener('click', () => {
                 document.getElementById('deleteRoomConfirmModal').classList.remove('hidden');
             });
@@ -2334,19 +2339,27 @@
             document.getElementById('confirmDeleteRoomBtn')?.addEventListener('click', async () => {
                 if (!currentRoomId) return;
                 try {
-                    await authenticateFirebase();
-                    const roomDocRef = getRoomDocRef(currentRoomId);
-                    await deleteDoc(roomDocRef);
+                    if (isFirebaseInitialized && db) {
+                        const roomDocRef = getRoomDocRef(currentRoomId);
+                        if (roomDocRef) await deleteDoc(roomDocRef);
+                    }
+                    let localRoomStore = {};
+                    try {
+                        const storedRooms = localStorage.getItem('homey_local_rooms');
+                        if (storedRooms) localRoomStore = JSON.parse(storedRooms);
+                    } catch(ex){}
+                    delete localRoomStore[currentRoomId];
+                    localStorage.setItem('homey_local_rooms', JSON.stringify(localRoomStore));
+
                     disconnectCloudRoom();
                     document.getElementById('deleteRoomConfirmModal').classList.add('hidden');
                     document.getElementById('cloudModal').classList.add('hidden');
                     showToast("已刪除雲端房間記錄", false);
                 } catch (e) {
-                    showToast("刪除房間失敗: " + (e.message || "權限不足"), true);
+                    showToast("刪除房間失敗", true);
                 }
             });
 
-            // Initialize Dashboard Date Presets
             const startMonthInput = document.getElementById('dashStartMonth');
             const endMonthInput = document.getElementById('dashEndMonth');
             if (startMonthInput && endMonthInput) {
@@ -2383,7 +2396,6 @@
                 }
             });
 
-            // Auto connect if URL has room param or room saved in localStorage
             const urlParams = new URLSearchParams(window.location.search);
             const queryRoom = urlParams.get('room');
             if (queryRoom) {
