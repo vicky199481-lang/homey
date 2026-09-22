@@ -692,7 +692,18 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+
+        // Suppress background unhandled rejections from optional Firebase Analytics dynamic config fetches
+        window.addEventListener('unhandledrejection', (event) => {
+            if (event.reason && (
+                event.reason.code === 'analytics/config-fetch-failed' ||
+                (typeof event.reason.message === 'string' && event.reason.message.includes('Analytics'))
+            )) {
+                event.preventDefault();
+                console.warn("Firebase Analytics suppressed non-critical fetch error.");
+            }
+        });
 
         // User provided Firebase credentials for homely-49359
         const userProvidedFirebaseConfig = {
@@ -726,11 +737,19 @@
                 auth = getAuth(app);
                 db = getFirestore(app);
                 
-                // Initialize Firebase Analytics safely
-                try {
-                    analytics = getAnalytics(app);
-                } catch (analyticsErr) {
-                    console.log("Firebase Analytics initialization skipped (non-browser or sandbox limitation):", analyticsErr);
+                // Only attempt Firebase Analytics if a valid measurementId is present
+                if (firebaseConfig.measurementId) {
+                    isSupported().then(supported => {
+                        if (supported) {
+                            try {
+                                analytics = getAnalytics(app);
+                            } catch (analyticsErr) {
+                                console.warn("Firebase Analytics skipped:", analyticsErr);
+                            }
+                        }
+                    }).catch(err => {
+                        console.warn("Analytics not supported in this environment:", err);
+                    });
                 }
             } catch (e) {
                 console.warn("Firebase config setup warning:", e);
