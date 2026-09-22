@@ -69,7 +69,7 @@
         }
     </style>
 </head>
-<body class="h-full flex flex-col text-milktea-800 antialiased pb-32 md:pb-6">
+<body class="h-full flex flex-col text-milktea-800 antialiased pb-36 md:pb-16">
 
     <header class="bg-[#FDFBF7] border-b border-milktea-200 sticky top-0 z-30 shadow-xs">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
@@ -85,16 +85,11 @@
                             <p class="text-[10px] sm:text-xs text-milktea-500 truncate">日式溫潤 ‧ 共同記帳 ‧ 家曆行程</p>
                         </div>
                     </div>
-
-                    <!-- Mobile LINE Quick Copy -->
-                    <button id="copyLineBtnMobile" class="sm:hidden inline-flex items-center px-2.5 py-1.5 bg-[#06C755] active:bg-[#05b34c] text-white text-xs font-semibold rounded-lg transition shadow-2xs shrink-0">
-                        <i class="fa-brands fa-line mr-1 text-sm"></i> 對帳
-                    </button>
                 </div>
 
                 <!-- Month Selector & Global Actions -->
                 <div class="flex flex-wrap items-center justify-between sm:justify-end gap-2">
-                    <!-- Cloud Real-time Sync Button -->
+                    <!-- Cloud Room Co-maintenance Button -->
                     <button id="cloudSyncBtn" class="inline-flex items-center px-2.5 py-1.5 bg-milktea-100 hover:bg-milktea-200 text-milktea-800 border border-milktea-300 text-xs font-semibold rounded-lg transition shadow-2xs truncate max-w-[160px] sm:max-w-none">
                         <i id="cloudSyncIcon" class="fa-solid fa-cloud text-milktea-500 mr-1.5 shrink-0"></i>
                         <span id="cloudSyncText" class="truncate">成員共同維護</span>
@@ -110,8 +105,8 @@
                         </button>
                     </div>
 
-                    <!-- LINE Copy Summary Button (Desktop) -->
-                    <button id="copyLineBtn" class="hidden inline-flex items-center px-3 py-1.5 bg-[#06C755] hover:bg-[#05b34c] text-white text-xs font-semibold rounded-lg transition shadow-2xs">
+                    <!-- LINE Copy Summary Button (Consolidated Single Button) -->
+                    <button id="copyLineBtn" class="hidden inline-flex items-center px-3 py-1.5 bg-[#06C755] hover:bg-[#05b34c] text-white text-xs font-semibold rounded-lg transition shadow-2xs shrink-0">
                         <i class="fa-brands fa-line mr-1.5 text-sm"></i> LINE 對帳單
                     </button>
                 </div>
@@ -135,7 +130,7 @@
         </div>
     </header>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
+    <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6 pb-36 md:pb-16">
 
         <!-- Toast Notification Container -->
         <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 -translate-y-20 opacity-0 transition-all duration-300 bg-milktea-800 text-milktea-50 px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-2.5 pointer-events-none w-11/12 max-w-md justify-center">
@@ -144,8 +139,7 @@
         </div>
 
         <!-- VIEW 1: DASHBOARD (總覽) -->
-        <div id="viewDashboard" class="space-y-4 sm:space-y-6">
-            <!-- Range Selector & Header -->
+        <div id="viewDashboard" class="space-y-4 sm:space-y-6 pb-24 md:pb-8">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs">
                 <div>
                     <h2 class="text-base sm:text-lg font-bold text-milktea-900 flex items-center">
@@ -154,16 +148,13 @@
                     <p class="text-xs text-milktea-500 mt-0.5">自主選擇分析區間，提供多月份趨勢、類別佔比與總結算</p>
                 </div>
 
-                <!-- Range Selector Controls -->
                 <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-between sm:justify-end">
-                    <!-- Quick Preset Buttons -->
                     <div class="flex items-center bg-milktea-100 rounded-lg p-1 text-xs font-medium space-x-1">
                         <button id="presetThisYearBtn" class="px-2.5 py-1 rounded-md bg-milktea-700 text-white shadow-2xs transition">當年度</button>
                         <button id="presetRecent3Btn" class="px-2.5 py-1 rounded-md text-milktea-700 hover:bg-white transition">近3個月</button>
                         <button id="presetCurrentMonthBtn" class="px-2.5 py-1 rounded-md text-milktea-700 hover:bg-white transition">當月</button>
                     </div>
 
-                    <!-- Custom Range Start / End Month Pickers -->
                     <div class="flex items-center space-x-1.5 bg-milktea-50 px-2 py-1 rounded-lg border border-milktea-300 text-xs">
                         <span class="text-milktea-600 font-medium">區間:</span>
                         <input type="month" id="dashStartMonth" class="bg-transparent border-0 text-xs font-semibold text-milktea-800 p-0 focus:outline-none">
@@ -173,13 +164,11 @@
                 </div>
             </div>
 
-            <!-- Dashboard Analytics KPI Overview Cards -->
             <div id="dashboardKpiGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-                <!-- Calculated dynamically in renderDashboardView -->
+                <!-- Calculated dynamically -->
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                <!-- Chart 1: Expense Split Trend Chart -->
                 <div class="bg-white p-4 sm:p-5 rounded-2xl border border-milktea-200 shadow-xs space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="font-bold text-milktea-800 text-xs sm:text-base flex items-center">
@@ -192,7 +181,6 @@
                     </div>
                 </div>
 
-                <!-- Chart 2: Category Distribution Pie Chart -->
                 <div class="bg-white p-4 sm:p-5 rounded-2xl border border-milktea-200 shadow-xs space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="font-bold text-milktea-800 text-xs sm:text-base flex items-center">
@@ -206,7 +194,6 @@
                 </div>
             </div>
 
-            <!-- Detailed Monthly Settlement Analysis Card -->
             <div class="bg-white rounded-2xl border border-milktea-200 shadow-xs p-4 sm:p-6 space-y-3">
                 <div class="flex justify-between items-center border-b border-milktea-100 pb-2.5">
                     <h3 class="font-bold text-milktea-900 text-sm sm:text-base flex items-center">
@@ -216,15 +203,14 @@
                 </div>
                 
                 <div id="dashboardSettlementBox" class="p-3.5 sm:p-4 rounded-xl bg-milktea-50 border border-milktea-200 grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
-                    <!-- Dynamic Settlement Details populated by JS -->
+                    <!-- Dynamic Settlement Details -->
                 </div>
             </div>
         </div>
 
         <!-- VIEW 2: SPREADSHEET (月見) -->
-        <div id="viewSheet" class="hidden space-y-4 sm:space-y-6">
+        <div id="viewSheet" class="hidden space-y-4 sm:space-y-6 pb-24 md:pb-8">
 
-            <!-- Cross-month historical search alert banner -->
             <div id="historyDataAlert" class="hidden bg-caramel/10 border border-caramel/30 rounded-2xl p-3.5 text-xs text-milktea-800 flex justify-between items-center">
                 <div class="flex items-center space-x-2 min-w-0 pr-2">
                     <i class="fa-solid fa-lightbulb text-caramel text-base shrink-0"></i>
@@ -233,7 +219,6 @@
                 <button id="jumpToHistoryBtn" class="bg-caramel text-white font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition shrink-0">立即切換</button>
             </div>
 
-            <!-- Budget Progress Banner -->
             <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1.5">
                 <div class="flex justify-between items-center text-xs font-semibold">
                     <span class="text-milktea-700 flex items-center">
@@ -252,6 +237,19 @@
                 <!-- Dynamically populated KPI cards -->
             </section>
             
+            <!-- Public Fund Contribution Calculation Panel -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-milktea-200 shadow-xs space-y-3">
+                <div class="flex justify-between items-center border-b border-milktea-100 pb-2.5">
+                    <h3 class="font-bold text-milktea-900 text-xs sm:text-sm flex items-center">
+                        <i class="fa-solid fa-coins text-caramel mr-2"></i> 當月公積金分攤與結算明細
+                    </h3>
+                    <span class="text-[11px] text-milktea-500">扣除個人墊付後每人實際應付/應收金額</span>
+                </div>
+                <div id="publicFundSummaryBox" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
             <!-- Quick Add Bar & AI Photo Receipt Scanner -->
             <div class="bg-white p-3.5 sm:p-4 rounded-2xl shadow-xs border border-milktea-200 space-y-3">
                 <div class="flex flex-wrap items-center justify-between gap-2 border-b border-milktea-100 pb-2.5">
@@ -261,14 +259,12 @@
                     </div>
 
                     <div class="flex items-center gap-1.5 w-full sm:w-auto justify-end">
-                        <!-- AI Receipt Upload Button -->
                         <label class="cursor-pointer bg-milktea-100 hover:bg-milktea-200 active:bg-milktea-200 text-milktea-800 font-medium text-xs px-2.5 py-1.5 rounded-lg transition flex items-center">
                             <i class="fa-solid fa-camera mr-1 text-milktea-600"></i>
                             <span>AI 發票辨識</span>
                             <input type="file" id="receiptFileInput" accept="image/*" class="hidden">
                         </label>
 
-                        <!-- Load Recurring Expenses Button -->
                         <button id="loadRecurringBtn" class="bg-milktea-100 hover:bg-milktea-200 active:bg-milktea-200 text-milktea-800 font-medium text-xs px-2.5 py-1.5 rounded-lg transition flex items-center">
                             <i class="fa-solid fa-calendar-check mr-1 text-milktea-600"></i>
                             <span>帶入固定開銷</span>
@@ -276,11 +272,10 @@
                     </div>
                 </div>
 
-                <!-- Desktop Form & Search -->
                 <div class="flex flex-col lg:flex-row gap-2.5 items-stretch">
                     <form id="quickAddForm" class="hidden sm:flex flex-wrap items-center gap-2 flex-1">
                         <select id="quickTarget" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2 focus:ring-2 focus:ring-milktea-500">
-                            <!-- Dynamic Member Options populated by JS -->
+                            <!-- Dynamic Member Options -->
                         </select>
                         <select id="quickCategory" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2 w-28 focus:ring-2 focus:ring-milktea-500">
                             <option value="居住">居住</option>
@@ -299,7 +294,6 @@
                         </button>
                     </form>
 
-                    <!-- Search Bar -->
                     <div class="relative w-full lg:w-64">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-milktea-400 text-xs"></i>
                         <input type="text" id="searchInput" placeholder="搜尋本月品項..." class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg pl-8 pr-3 py-2 focus:ring-2 focus:ring-milktea-500">
@@ -309,25 +303,23 @@
 
             <!-- Spreadsheet Dynamic Tables Grid -->
             <div id="dynamicTablesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                <!-- Dynamically populated tables for Shared & Each Member -->
+                <!-- Dynamically populated tables -->
             </div>
 
-            <!-- Notes & Formula Explanations -->
             <div class="bg-milktea-100/80 border border-milktea-200 rounded-2xl p-3.5 sm:p-4 text-xs text-milktea-800 flex items-start space-x-2.5">
                 <i class="fa-solid fa-mug-saucer text-milktea-600 text-sm sm:text-base mt-0.5 shrink-0"></i>
                 <div class="space-y-1">
                     <p class="font-bold">日式多人在線對帳說明：</p>
                     <p>1. <strong>共同總額</strong> = 共同消費總明細 + 各成員自行支付/墊付數額。</p>
-                    <p>2. <strong>平帳機制</strong> = 根據成員設定之分攤比例，系統自動計算每人應負擔金額，並規劃最佳化多邊對帳轉帳方案。</p>
+                    <p>2. <strong>平帳機制</strong> = 根據成員設定之分攤比例，系統自動計算每人應負擔金額，並扣除個人墊付後規劃每人實際應補繳或領回的公積金金額。</p>
                 </div>
             </div>
 
         </div>
 
-        <!-- VIEW 3: CALENDAR (家曆 - 家庭共用行事曆) -->
-        <div id="viewCalendar" class="hidden space-y-4 sm:space-y-6">
+        <!-- VIEW 3: CALENDAR (家曆) -->
+        <div id="viewCalendar" class="hidden space-y-4 sm:space-y-6 pb-24 md:pb-8">
             <div class="bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-4">
-                <!-- Calendar Header & Navigation -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-milktea-100 pb-4">
                     <div>
                         <h2 class="text-base sm:text-lg font-bold text-milktea-900 flex items-center">
@@ -352,7 +344,6 @@
                     </div>
                 </div>
 
-                <!-- Calendar Grid (Mon-Sun) -->
                 <div class="grid grid-cols-7 gap-1 sm:gap-2 text-center text-xs font-bold text-milktea-600 bg-milktea-100/50 p-2 rounded-xl">
                     <div>週一</div>
                     <div>週二</div>
@@ -364,11 +355,10 @@
                 </div>
 
                 <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1 sm:gap-2 min-h-[360px]">
-                    <!-- Dynamically populated calendar days -->
+                    <!-- Dynamically populated days -->
                 </div>
             </div>
 
-            <!-- Upcoming Events List -->
             <div class="bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-3">
                 <h3 class="font-bold text-milktea-900 text-sm sm:text-base flex items-center border-b border-milktea-100 pb-2.5">
                     <i class="fa-solid fa-list-check text-matcha mr-2"></i> 本月近期行程清單
@@ -379,14 +369,13 @@
             </div>
         </div>
 
-        <!-- VIEW 4: SETTINGS (家計) - Added generous bottom padding to prevent mobile navigation overlap -->
-        <div id="tabSettingsView" class="hidden space-y-4 sm:space-y-6 pb-28 sm:pb-6">
+        <!-- VIEW 4: SETTINGS (家計) -->
+        <div id="tabSettingsView" class="hidden space-y-4 sm:space-y-6 pb-32">
             <div class="max-w-3xl mx-auto bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-6">
                 <h2 class="text-base sm:text-lg font-bold text-milktea-900 border-b border-milktea-100 pb-3 flex items-center">
                     <i class="fa-solid fa-users-gear text-milktea-600 mr-2"></i> 成員與預算設定
                 </h2>
 
-                <!-- Dynamic Member Management Section -->
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
                         <div>
@@ -398,7 +387,6 @@
                         </button>
                     </div>
 
-                    <!-- Member Split Mode Switch -->
                     <div class="flex flex-wrap items-center gap-3 bg-milktea-50 p-2.5 rounded-xl border border-milktea-200 text-xs">
                         <span class="font-semibold text-milktea-700">分攤模式：</span>
                         <label class="inline-flex items-center cursor-pointer">
@@ -411,13 +399,11 @@
                         </label>
                     </div>
 
-                    <!-- Dynamic Members List Container -->
                     <div id="membersSettingsContainer" class="space-y-2.5">
                         <!-- Populated by JS -->
                     </div>
                 </div>
 
-                <!-- Monthly Budget Setting -->
                 <div class="space-y-3 pt-3 border-t border-milktea-100">
                     <h3 class="text-xs sm:text-sm font-semibold text-milktea-800">每月共同支出預算上限 (NT$)</h3>
                     <div>
@@ -425,7 +411,6 @@
                     </div>
                 </div>
 
-                <!-- Recurring Fixed Expenses Setting -->
                 <div class="space-y-3 pt-3 border-t border-milktea-100">
                     <div class="flex justify-between items-center">
                         <div>
@@ -437,25 +422,25 @@
                         </button>
                     </div>
 
-                    <div class="overflow-x-auto rounded-xl border border-milktea-200">
-                        <table class="w-full text-left text-xs sm:text-sm">
+                    <!-- WIDER MOBILE TABLE WITH RESPONSIVE COLUMNS -->
+                    <div class="overflow-x-auto rounded-xl border border-milktea-200 bg-white">
+                        <table class="w-full min-w-[340px] text-left text-xs sm:text-sm">
                             <thead class="bg-milktea-100/80 text-milktea-800 font-semibold border-b border-milktea-200">
                                 <tr>
-                                    <th class="p-2 pl-3">歸屬</th>
-                                    <th class="p-2">分類</th>
-                                    <th class="p-2">品項名稱</th>
-                                    <th class="p-2 text-right">預設金額</th>
-                                    <th class="p-2 w-8 text-center"></th>
+                                    <th class="p-2.5 pl-3 w-24">歸屬</th>
+                                    <th class="p-2.5 w-32">分類</th>
+                                    <th class="p-2.5 min-w-[140px]">品項名稱</th>
+                                    <th class="p-2.5 text-right w-24">預設金額</th>
+                                    <th class="p-2.5 w-10 text-center"></th>
                                 </tr>
                             </thead>
-                            <tbody id="recurringSettingsBody" class="divide-y divide-milktea-100 bg-white">
+                            <tbody id="recurringSettingsBody" class="divide-y divide-milktea-100">
                                 <!-- Dynamic Recurring Rows -->
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Data Backup / Export / Import / Recovery -->
                 <div class="space-y-3 pt-3 border-t border-milktea-100">
                     <h3 class="text-xs sm:text-sm font-semibold text-milktea-800">資料備份與救回機制</h3>
                     <div class="flex flex-wrap gap-2">
@@ -475,8 +460,7 @@
                     </div>
                 </div>
 
-                <!-- Save Changes Button with safe clearance above mobile navbar -->
-                <div class="pt-6 pb-12 flex justify-end">
+                <div class="pt-6 pb-16 flex justify-end">
                     <button id="saveSettingsBtn" class="w-full sm:w-auto bg-milktea-700 hover:bg-milktea-800 active:bg-milktea-900 text-white text-sm font-semibold px-8 py-3.5 rounded-xl transition shadow-md">
                         儲存變更設定
                     </button>
@@ -507,7 +491,7 @@
                 <div>
                     <label class="block text-xs font-medium text-milktea-600 mb-1">歸屬帳目</label>
                     <select id="mobileQuickTarget" class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-sm rounded-lg p-2.5">
-                        <!-- Populated dynamically by JS -->
+                        <!-- Populated dynamically -->
                     </select>
                 </div>
                 <div>
@@ -654,7 +638,7 @@
         <div class="bg-white w-full max-w-md rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-milktea-100 pb-3">
                 <h3 class="font-bold text-milktea-900 text-base sm:text-lg flex items-center">
-                    <i class="fa-solid fa-users-line text-matcha mr-2"></i> 家庭成員雲端共同維護
+                    <i class="fa-solid fa-users-line text-matcha mr-2"></i> 成員專屬房間雲端同步
                 </h3>
                 <button id="closeCloudModalBtn" class="text-milktea-400 hover:text-milktea-700 text-lg p-1">
                     <i class="fa-solid fa-xmark"></i>
@@ -662,7 +646,7 @@
             </div>
 
             <p class="text-xs text-milktea-600 leading-relaxed">
-                輸入或建立專屬「家庭房間代碼」，僅有獲得代碼的家庭成員可以即時共同編輯、查看與同步記帳內容與家曆行程。
+                輸入「家庭房間代碼」，僅有加入相同房間代碼的成員可以同步總覽、月見、家曆及家計所有資料。
             </p>
 
             <div class="space-y-3 bg-milktea-50 p-3.5 rounded-xl border border-milktea-200">
@@ -679,7 +663,7 @@
                     <div class="flex gap-2">
                         <input type="text" id="roomCodeInput" placeholder="例如：OUR-HOME-88" class="flex-1 bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-mono font-bold focus:ring-2 focus:ring-milktea-500 uppercase">
                         <button id="joinRoomBtn" class="bg-milktea-700 hover:bg-milktea-800 text-white text-xs font-semibold px-3 py-2 rounded-lg transition shrink-0">
-                            加入/建立
+                            加入房間
                         </button>
                     </div>
                 </div>
@@ -696,7 +680,6 @@
         </div>
     </div>
 
-    <!-- Firebase SDK & Real-time Sync Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -750,10 +733,15 @@
                         return;
                     }
                     isRemoteUpdate = true;
-                    if (window.setAppState && remoteData.config) {
-                        window.setAppState(remoteData.config, remoteData.appData, remoteData.recurringTemplates, remoteData.calendarEvents);
+                    if (window.setAppState && remoteData.state) {
+                        window.setAppState(
+                            remoteData.state.config, 
+                            remoteData.state.appData, 
+                            remoteData.state.recurringTemplates, 
+                            remoteData.state.calendarEvents
+                        );
                     }
-                    setTimeout(() => { isRemoteUpdate = false; }, 200);
+                    setTimeout(() => { isRemoteUpdate = false; }, 250);
                 } else {
                     syncStateToCloud();
                 }
@@ -771,7 +759,7 @@
                 // Ignore SecurityError inside sandboxed blob iframes
             }
 
-            window.showToast && window.showToast(`已成功加入房間：${activeRoomId}`);
+            window.showToast && window.showToast(`已成功進入房間：${activeRoomId}`);
         }
 
         function cleanRoomSubscription() {
@@ -795,17 +783,19 @@
                     if (!state) return;
                     const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'household_rooms', activeRoomId);
                     await setDoc(roomDocRef, {
-                        config: state.config,
-                        appData: state.appData,
-                        recurringTemplates: state.recurringTemplates,
-                        calendarEvents: state.calendarEvents,
+                        state: {
+                            config: state.config,
+                            appData: state.appData,
+                            recurringTemplates: state.recurringTemplates,
+                            calendarEvents: state.calendarEvents
+                        },
                         updatedAt: new Date().toISOString(),
                         lastUpdatedBy: activeUser.uid
                     }, { merge: true });
                 } catch (err) {
                     console.error("Failed to sync to cloud:", err);
                 }
-            }, 500);
+            }, 400);
         }
 
         function disconnectHouseholdRoom() {
@@ -832,9 +822,9 @@
 
             if (isConnected && roomId) {
                 if (syncIcon) syncIcon.className = "fa-solid fa-circle text-matcha text-xs mr-1.5 animate-pulse shrink-0";
-                if (syncText) syncText.textContent = `雲端: ${roomId}`;
+                if (syncText) syncText.textContent = `房間: ${roomId}`;
                 if (roomDisplay) {
-                    roomDisplay.innerHTML = `<span>🟢 已連線：${roomId}</span><span class="text-[10px] text-matcha font-normal">成員即時同步中</span>`;
+                    roomDisplay.innerHTML = `<span>🟢 已連線：${roomId}</span><span class="text-[10px] text-matcha font-normal">總覽/月見/家曆/家計 同步中</span>`;
                 }
                 if (roomActions) roomActions.classList.remove('hidden');
             } else {
@@ -891,7 +881,6 @@
         });
     </script>
 
-    <!-- Main Application Logic -->
     <script>
         const MEMBER_PALETTE = ['#D98A76', '#8A9A86', '#E2AD63', '#6E8A9A', '#A8927E', '#B87A8C'];
         const CATEGORY_LIST = ['居住', '公用', '飲食', '日用', '交通', '育樂', '醫療', '其他'];
@@ -910,10 +899,7 @@
         }
 
         let config = {
-            members: [
-                { id: 'm1', name: '珊', weight: 1, color: '#D98A76' },
-                { id: 'm2', name: '群', weight: 1, color: '#8A9A86' }
-            ],
+            members: [],
             splitMode: 'equal',
             targetBudget: 40000
         };
@@ -924,36 +910,18 @@
         let searchQuery = '';
 
         let calendarYear = 2026;
-        let calendarMonth = 9; // 1-12
+        let calendarMonth = 9;
 
-        let calendarEvents = [
-            { id: 'e1', date: '2026-09-10', memberId: 'm1', title: '繳交房租與管理費', desc: '轉帳給房東，記得確認合約編號。' },
-            { id: 'e2', date: '2026-09-15', memberId: 'm2', title: '好市多補貨購物', desc: '買衛生紙、鮮乳與日常新鮮食材。' },
-            { id: 'e3', date: '2026-09-20', memberId: 'm1', title: '家庭聚餐約會', desc: '慶祝紀念日，已預訂餐廳位子。' }
-        ];
+        let calendarEvents = [];
 
         let appData = {
             '2026-09': {
-                shared: [
-                    { category: '居住', item: '房租', amount: 25000 },
-                    { category: '公用', item: '卡費', amount: 0 }
-                ],
-                personal: {
-                    'm1': [],
-                    'm2': [
-                        { category: '居住', item: '管理費', amount: 1500 },
-                        { category: '公用', item: '上個月結餘', amount: -3000 }
-                    ]
-                }
+                shared: [],
+                personal: {}
             }
         };
 
-        let recurringTemplates = [
-            { category: '居住', item: '房屋租金', amount: 25000, target: 'shared' },
-            { category: '居住', item: '大樓管理費', amount: 1500, target: 'm2' },
-            { category: '公用', item: '水電瓦斯費', amount: 1800, target: 'shared' },
-            { category: '公用', item: '家用寬頻網路', amount: 899, target: 'shared' }
-        ];
+        let recurringTemplates = [];
 
         window.getAppState = () => ({ config, appData, recurringTemplates, calendarEvents });
         window.setAppState = (newConfig, newAppData, newTemplates, newEvents) => {
@@ -1020,16 +988,13 @@
 
             const headerMonthPicker = document.getElementById('headerMonthPickerContainer');
             const copyBtn = document.getElementById('copyLineBtn');
-            const copyBtnMobile = document.getElementById('copyLineBtnMobile');
 
             if (viewIndex === 1) {
                 if (headerMonthPicker) headerMonthPicker.classList.remove('hidden');
                 if (copyBtn) copyBtn.classList.remove('hidden');
-                if (copyBtnMobile) copyBtnMobile.classList.remove('hidden');
             } else {
                 if (headerMonthPicker) headerMonthPicker.classList.add('hidden');
                 if (copyBtn) copyBtn.classList.add('hidden');
-                if (copyBtnMobile) copyBtnMobile.classList.add('hidden');
             }
 
             if (viewIndex === 0) {
@@ -1124,7 +1089,7 @@
             const memberStats = {};
             config.members.forEach(m => {
                 const weight = config.splitMode === 'equal' ? 1 : (parseFloat(m.weight) || 1);
-                const ratio = totalWeight > 0 ? (weight / totalWeight) : (1 / config.members.length);
+                const ratio = totalWeight > 0 ? (weight / totalWeight) : (config.members.length > 0 ? (1 / config.members.length) : 0);
                 const targetObligation = Math.round(sharedTotal * ratio);
                 const paidAmount = personalSums[m.id] || 0;
                 const netBalance = paidAmount - targetObligation;
@@ -1302,7 +1267,7 @@
                     </div>
                     <div class="space-y-1 border-t md:border-t-0 md:border-l border-milktea-200 pt-2 md:pt-0 md:pl-3 min-w-0">
                         <p class="text-xs font-bold text-milktea-800">成員墊付概況：</p>
-                        ${memberSummaryHtml}
+                        ${memberSummaryHtml || '<p class="text-xs text-milktea-400">尚未設定成員</p>'}
                     </div>
                     <div class="space-y-1 border-t md:border-t-0 md:border-l border-milktea-200 pt-2 md:pt-0 md:pl-3 min-w-0">
                         <p class="text-xs font-bold text-milktea-800">💡 提示：</p>
@@ -1441,6 +1406,50 @@
                 </div>
                 ${memberCards}
             `;
+
+            // Render Public Fund Contribution Panel
+            const publicFundBox = document.getElementById('publicFundSummaryBox');
+            if (publicFundBox) {
+                if (config.members.length === 0) {
+                    publicFundBox.innerHTML = `<div class="col-span-full p-4 text-center text-xs text-milktea-400">尚未新增成員，請至「家計」頁面新增成員</div>`;
+                } else {
+                    let fundHtml = config.members.map(m => {
+                        const stat = totals.memberStats[m.id] || { paidAmount: 0, targetObligation: 0, netBalance: 0 };
+                        let actionText = '';
+                        let badgeClass = '';
+                        let amountStr = `NT$ ${Math.abs(stat.netBalance).toLocaleString('zh-TW')}`;
+
+                        if (stat.netBalance < -0.5) {
+                            actionText = `應補繳公積金 (匯入共用)`;
+                            badgeClass = `bg-terracotta/10 text-terracotta border-terracotta/30`;
+                        } else if (stat.netBalance > 0.5) {
+                            actionText = `應從公積金領回 (溢付退款)`;
+                            badgeClass = `bg-matcha/10 text-matcha border-matcha/30`;
+                        } else {
+                            actionText = `收支完全平衡`;
+                            badgeClass = `bg-milktea-100 text-milktea-700 border-milktea-200`;
+                            amountStr = `NT$ 0`;
+                        }
+
+                        return `
+                            <div class="p-3.5 rounded-xl border border-milktea-200 bg-milktea-50/70 space-y-2 min-w-0">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-bold text-milktea-800 flex items-center truncate">
+                                        <span class="w-2.5 h-2.5 rounded-full mr-1.5 shrink-0" style="background-color: ${m.color}"></span>
+                                        <span class="truncate">${escapeHtml(m.name)}</span>
+                                    </span>
+                                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md border ${badgeClass} shrink-0">${actionText}</span>
+                                </div>
+                                <div class="flex justify-between items-baseline pt-1 border-t border-milktea-200/60">
+                                    <span class="text-[11px] text-milktea-500">應付負擔: ${stat.targetObligation.toLocaleString('zh-TW')} | 已墊付: ${stat.paidAmount.toLocaleString('zh-TW')}</span>
+                                    <span class="text-sm sm:text-base font-bold font-mono text-milktea-900">${amountStr}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    publicFundBox.innerHTML = fundHtml;
+                }
+            }
         }
 
         function renderDynamicTables(totals) {
@@ -1451,7 +1460,6 @@
             const month = appData[currentDateKey];
             const query = searchQuery.toLowerCase();
 
-            // 1. Shared Table
             let sharedItems = (month.shared || []).filter(item => {
                 if (!query) return true;
                 return (item.item || '').toLowerCase().includes(query) || (item.category || '').toLowerCase().includes(query);
@@ -1515,7 +1523,6 @@
                 </div>
             `;
 
-            // 2. Member Personal Tables
             let memberTablesCards = config.members.map(m => {
                 const pList = month.personal?.[m.id] || [];
                 const filteredPList = pList.filter(item => {
@@ -1600,8 +1607,8 @@
             const firstDay = new Date(calendarYear, calendarMonth - 1, 1);
             const lastDay = new Date(calendarYear, calendarMonth, 0);
             const daysInMonth = lastDay.getDate();
-            let startingDayOfWeek = firstDay.getDay(); // 0 is Sunday
-            startingDayOfWeek = startingDayOfWeek === 0 ? 6 : startingDayOfWeek - 1; // Mon=0, Sun=6
+            let startingDayOfWeek = firstDay.getDay();
+            startingDayOfWeek = startingDayOfWeek === 0 ? 6 : startingDayOfWeek - 1;
 
             let html = '';
 
@@ -1691,6 +1698,10 @@
         }
 
         function openAddEventOnDate(dateStr) {
+            if (config.members.length === 0) {
+                showToast('請先至「家計」頁面新增成員，才可安排行程！');
+                return;
+            }
             const dateInput = document.getElementById('eventDateInput');
             if (dateInput) dateInput.value = dateStr || new Date().toISOString().split('T')[0];
             
@@ -1863,6 +1874,11 @@
             const container = document.getElementById('membersSettingsContainer');
             if (!container) return;
 
+            if (config.members.length === 0) {
+                container.innerHTML = `<div class="p-6 text-center text-xs text-milktea-400 bg-milktea-50 rounded-xl border border-milktea-200">尚無成員，請點擊上方「新增成員」開始建立</div>`;
+                return;
+            }
+
             let html = '';
             config.members.forEach((m, idx) => {
                 html += `
@@ -1880,11 +1896,9 @@
                         ` : ''}
 
                         <div class="flex-1 flex justify-end shrink-0">
-                            ${config.members.length > 1 ? `
-                                <button onclick="removeMemberSetting(${idx})" class="text-milktea-400 hover:text-rose-500 p-1 text-sm transition">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                            ` : ''}
+                            <button onclick="removeMemberSetting(${idx})" class="text-milktea-400 hover:text-rose-500 p-1 text-sm transition">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -1906,10 +1920,6 @@
         }
 
         function removeMemberSetting(idx) {
-            if (config.members.length <= 1) {
-                showToast('至少需要保留一位成員！');
-                return;
-            }
             config.members.splice(idx, 1);
             renderAll();
         }
@@ -1941,21 +1951,21 @@
 
                 html += `
                     <tr class="hover:bg-milktea-50/50 transition">
-                        <td class="p-2 pl-3 border-r border-milktea-150 min-w-[70px]">
-                            <select onchange="updateRecurringSetting(${idx}, 'target', this.value)" class="bg-milktea-50 border border-milktea-200 text-xs rounded p-1 text-milktea-800">
+                        <td class="p-2.5 pl-3 border-r border-milktea-150">
+                            <select onchange="updateRecurringSetting(${idx}, 'target', this.value)" class="bg-milktea-50 border border-milktea-200 text-xs rounded p-1.5 text-milktea-800 w-full">
                                 ${optionsHtml}
                             </select>
                         </td>
-                        <td class="p-2 border-r border-milktea-150 min-w-[75px]">
+                        <td class="p-2.5 border-r border-milktea-150">
                             ${renderCategorySelect(tpl.category || '居住', `updateRecurringSetting(${idx}, 'category', this.value)`)}
                         </td>
-                        <td class="p-2 border-r border-milktea-150 min-w-[90px]">
-                            <input type="text" value="${escapeHtml(tpl.item || '')}" onchange="updateRecurringSetting(${idx}, 'item', this.value)" placeholder="品項名稱" class="w-full bg-transparent border border-milktea-200 rounded p-1 text-xs text-milktea-800 truncate">
+                        <td class="p-2.5 border-r border-milktea-150">
+                            <input type="text" value="${escapeHtml(tpl.item || '')}" onchange="updateRecurringSetting(${idx}, 'item', this.value)" placeholder="品項名稱" class="w-full bg-transparent border border-milktea-200 rounded p-1.5 text-xs text-milktea-800">
                         </td>
-                        <td class="p-2 border-r border-milktea-150 text-right min-w-[75px]">
-                            <input type="number" step="any" value="${tpl.amount !== undefined ? tpl.amount : ''}" onchange="updateRecurringSetting(${idx}, 'amount', this.value)" placeholder="0" class="w-full bg-transparent border border-milktea-200 rounded p-1 text-xs text-right font-mono text-milktea-900">
+                        <td class="p-2.5 border-r border-milktea-150 text-right">
+                            <input type="number" step="any" value="${tpl.amount !== undefined ? tpl.amount : ''}" onchange="updateRecurringSetting(${idx}, 'amount', this.value)" placeholder="0" class="w-full bg-transparent border border-milktea-200 rounded p-1.5 text-xs text-right font-mono text-milktea-900">
                         </td>
-                        <td class="p-2 text-center w-8">
+                        <td class="p-2.5 text-center">
                             <button onclick="deleteRecurringSetting(${idx})" class="text-milktea-400 hover:text-rose-500 transition p-1">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
@@ -2171,7 +2181,6 @@
             });
 
             document.getElementById('copyLineBtn')?.addEventListener('click', copyLineSummary);
-            document.getElementById('copyLineBtnMobile')?.addEventListener('click', copyLineSummary);
 
             const receiptInput = document.getElementById('receiptFileInput');
             receiptInput?.addEventListener('change', (e) => {
@@ -2256,7 +2265,6 @@
                 showToast(`已新增「${item}」`);
             });
 
-            // Calendar Navigation & Events modals
             document.getElementById('calPrevMonthBtn')?.addEventListener('click', () => shiftCalendarMonth(-1));
             document.getElementById('calNextMonthBtn')?.addEventListener('click', () => shiftCalendarMonth(1));
 
@@ -2289,7 +2297,6 @@
                 showToast('已成功新增家庭行程！');
             });
 
-            // Event detail modal bindings
             const eventDetailModal = document.getElementById('eventDetailModal');
             document.getElementById('closeEventDetailBtn')?.addEventListener('click', () => eventDetailModal?.classList.add('hidden'));
             document.getElementById('closeEventDetailFooterBtn')?.addEventListener('click', () => eventDetailModal?.classList.add('hidden'));
