@@ -63,27 +63,31 @@
                 font-size: 14px !important;
             }
         }
+        .break-words-anywhere {
+            word-break: break-all;
+            overflow-wrap: break-word;
+        }
     </style>
 </head>
-<body class="h-full flex flex-col text-milktea-800 antialiased pb-28 md:pb-6">
+<body class="h-full flex flex-col text-milktea-800 antialiased pb-32 md:pb-6">
 
     <header class="bg-[#FDFBF7] border-b border-milktea-200 sticky top-0 z-30 shadow-xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 gap-3 sm:gap-0">
                 <!-- Logo & Title -->
                 <div class="flex items-center justify-between sm:justify-start">
-                    <div class="flex items-center space-x-3">
-                        <div class="bg-milktea-700 text-milktea-50 p-2 sm:p-2.5 rounded-xl shadow-xs">
+                    <div class="flex items-center space-x-2.5 min-w-0 pr-2">
+                        <div class="bg-milktea-700 text-milktea-50 p-2 sm:p-2.5 rounded-xl shadow-xs shrink-0">
                             <i class="fa-solid fa-mug-hot text-lg sm:text-xl"></i>
                         </div>
-                        <div>
-                            <h1 class="text-base sm:text-lg font-bold text-milktea-900 leading-tight tracking-wide">家計日常｜Ｈomey</h1>
-                            <p class="text-[11px] sm:text-xs text-milktea-500">日式溫潤 ‧ 共同記帳 ‧ 家曆行程</p>
+                        <div class="min-w-0">
+                            <h1 class="text-sm sm:text-lg font-bold text-milktea-900 leading-tight tracking-wide truncate">家計日常｜Ｈomey</h1>
+                            <p class="text-[10px] sm:text-xs text-milktea-500 truncate">日式溫潤 ‧ 共同記帳 ‧ 家曆行程</p>
                         </div>
                     </div>
 
                     <!-- Mobile LINE Quick Copy -->
-                    <button id="copyLineBtnMobile" class="sm:hidden inline-flex items-center px-2.5 py-1.5 bg-[#06C755] active:bg-[#05b34c] text-white text-xs font-semibold rounded-lg transition shadow-2xs">
+                    <button id="copyLineBtnMobile" class="sm:hidden inline-flex items-center px-2.5 py-1.5 bg-[#06C755] active:bg-[#05b34c] text-white text-xs font-semibold rounded-lg transition shadow-2xs shrink-0">
                         <i class="fa-brands fa-line mr-1 text-sm"></i> 對帳
                     </button>
                 </div>
@@ -91,9 +95,9 @@
                 <!-- Month Selector & Global Actions -->
                 <div class="flex flex-wrap items-center justify-between sm:justify-end gap-2">
                     <!-- Cloud Real-time Sync Button -->
-                    <button id="cloudSyncBtn" class="inline-flex items-center px-2.5 py-1.5 bg-milktea-100 hover:bg-milktea-200 text-milktea-800 border border-milktea-300 text-xs font-semibold rounded-lg transition shadow-2xs">
-                        <i id="cloudSyncIcon" class="fa-solid fa-cloud text-milktea-500 mr-1.5"></i>
-                        <span id="cloudSyncText">成員共同維護</span>
+                    <button id="cloudSyncBtn" class="inline-flex items-center px-2.5 py-1.5 bg-milktea-100 hover:bg-milktea-200 text-milktea-800 border border-milktea-300 text-xs font-semibold rounded-lg transition shadow-2xs truncate max-w-[160px] sm:max-w-none">
+                        <i id="cloudSyncIcon" class="fa-solid fa-cloud text-milktea-500 mr-1.5 shrink-0"></i>
+                        <span id="cloudSyncText" class="truncate">成員共同維護</span>
                     </button>
 
                     <div id="headerMonthPickerContainer" class="hidden flex items-center bg-milktea-100 rounded-lg p-1 border border-milktea-200 transition-all">
@@ -151,7 +155,7 @@
                 </div>
 
                 <!-- Range Selector Controls -->
-                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-between sm:justify-end">
                     <!-- Quick Preset Buttons -->
                     <div class="flex items-center bg-milktea-100 rounded-lg p-1 text-xs font-medium space-x-1">
                         <button id="presetThisYearBtn" class="px-2.5 py-1 rounded-md bg-milktea-700 text-white shadow-2xs transition">當年度</button>
@@ -222,11 +226,11 @@
 
             <!-- Cross-month historical search alert banner -->
             <div id="historyDataAlert" class="hidden bg-caramel/10 border border-caramel/30 rounded-2xl p-3.5 text-xs text-milktea-800 flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-lightbulb text-caramel text-base"></i>
-                    <span id="historyAlertText">提示訊息</span>
+                <div class="flex items-center space-x-2 min-w-0 pr-2">
+                    <i class="fa-solid fa-lightbulb text-caramel text-base shrink-0"></i>
+                    <span id="historyAlertText" class="truncate">提示訊息</span>
                 </div>
-                <button id="jumpToHistoryBtn" class="bg-caramel text-white font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition">立即切換</button>
+                <button id="jumpToHistoryBtn" class="bg-caramel text-white font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition shrink-0">立即切換</button>
             </div>
 
             <!-- Budget Progress Banner -->
@@ -310,7 +314,7 @@
 
             <!-- Notes & Formula Explanations -->
             <div class="bg-milktea-100/80 border border-milktea-200 rounded-2xl p-3.5 sm:p-4 text-xs text-milktea-800 flex items-start space-x-2.5">
-                <i class="fa-solid fa-mug-saucer text-milktea-600 text-sm sm:text-base mt-0.5"></i>
+                <i class="fa-solid fa-mug-saucer text-milktea-600 text-sm sm:text-base mt-0.5 shrink-0"></i>
                 <div class="space-y-1">
                     <p class="font-bold">日式多人在線對帳說明：</p>
                     <p>1. <strong>共同總額</strong> = 共同消費總明細 + 各成員自行支付/墊付數額。</p>
@@ -332,18 +336,18 @@
                         <p class="text-xs text-milktea-500 mt-0.5">成員共同維護行程、記錄大小事，隨時掌握誰安排了什麼活動</p>
                     </div>
 
-                    <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <div class="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto justify-between sm:justify-end">
                         <div class="flex items-center bg-milktea-100 rounded-lg p-1 border border-milktea-200">
                             <button id="calPrevMonthBtn" class="p-1.5 rounded-md text-milktea-700 hover:bg-white transition" title="上個月">
                                 <i class="fa-solid fa-chevron-left text-xs"></i>
                             </button>
-                            <span id="calMonthTitle" class="px-3 text-xs sm:text-sm font-bold text-milktea-800">2026年9月</span>
+                            <span id="calMonthTitle" class="px-2 sm:px-3 text-xs sm:text-sm font-bold text-milktea-800">2026年9月</span>
                             <button id="calNextMonthBtn" class="p-1.5 rounded-md text-milktea-700 hover:bg-white transition" title="下個月">
                                 <i class="fa-solid fa-chevron-right text-xs"></i>
                             </button>
                         </div>
-                        <button id="openAddEventModalBtn" class="bg-milktea-700 hover:bg-milktea-800 active:bg-milktea-900 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-2xs flex items-center">
-                            <i class="fa-solid fa-plus mr-1.5"></i> 新增行程
+                        <button id="openAddEventModalBtn" class="bg-milktea-700 hover:bg-milktea-800 active:bg-milktea-900 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-2xs flex items-center shrink-0">
+                            <i class="fa-solid fa-plus mr-1"></i> 新增行程
                         </button>
                     </div>
                 </div>
@@ -359,7 +363,7 @@
                     <div class="text-terracotta">週日</div>
                 </div>
 
-                <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1 sm:gap-2 min-h-[380px]">
+                <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1 sm:gap-2 min-h-[360px]">
                     <!-- Dynamically populated calendar days -->
                 </div>
             </div>
@@ -375,7 +379,7 @@
             </div>
         </div>
 
-        <!-- VIEW 4: SETTINGS (家計) - Added pb-28 for mobile bottom navigation spacing -->
+        <!-- VIEW 4: SETTINGS (家計) - Added generous bottom padding to prevent mobile navigation overlap -->
         <div id="tabSettingsView" class="hidden space-y-4 sm:space-y-6 pb-28 sm:pb-6">
             <div class="max-w-3xl mx-auto bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-6">
                 <h2 class="text-base sm:text-lg font-bold text-milktea-900 border-b border-milktea-100 pb-3 flex items-center">
@@ -389,13 +393,13 @@
                             <h3 class="text-xs sm:text-sm font-semibold text-milktea-800">成員名單與分攤比例設定</h3>
                             <p class="text-[11px] text-milktea-500">可自由設定家庭成員人數、名稱與分攤權重</p>
                         </div>
-                        <button id="addMemberBtn" type="button" class="text-xs text-white bg-milktea-700 hover:bg-milktea-800 font-medium px-3 py-1.5 rounded-lg shadow-2xs transition flex items-center">
+                        <button id="addMemberBtn" type="button" class="text-xs text-white bg-milktea-700 hover:bg-milktea-800 font-medium px-3 py-1.5 rounded-lg shadow-2xs transition flex items-center shrink-0">
                             <i class="fa-solid fa-user-plus mr-1.5"></i> 新增成員
                         </button>
                     </div>
 
                     <!-- Member Split Mode Switch -->
-                    <div class="flex items-center space-x-4 bg-milktea-50 p-2.5 rounded-xl border border-milktea-200 text-xs">
+                    <div class="flex flex-wrap items-center gap-3 bg-milktea-50 p-2.5 rounded-xl border border-milktea-200 text-xs">
                         <span class="font-semibold text-milktea-700">分攤模式：</span>
                         <label class="inline-flex items-center cursor-pointer">
                             <input type="radio" name="splitMode" value="equal" checked class="text-milktea-700 focus:ring-milktea-500">
@@ -428,7 +432,7 @@
                             <h3 class="text-xs sm:text-sm font-semibold text-milktea-800">固定開銷預設項目</h3>
                             <p class="text-[11px] text-milktea-500">於月見頁面點擊「帶入固定開銷」時使用的預設範本</p>
                         </div>
-                        <button id="addRecurringSettingBtn" type="button" class="text-xs text-milktea-700 hover:text-milktea-900 font-medium flex items-center bg-milktea-100 hover:bg-milktea-200 px-2.5 py-1.5 rounded-lg border border-milktea-200 transition">
+                        <button id="addRecurringSettingBtn" type="button" class="text-xs text-milktea-700 hover:text-milktea-900 font-medium flex items-center bg-milktea-100 hover:bg-milktea-200 px-2.5 py-1.5 rounded-lg border border-milktea-200 transition shrink-0">
                             <i class="fa-solid fa-plus mr-1"></i> 新增固定項目
                         </button>
                     </div>
@@ -471,8 +475,8 @@
                     </div>
                 </div>
 
-                <!-- Save Changes Button with generous top margin and padding for mobile viewports -->
-                <div class="pt-8 pb-12 flex justify-end">
+                <!-- Save Changes Button with safe clearance above mobile navbar -->
+                <div class="pt-6 pb-12 flex justify-end">
                     <button id="saveSettingsBtn" class="w-full sm:w-auto bg-milktea-700 hover:bg-milktea-800 active:bg-milktea-900 text-white text-sm font-semibold px-8 py-3.5 rounded-xl transition shadow-md">
                         儲存變更設定
                     </button>
@@ -491,7 +495,7 @@
 
     <!-- Mobile Quick Add Modal -->
     <div id="mobileAddModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-end justify-center sm:hidden">
-        <div class="bg-white w-full rounded-t-2xl p-5 space-y-4 animate-in slide-in-from-bottom duration-200 pb-10">
+        <div class="bg-white w-full rounded-t-2xl p-5 space-y-4 animate-in slide-in-from-bottom duration-200 pb-12 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-milktea-100 pb-3">
                 <h3 class="font-bold text-milktea-900 text-base">快速新增記帳</h3>
                 <button id="closeMobileModalBtn" class="text-milktea-400 text-lg p-1">
@@ -537,7 +541,7 @@
 
     <!-- Calendar Event Add Modal -->
     <div id="eventModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200">
+        <div class="bg-white w-full max-w-md rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-milktea-100 pb-3">
                 <h3 class="font-bold text-milktea-900 text-base sm:text-lg flex items-center">
                     <i class="fa-solid fa-calendar-plus text-terracotta mr-2"></i> 新增家庭行程 (家曆)
@@ -581,7 +585,7 @@
 
     <!-- Calendar Event Detail Popup Modal -->
     <div id="eventDetailModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200">
+        <div class="bg-white w-full max-w-sm rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-milktea-100 pb-3">
                 <h3 class="font-bold text-milktea-900 text-base sm:text-lg flex items-center">
                     <i class="fa-solid fa-circle-info text-milktea-600 mr-2"></i> 行程詳細內容
@@ -605,12 +609,12 @@
 
                 <div>
                     <p class="text-milktea-500 font-medium mb-1">要做什麼：</p>
-                    <p id="detailEventTitle" class="font-bold text-milktea-900 text-base bg-milktea-100/50 p-2.5 rounded-lg border border-milktea-200"></p>
+                    <p id="detailEventTitle" class="font-bold text-milktea-900 text-base bg-milktea-100/50 p-2.5 rounded-lg border border-milktea-200 break-words-anywhere"></p>
                 </div>
 
                 <div>
                     <p class="text-milktea-500 font-medium mb-1">備註說明：</p>
-                    <p id="detailEventDesc" class="text-milktea-700 bg-milktea-50 p-2.5 rounded-lg border border-milktea-200 min-h-[50px] whitespace-pre-wrap"></p>
+                    <p id="detailEventDesc" class="text-milktea-700 bg-milktea-50 p-2.5 rounded-lg border border-milktea-200 min-h-[50px] whitespace-pre-wrap break-words-anywhere"></p>
                 </div>
             </div>
 
@@ -647,7 +651,7 @@
 
     <!-- Cloud Room Synchronization Modal -->
     <div id="cloudModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200">
+        <div class="bg-white w-full max-w-md rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-milktea-100 pb-3">
                 <h3 class="font-bold text-milktea-900 text-base sm:text-lg flex items-center">
                     <i class="fa-solid fa-users-line text-matcha mr-2"></i> 家庭成員雲端共同維護
@@ -674,7 +678,7 @@
                     <label class="block text-xs font-semibold text-milktea-800 mb-1">家庭房間代碼 (Passcode)</label>
                     <div class="flex gap-2">
                         <input type="text" id="roomCodeInput" placeholder="例如：OUR-HOME-88" class="flex-1 bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-mono font-bold focus:ring-2 focus:ring-milktea-500 uppercase">
-                        <button id="joinRoomBtn" class="bg-milktea-700 hover:bg-milktea-800 text-white text-xs font-semibold px-3 py-2 rounded-lg transition">
+                        <button id="joinRoomBtn" class="bg-milktea-700 hover:bg-milktea-800 text-white text-xs font-semibold px-3 py-2 rounded-lg transition shrink-0">
                             加入/建立
                         </button>
                     </div>
@@ -692,6 +696,7 @@
         </div>
     </div>
 
+    <!-- Firebase SDK & Real-time Sync Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -710,6 +715,7 @@
         let activeRoomId = null;
         let roomUnsubscribe = null;
         let isRemoteUpdate = false;
+        let syncTimeout = null;
 
         async function initAuth() {
             try {
@@ -740,11 +746,14 @@
             roomUnsubscribe = onSnapshot(roomDocRef, (snapshot) => {
                 if (snapshot.exists()) {
                     const remoteData = snapshot.data();
+                    if (remoteData.lastUpdatedBy && activeUser && remoteData.lastUpdatedBy === activeUser.uid) {
+                        return;
+                    }
                     isRemoteUpdate = true;
-                    if (window.setAppState) {
+                    if (window.setAppState && remoteData.config) {
                         window.setAppState(remoteData.config, remoteData.appData, remoteData.recurringTemplates, remoteData.calendarEvents);
                     }
-                    setTimeout(() => { isRemoteUpdate = false; }, 100);
+                    setTimeout(() => { isRemoteUpdate = false; }, 200);
                 } else {
                     syncStateToCloud();
                 }
@@ -779,21 +788,24 @@
             }
             if (!activeUser) return;
 
-            try {
-                const state = window.getAppState ? window.getAppState() : null;
-                if (!state) return;
-                const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'household_rooms', activeRoomId);
-                await setDoc(roomDocRef, {
-                    config: state.config,
-                    appData: state.appData,
-                    recurringTemplates: state.recurringTemplates,
-                    calendarEvents: state.calendarEvents,
-                    updatedAt: new Date().toISOString(),
-                    lastUpdatedBy: activeUser.uid
-                }, { merge: true });
-            } catch (err) {
-                console.error("Failed to sync to cloud:", err);
-            }
+            if (syncTimeout) clearTimeout(syncTimeout);
+            syncTimeout = setTimeout(async () => {
+                try {
+                    const state = window.getAppState ? window.getAppState() : null;
+                    if (!state) return;
+                    const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'household_rooms', activeRoomId);
+                    await setDoc(roomDocRef, {
+                        config: state.config,
+                        appData: state.appData,
+                        recurringTemplates: state.recurringTemplates,
+                        calendarEvents: state.calendarEvents,
+                        updatedAt: new Date().toISOString(),
+                        lastUpdatedBy: activeUser.uid
+                    }, { merge: true });
+                } catch (err) {
+                    console.error("Failed to sync to cloud:", err);
+                }
+            }, 500);
         }
 
         function disconnectHouseholdRoom() {
@@ -819,14 +831,14 @@
             const roomActions = document.getElementById('cloudRoomActions');
 
             if (isConnected && roomId) {
-                if (syncIcon) syncIcon.className = "fa-solid fa-circle text-matcha text-xs mr-1.5 animate-pulse";
+                if (syncIcon) syncIcon.className = "fa-solid fa-circle text-matcha text-xs mr-1.5 animate-pulse shrink-0";
                 if (syncText) syncText.textContent = `雲端: ${roomId}`;
                 if (roomDisplay) {
                     roomDisplay.innerHTML = `<span>🟢 已連線：${roomId}</span><span class="text-[10px] text-matcha font-normal">成員即時同步中</span>`;
                 }
                 if (roomActions) roomActions.classList.remove('hidden');
             } else {
-                if (syncIcon) syncIcon.className = "fa-solid fa-cloud text-milktea-500 mr-1.5";
+                if (syncIcon) syncIcon.className = "fa-solid fa-cloud text-milktea-500 mr-1.5 shrink-0";
                 if (syncText) syncText.textContent = "成員共同維護";
                 if (roomDisplay) {
                     roomDisplay.innerHTML = `<span>⚪ 未連線 (單機模式)</span><span class="w-2 h-2 rounded-full bg-gray-300"></span>`;
@@ -862,17 +874,7 @@
             document.getElementById('copyShareLinkBtn')?.addEventListener('click', () => {
                 if (!activeRoomId) return;
                 const shareUrl = `${window.location.origin}${window.location.pathname}?room=${activeRoomId}`;
-                const textArea = document.createElement('textarea');
-                textArea.value = shareUrl;
-                document.body.appendChild(textArea);
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    window.showToast && window.showToast("已複製家人專屬邀請連結！");
-                } catch (e) {
-                    window.showToast && window.showToast("複製失敗，請手動分享網址");
-                }
-                document.body.removeChild(textArea);
+                copyTextToClipboard(shareUrl, "已複製家人專屬邀請連結！");
             });
 
             try {
@@ -889,6 +891,7 @@
         });
     </script>
 
+    <!-- Main Application Logic -->
     <script>
         const MEMBER_PALETTE = ['#D98A76', '#8A9A86', '#E2AD63', '#6E8A9A', '#A8927E', '#B87A8C'];
         const CATEGORY_LIST = ['居住', '公用', '飲食', '日用', '交通', '育樂', '醫療', '其他'];
@@ -1260,21 +1263,21 @@
                 let memberPaidCards = config.members.map(m => {
                     const paid = rangeTotals.grandMemberPaid[m.id] || 0;
                     return `
-                        <div class="bg-milktea-50 p-3 rounded-xl border border-milktea-200">
-                            <p class="text-[11px] font-medium text-milktea-500">${escapeHtml(m.name)} 墊付累計</p>
-                            <p class="text-sm sm:text-lg font-bold font-mono text-milktea-800">NT$ ${paid.toLocaleString('zh-TW')}</p>
+                        <div class="bg-milktea-50 p-3 rounded-xl border border-milktea-200 min-w-0">
+                            <p class="text-[11px] font-medium text-milktea-500 truncate">${escapeHtml(m.name)} 墊付累計</p>
+                            <p class="text-sm sm:text-lg font-bold font-mono text-milktea-800 truncate">NT$ ${paid.toLocaleString('zh-TW')}</p>
                         </div>
                     `;
                 }).join('');
 
                 kpiGrid.innerHTML = `
-                    <div class="bg-milktea-50 p-3 rounded-xl border border-milktea-200">
-                        <p class="text-[11px] font-medium text-milktea-500">區間共同總支出 (${rangeTotals.monthsCount} 個月)</p>
-                        <p class="text-sm sm:text-lg font-bold font-mono text-milktea-900">NT$ ${rangeTotals.grandSharedTotal.toLocaleString('zh-TW')}</p>
+                    <div class="bg-milktea-50 p-3 rounded-xl border border-milktea-200 min-w-0">
+                        <p class="text-[11px] font-medium text-milktea-500 truncate">區間共同總支出 (${rangeTotals.monthsCount} 個月)</p>
+                        <p class="text-sm sm:text-lg font-bold font-mono text-milktea-900 truncate">NT$ ${rangeTotals.grandSharedTotal.toLocaleString('zh-TW')}</p>
                     </div>
-                    <div class="bg-milktea-50 p-3 rounded-xl border border-milktea-200">
-                        <p class="text-[11px] font-medium text-milktea-500">月平均共同支出</p>
-                        <p class="text-sm sm:text-lg font-bold font-mono text-milktea-800">NT$ ${(Math.round(rangeTotals.grandSharedTotal / (rangeTotals.monthsCount || 1))).toLocaleString('zh-TW')}</p>
+                    <div class="bg-milktea-50 p-3 rounded-xl border border-milktea-200 min-w-0">
+                        <p class="text-[11px] font-medium text-milktea-500 truncate">月平均共同支出</p>
+                        <p class="text-sm sm:text-lg font-bold font-mono text-milktea-800 truncate">NT$ ${(Math.round(rangeTotals.grandSharedTotal / (rangeTotals.monthsCount || 1))).toLocaleString('zh-TW')}</p>
                     </div>
                     ${memberPaidCards}
                 `;
@@ -1289,19 +1292,19 @@
             if (settlementBox) {
                 let memberSummaryHtml = config.members.map(m => {
                     const totalPaid = rangeTotals.grandMemberPaid[m.id] || 0;
-                    return `<div class="text-xs text-milktea-700"><span class="font-bold">${escapeHtml(m.name)}</span> 累計墊付：<span class="font-mono font-semibold">NT$ ${totalPaid.toLocaleString('zh-TW')}</span></div>`;
+                    return `<div class="text-xs text-milktea-700 break-words-anywhere"><span class="font-bold">${escapeHtml(m.name)}</span> 累計墊付：<span class="font-mono font-semibold">NT$ ${totalPaid.toLocaleString('zh-TW')}</span></div>`;
                 }).join('');
 
                 settlementBox.innerHTML = `
-                    <div class="space-y-1">
+                    <div class="space-y-1 min-w-0">
                         <p class="text-xs font-bold text-milktea-800">區間消費總覽：</p>
-                        <p class="text-xs text-milktea-600">共選取 ${rangeTotals.monthsCount} 個月份，共同開銷共累計 <span class="font-bold font-mono text-milktea-900">NT$ ${rangeTotals.grandSharedTotal.toLocaleString('zh-TW')}</span>。</p>
+                        <p class="text-xs text-milktea-600 break-words-anywhere">共選取 ${rangeTotals.monthsCount} 個月份，共同開銷共累計 <span class="font-bold font-mono text-milktea-900">NT$ ${rangeTotals.grandSharedTotal.toLocaleString('zh-TW')}</span>。</p>
                     </div>
-                    <div class="space-y-1 border-t md:border-t-0 md:border-l border-milktea-200 pt-2 md:pt-0 md:pl-3">
+                    <div class="space-y-1 border-t md:border-t-0 md:border-l border-milktea-200 pt-2 md:pt-0 md:pl-3 min-w-0">
                         <p class="text-xs font-bold text-milktea-800">成員墊付概況：</p>
                         ${memberSummaryHtml}
                     </div>
-                    <div class="space-y-1 border-t md:border-t-0 md:border-l border-milktea-200 pt-2 md:pt-0 md:pl-3">
+                    <div class="space-y-1 border-t md:border-t-0 md:border-l border-milktea-200 pt-2 md:pt-0 md:pl-3 min-w-0">
                         <p class="text-xs font-bold text-milktea-800">💡 提示：</p>
                         <p class="text-[11px] text-milktea-500">切換至「月見」可查看單月明細與當月平帳建議方案。</p>
                     </div>
@@ -1405,18 +1408,18 @@
                 }
 
                 return `
-                    <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1">
+                    <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1 min-w-0">
                         <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-milktea-700 flex items-center">
-                                <span class="w-2.5 h-2.5 rounded-full mr-1.5" style="background-color: ${m.color}"></span>
-                                ${escapeHtml(m.name)} 墊付
+                            <span class="text-xs font-bold text-milktea-700 flex items-center truncate pr-1">
+                                <span class="w-2.5 h-2.5 rounded-full mr-1.5 shrink-0" style="background-color: ${m.color}"></span>
+                                <span class="truncate">${escapeHtml(m.name)} 墊付</span>
                             </span>
-                            <span class="text-[10px] text-milktea-400">應負擔 NT$ ${stat.targetObligation.toLocaleString('zh-TW')}</span>
+                            <span class="text-[10px] text-milktea-400 shrink-0">應負擔 NT$ ${stat.targetObligation.toLocaleString('zh-TW')}</span>
                         </div>
-                        <div class="text-base sm:text-xl font-bold font-mono text-milktea-900">
+                        <div class="text-base sm:text-xl font-bold font-mono text-milktea-900 truncate">
                             NT$ ${stat.paidAmount.toLocaleString('zh-TW')}
                         </div>
-                        <div class="text-[11px]">
+                        <div class="text-[11px] truncate">
                             ${balText}
                         </div>
                     </div>
@@ -1424,14 +1427,15 @@
             }).join('');
 
             grid.innerHTML = `
-                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1">
-                    <span class="text-xs font-bold text-milktea-700 flex items-center">
-                        <i class="fa-solid fa-calculator text-milktea-500 mr-1.5"></i> 當月共同總開銷
+                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1 min-w-0">
+                    <span class="text-xs font-bold text-milktea-700 flex items-center truncate">
+                        <i class="fa-solid fa-calculator text-milktea-500 mr-1.5 shrink-0"></i> 
+                        <span class="truncate">當月共同總開銷</span>
                     </span>
-                    <div class="text-base sm:text-xl font-bold font-mono text-milktea-900">
+                    <div class="text-base sm:text-xl font-bold font-mono text-milktea-900 truncate">
                         NT$ ${totals.sharedTotal.toLocaleString('zh-TW')}
                     </div>
-                    <div class="text-[11px] text-milktea-500">
+                    <div class="text-[11px] text-milktea-500 truncate">
                         公用明細 + 成員個人墊付總和
                     </div>
                 </div>
@@ -1457,16 +1461,16 @@
                 const realIdx = month.shared.indexOf(item);
                 return `
                     <tr class="hover:bg-milktea-50/50 transition">
-                        <td class="p-2 border-r border-milktea-100">
+                        <td class="p-2 border-r border-milktea-100 min-w-[70px]">
                             ${renderCategorySelect(item.category || '公用', `updateSharedItem(${realIdx}, 'category', this.value)`)}
                         </td>
-                        <td class="p-2 border-r border-milktea-100">
-                            <input type="text" value="${escapeHtml(item.item || '')}" onchange="updateSharedItem(${realIdx}, 'item', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-1 text-xs text-milktea-800">
+                        <td class="p-2 border-r border-milktea-100 min-w-[90px]">
+                            <input type="text" value="${escapeHtml(item.item || '')}" onchange="updateSharedItem(${realIdx}, 'item', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-1 text-xs text-milktea-800 break-words-anywhere">
                         </td>
-                        <td class="p-2 border-r border-milktea-100 text-right">
+                        <td class="p-2 border-r border-milktea-100 text-right min-w-[75px]">
                             <input type="number" step="any" value="${item.amount !== undefined ? item.amount : ''}" onchange="updateSharedItem(${realIdx}, 'amount', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-1 text-xs text-right font-mono font-semibold text-milktea-900">
                         </td>
-                        <td class="p-1 text-center">
+                        <td class="p-1 text-center w-8">
                             <button onclick="deleteSharedItem(${realIdx})" class="text-milktea-400 hover:text-rose-500 p-1 transition">
                                 <i class="fa-solid fa-xmark text-xs"></i>
                             </button>
@@ -1476,23 +1480,24 @@
             }).join('');
 
             let sharedTableCard = `
-                <div class="bg-white rounded-2xl border border-milktea-200 shadow-xs overflow-hidden flex flex-col">
+                <div class="bg-white rounded-2xl border border-milktea-200 shadow-xs overflow-hidden flex flex-col min-w-0">
                     <div class="bg-milktea-100/90 p-3 px-4 border-b border-milktea-200 flex justify-between items-center">
-                        <h3 class="font-bold text-milktea-800 text-xs sm:text-sm flex items-center">
-                            <i class="fa-solid fa-people-roof text-milktea-600 mr-2"></i> 共同支出明細
+                        <h3 class="font-bold text-milktea-800 text-xs sm:text-sm flex items-center truncate pr-2">
+                            <i class="fa-solid fa-people-roof text-milktea-600 mr-2 shrink-0"></i> 
+                            <span class="truncate">共同支出明細</span>
                         </h3>
-                        <button onclick="addSharedRow()" class="text-xs bg-white text-milktea-800 font-semibold px-2.5 py-1 rounded-lg border border-milktea-300 hover:bg-milktea-50 transition shadow-2xs">
+                        <button onclick="addSharedRow()" class="text-xs bg-white text-milktea-800 font-semibold px-2.5 py-1 rounded-lg border border-milktea-300 hover:bg-milktea-50 transition shadow-2xs shrink-0">
                             <i class="fa-solid fa-plus mr-1"></i> 新增
                         </button>
                     </div>
                     <div class="p-2 flex-1 overflow-x-auto">
-                        <table class="w-full text-left text-xs">
+                        <table class="w-full min-w-[260px] text-left text-xs">
                             <thead class="bg-milktea-50 text-milktea-700 font-semibold border-b border-milktea-200">
                                 <tr>
-                                    <th class="p-2 w-24">分類</th>
+                                    <th class="p-2 w-20">分類</th>
                                     <th class="p-2">品項</th>
-                                    <th class="p-2 text-right w-24">金額</th>
-                                    <th class="p-1 w-6"></th>
+                                    <th class="p-2 text-right w-20">金額</th>
+                                    <th class="p-1 w-8"></th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-milktea-100">
@@ -1522,16 +1527,16 @@
                     const realIdx = pList.indexOf(item);
                     return `
                         <tr class="hover:bg-milktea-50/50 transition">
-                            <td class="p-2 border-r border-milktea-100">
+                            <td class="p-2 border-r border-milktea-100 min-w-[70px]">
                                 ${renderCategorySelect(item.category || '日用', `updatePersonalItem('${m.id}', ${realIdx}, 'category', this.value)`)}
                             </td>
-                            <td class="p-2 border-r border-milktea-100">
-                                <input type="text" value="${escapeHtml(item.item || '')}" onchange="updatePersonalItem('${m.id}', ${realIdx}, 'item', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-1 text-xs text-milktea-800">
+                            <td class="p-2 border-r border-milktea-100 min-w-[90px]">
+                                <input type="text" value="${escapeHtml(item.item || '')}" onchange="updatePersonalItem('${m.id}', ${realIdx}, 'item', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-1 text-xs text-milktea-800 break-words-anywhere">
                             </td>
-                            <td class="p-2 border-r border-milktea-100 text-right">
+                            <td class="p-2 border-r border-milktea-100 text-right min-w-[75px]">
                                 <input type="number" step="any" value="${item.amount !== undefined ? item.amount : ''}" onchange="updatePersonalItem('${m.id}', ${realIdx}, 'amount', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-1 text-xs text-right font-mono font-semibold text-milktea-900">
                             </td>
-                            <td class="p-1 text-center">
+                            <td class="p-1 text-center w-8">
                                 <button onclick="deletePersonalItem('${m.id}', ${realIdx})" class="text-milktea-400 hover:text-rose-500 p-1 transition">
                                     <i class="fa-solid fa-xmark text-xs"></i>
                                 </button>
@@ -1543,24 +1548,24 @@
                 const pSum = totals.personalSums[m.id] || 0;
 
                 return `
-                    <div class="bg-white rounded-2xl border border-milktea-200 shadow-xs overflow-hidden flex flex-col">
+                    <div class="bg-white rounded-2xl border border-milktea-200 shadow-xs overflow-hidden flex flex-col min-w-0">
                         <div class="p-3 px-4 border-b border-milktea-200 flex justify-between items-center" style="background-color: ${m.color}15">
-                            <h3 class="font-bold text-milktea-900 text-xs sm:text-sm flex items-center">
-                                <span class="w-2.5 h-2.5 rounded-full mr-2" style="background-color: ${m.color}"></span>
-                                ${escapeHtml(m.name)} - 個人墊付明細
+                            <h3 class="font-bold text-milktea-900 text-xs sm:text-sm flex items-center truncate pr-2">
+                                <span class="w-2.5 h-2.5 rounded-full mr-2 shrink-0" style="background-color: ${m.color}"></span>
+                                <span class="truncate">${escapeHtml(m.name)} - 個人墊付</span>
                             </h3>
-                            <button onclick="addPersonalRow('${m.id}')" class="text-xs bg-white text-milktea-800 font-semibold px-2.5 py-1 rounded-lg border border-milktea-300 hover:bg-milktea-50 transition shadow-2xs">
+                            <button onclick="addPersonalRow('${m.id}')" class="text-xs bg-white text-milktea-800 font-semibold px-2.5 py-1 rounded-lg border border-milktea-300 hover:bg-milktea-50 transition shadow-2xs shrink-0">
                                 <i class="fa-solid fa-plus mr-1"></i> 新增
                             </button>
                         </div>
                         <div class="p-2 flex-1 overflow-x-auto">
-                            <table class="w-full text-left text-xs">
+                            <table class="w-full min-w-[260px] text-left text-xs">
                                 <thead class="bg-milktea-50 text-milktea-700 font-semibold border-b border-milktea-200">
                                     <tr>
-                                        <th class="p-2 w-24">分類</th>
+                                        <th class="p-2 w-20">分類</th>
                                         <th class="p-2">品項</th>
-                                        <th class="p-2 text-right w-24">金額</th>
-                                        <th class="p-1 w-6"></th>
+                                        <th class="p-2 text-right w-20">金額</th>
+                                        <th class="p-1 w-8"></th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-milktea-100">
@@ -1600,9 +1605,8 @@
 
             let html = '';
 
-            // Blank padding for previous month tail
             for (let i = 0; i < startingDayOfWeek; i++) {
-                html += `<div class="bg-milktea-50/30 rounded-xl min-h-[90px] border border-milktea-100/50 opacity-40"></div>`;
+                html += `<div class="bg-milktea-50/30 rounded-xl min-h-[75px] sm:min-h-[90px] border border-milktea-100/50 opacity-40"></div>`;
             }
 
             const memberMap = {};
@@ -1619,22 +1623,22 @@
                 let eventsHtml = dayEvents.map(ev => {
                     const mObj = memberMap[ev.memberId] || { name: '成員', color: '#8C7565' };
                     return `
-                        <div onclick="openEventDetail('${ev.id}')" class="group relative text-[10px] sm:text-xs p-1 rounded-md text-white font-medium truncate mb-1 shadow-2xs flex items-center justify-between cursor-pointer hover:opacity-90 transition" style="background-color: ${mObj.color}" title="點擊查看詳情: ${escapeHtml(ev.title)}">
+                        <div onclick="openEventDetail('${ev.id}')" class="group relative text-[9px] sm:text-xs p-1 rounded-md text-white font-medium truncate mb-0.5 sm:mb-1 shadow-2xs flex items-center justify-between cursor-pointer hover:opacity-90 transition min-w-0" style="background-color: ${mObj.color}" title="點擊查看詳情: ${escapeHtml(ev.title)}">
                             <span class="truncate pr-1"><b>${escapeHtml(mObj.name)}:</b> ${escapeHtml(ev.title)}</span>
-                            <span class="text-[9px] opacity-80"><i class="fa-solid fa-magnifying-glass"></i></span>
+                            <span class="text-[8px] opacity-85 shrink-0"><i class="fa-solid fa-magnifying-glass"></i></span>
                         </div>
                     `;
                 }).join('');
 
                 html += `
-                    <div class="bg-white rounded-xl min-h-[95px] p-1.5 sm:p-2 border ${isToday ? 'border-milktea-700 bg-milktea-50/40 ring-1 ring-milktea-700' : 'border-milktea-200'} flex flex-col justify-between transition hover:shadow-xs">
+                    <div class="bg-white rounded-xl min-h-[75px] sm:min-h-[95px] p-1 sm:p-2 border ${isToday ? 'border-milktea-700 bg-milktea-50/40 ring-1 ring-milktea-700' : 'border-milktea-200'} flex flex-col justify-between transition hover:shadow-xs min-w-0">
                         <div class="flex justify-between items-center text-xs">
                             <span class="font-bold ${isToday ? 'bg-milktea-700 text-white w-5 h-5 rounded-full flex items-center justify-center text-[11px]' : 'text-milktea-800'}">${day}</span>
                             <button onclick="openAddEventOnDate('${dayStr}')" class="text-milktea-300 hover:text-milktea-700 text-[10px] sm:text-xs transition p-0.5" title="在這天新增行程">
                                 <i class="fa-solid fa-plus"></i>
                             </button>
                         </div>
-                        <div class="flex-1 overflow-y-auto mt-1 max-h-[85px] space-y-0.5">
+                        <div class="flex-1 overflow-y-auto mt-1 max-h-[70px] sm:max-h-[85px] space-y-0.5">
                             ${eventsHtml}
                         </div>
                     </div>
@@ -1643,7 +1647,6 @@
 
             gridEl.innerHTML = html;
 
-            // Render upcoming list for this month
             const monthPrefix = `${calendarYear}-${String(calendarMonth).padStart(2, '0')}`;
             const sortedEvents = calendarEvents
                 .filter(ev => ev.date && ev.date.startsWith(monthPrefix))
@@ -1655,18 +1658,18 @@
                 listEl.innerHTML = sortedEvents.map(ev => {
                     const mObj = memberMap[ev.memberId] || { name: '成員', color: '#8C7565' };
                     return `
-                        <div onclick="openEventDetail('${ev.id}')" class="flex items-center justify-between p-3 bg-milktea-50/80 hover:bg-milktea-100/80 rounded-xl border border-milktea-200 text-xs sm:text-sm cursor-pointer transition">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-3 h-10 rounded-full" style="background-color: ${mObj.color}"></div>
-                                <div>
-                                    <div class="flex items-center space-x-2">
-                                        <span class="font-bold text-milktea-900">${escapeHtml(ev.title)}</span>
-                                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full text-white" style="background-color: ${mObj.color}">${escapeHtml(mObj.name)} 排定</span>
+                        <div onclick="openEventDetail('${ev.id}')" class="flex items-center justify-between p-3 bg-milktea-50/80 hover:bg-milktea-100/80 rounded-xl border border-milktea-200 text-xs sm:text-sm cursor-pointer transition min-w-0">
+                            <div class="flex items-center space-x-3 min-w-0 pr-2">
+                                <div class="w-2.5 sm:w-3 h-10 rounded-full shrink-0" style="background-color: ${mObj.color}"></div>
+                                <div class="min-w-0 pr-1">
+                                    <div class="flex items-center space-x-2 min-w-0">
+                                        <span class="font-bold text-milktea-900 truncate">${escapeHtml(ev.title)}</span>
+                                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full text-white shrink-0" style="background-color: ${mObj.color}">${escapeHtml(mObj.name)}</span>
                                     </div>
-                                    <p class="text-[11px] text-milktea-500 mt-0.5">📅 ${ev.date} ${ev.desc ? ' ‧ ' + escapeHtml(ev.desc) : ''}</p>
+                                    <p class="text-[11px] text-milktea-500 mt-0.5 truncate">📅 ${ev.date} ${ev.desc ? ' ‧ ' + escapeHtml(ev.desc) : ''}</p>
                                 </div>
                             </div>
-                            <div class="text-milktea-400 text-xs px-2">
+                            <div class="text-milktea-400 text-xs px-1 shrink-0">
                                 <i class="fa-solid fa-chevron-right"></i>
                             </div>
                         </div>
@@ -1864,19 +1867,19 @@
             config.members.forEach((m, idx) => {
                 html += `
                     <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 p-2.5 bg-milktea-50 rounded-xl border border-milktea-200">
-                        <div class="flex items-center space-x-2 w-full sm:w-auto">
-                            <input type="color" value="${m.color}" onchange="updateMemberSetting(${idx}, 'color', this.value)" class="w-8 h-8 rounded cursor-pointer border-0 p-0 bg-transparent">
-                            <input type="text" value="${escapeHtml(m.name)}" placeholder="成員名稱" onchange="updateMemberSetting(${idx}, 'name', this.value)" class="bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-semibold text-milktea-800 flex-1 sm:w-32">
+                        <div class="flex items-center space-x-2 w-full sm:w-auto min-w-0">
+                            <input type="color" value="${m.color}" onchange="updateMemberSetting(${idx}, 'color', this.value)" class="w-8 h-8 rounded cursor-pointer border-0 p-0 bg-transparent shrink-0">
+                            <input type="text" value="${escapeHtml(m.name)}" placeholder="成員名稱" onchange="updateMemberSetting(${idx}, 'name', this.value)" class="bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-semibold text-milktea-800 flex-1 sm:w-32 truncate">
                         </div>
 
                         ${config.splitMode === 'custom' ? `
-                            <div class="flex items-center space-x-1">
+                            <div class="flex items-center space-x-1 shrink-0">
                                 <span class="text-xs text-milktea-600">權重:</span>
                                 <input type="number" step="0.1" value="${m.weight}" onchange="updateMemberSetting(${idx}, 'weight', this.value)" class="w-16 bg-white border border-milktea-300 text-xs rounded-lg p-2 text-center font-mono">
                             </div>
                         ` : ''}
 
-                        <div class="flex-1 flex justify-end">
+                        <div class="flex-1 flex justify-end shrink-0">
                             ${config.members.length > 1 ? `
                                 <button onclick="removeMemberSetting(${idx})" class="text-milktea-400 hover:text-rose-500 p-1 text-sm transition">
                                     <i class="fa-solid fa-trash-can"></i>
@@ -1938,21 +1941,21 @@
 
                 html += `
                     <tr class="hover:bg-milktea-50/50 transition">
-                        <td class="p-2 pl-3 border-r border-milktea-100">
+                        <td class="p-2 pl-3 border-r border-milktea-150 min-w-[70px]">
                             <select onchange="updateRecurringSetting(${idx}, 'target', this.value)" class="bg-milktea-50 border border-milktea-200 text-xs rounded p-1 text-milktea-800">
                                 ${optionsHtml}
                             </select>
                         </td>
-                        <td class="p-2 border-r border-milktea-100">
+                        <td class="p-2 border-r border-milktea-150 min-w-[75px]">
                             ${renderCategorySelect(tpl.category || '居住', `updateRecurringSetting(${idx}, 'category', this.value)`)}
                         </td>
-                        <td class="p-2 border-r border-milktea-100">
-                            <input type="text" value="${escapeHtml(tpl.item || '')}" onchange="updateRecurringSetting(${idx}, 'item', this.value)" placeholder="品項名稱" class="w-full bg-transparent border border-milktea-200 rounded p-1 text-xs text-milktea-800">
+                        <td class="p-2 border-r border-milktea-150 min-w-[90px]">
+                            <input type="text" value="${escapeHtml(tpl.item || '')}" onchange="updateRecurringSetting(${idx}, 'item', this.value)" placeholder="品項名稱" class="w-full bg-transparent border border-milktea-200 rounded p-1 text-xs text-milktea-800 truncate">
                         </td>
-                        <td class="p-2 border-r border-milktea-100 text-right">
+                        <td class="p-2 border-r border-milktea-150 text-right min-w-[75px]">
                             <input type="number" step="any" value="${tpl.amount !== undefined ? tpl.amount : ''}" onchange="updateRecurringSetting(${idx}, 'amount', this.value)" placeholder="0" class="w-full bg-transparent border border-milktea-200 rounded p-1 text-xs text-right font-mono text-milktea-900">
                         </td>
-                        <td class="p-2 text-center">
+                        <td class="p-2 text-center w-8">
                             <button onclick="deleteRecurringSetting(${idx})" class="text-milktea-400 hover:text-rose-500 transition p-1">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
@@ -1990,6 +1993,41 @@
         window.deleteRecurringSetting = deleteRecurringSetting;
         window.updateRecurringSetting = updateRecurringSetting;
 
+        function copyTextToClipboard(text, successMessage) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast(successMessage);
+                }).catch(() => {
+                    fallbackCopyText(text, successMessage);
+                });
+            } else {
+                fallbackCopyText(text, successMessage);
+            }
+        }
+
+        function fallbackCopyText(text, successMessage) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.top = '0';
+            textArea.style.left = '0';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast(successMessage);
+                } else {
+                    showToast('複製失敗，請手動複製');
+                }
+            } catch (err) {
+                showToast('複製失敗，請手動複製');
+            }
+            document.body.removeChild(textArea);
+        }
+
         function copyLineSummary() {
             const totals = calculateMonthTotals(currentDateKey);
 
@@ -2014,17 +2052,7 @@
             text += `───────────────\n`;
             text += `來自 家計日常｜Ｈomey`;
 
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                showToast('已複製 LINE 對帳單到剪貼簿！');
-            } catch (err) {
-                showToast('複製失敗，請手動複製');
-            }
-            document.body.removeChild(textArea);
+            copyTextToClipboard(text, '已成功將 LINE 對帳單複製到剪貼簿！');
         }
 
         async function scanReceiptImage(file) {
