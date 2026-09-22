@@ -692,15 +692,27 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+
+        // User provided Firebase credentials for homely-49359
+        const userProvidedFirebaseConfig = {
+            apiKey: "AIzaSyAOZlps6ZR2tOyepBT_NZbgDP1EhDTTRFA",
+            authDomain: "homely-49359.firebaseapp.com",
+            projectId: "homely-49359",
+            storageBucket: "homely-49359.firebasestorage.app",
+            messagingSenderId: "167403968077",
+            appId: "1:167403968077:web:bd175bd1c82fda41912e04",
+            measurementId: "G-SGQZ58G9WD"
+        };
 
         // Generate unique instance ID for current browser session to prevent self-trigger loop
         const sessionInstanceId = 'inst_' + Math.random().toString(36).substring(2, 11);
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'family-budget-app';
-        const hasFirebaseConfig = typeof __firebase_config !== 'undefined' && __firebase_config;
-        const firebaseConfig = hasFirebaseConfig ? JSON.parse(__firebase_config) : null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'homely-49359';
+        const hasPlatformConfig = typeof __firebase_config !== 'undefined' && __firebase_config;
+        const firebaseConfig = hasPlatformConfig ? JSON.parse(__firebase_config) : userProvidedFirebaseConfig;
 
-        let app = null, auth = null, db = null;
+        let app = null, auth = null, db = null, analytics = null;
         let activeUser = null;
         let activeRoomId = null;
         let roomUnsubscribe = null;
@@ -713,6 +725,13 @@
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
+                
+                // Initialize Firebase Analytics safely
+                try {
+                    analytics = getAnalytics(app);
+                } catch (analyticsErr) {
+                    console.log("Firebase Analytics initialization skipped (non-browser or sandbox limitation):", analyticsErr);
+                }
             } catch (e) {
                 console.warn("Firebase config setup warning:", e);
             }
