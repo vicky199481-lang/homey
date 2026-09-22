@@ -144,6 +144,7 @@
             <span id="toastMsg" class="text-xs sm:text-sm font-medium">提示訊息</span>
         </div>
 
+        <!-- 1. Dashboard View -->
         <div id="viewDashboard" class="space-y-4 sm:space-y-6 pb-24 md:pb-8">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs">
                 <div>
@@ -248,6 +249,7 @@
             </div>
         </div>
 
+        <!-- 2. Sheet View -->
         <div id="viewSheet" class="hidden space-y-4 sm:space-y-6 pb-24 md:pb-8">
 
             <!-- Public Fund Live Balance Treasury Card -->
@@ -366,6 +368,7 @@
             </div>
         </div>
 
+        <!-- 3. Calendar View -->
         <div id="viewCalendar" class="hidden space-y-4 sm:space-y-6 pb-24 md:pb-8">
             <div class="bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-milktea-100 pb-4">
@@ -417,6 +420,7 @@
             </div>
         </div>
 
+        <!-- 4. Settings View -->
         <div id="tabSettingsView" class="hidden space-y-4 sm:space-y-6 pb-32">
             <div class="max-w-3xl mx-auto bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-6">
                 <h2 class="text-base sm:text-lg font-bold text-milktea-900 border-b border-milktea-100 pb-3 flex items-center">
@@ -543,6 +547,7 @@
             </div>
         </div>
     </main>
+
 
     <!-- Member Deposit Modal -->
     <div id="depositModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
@@ -721,7 +726,7 @@
                     <label class="block text-xs font-semibold text-milktea-800 mb-1">目前房間狀態</label>
                     <div id="currentRoomDisplay" class="text-xs font-mono font-bold text-milktea-700 bg-white p-2 rounded-lg border border-milktea-200 flex justify-between items-center">
                         <span>未連線 (單機模式)</span>
-                        <span class="w-2 h-2 rounded-full bg-gray-300"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
                     </div>
                 </div>
 
@@ -744,7 +749,7 @@
                 </div>
 
                 <button id="joinRoomBtn" class="w-full bg-milktea-700 hover:bg-milktea-800 text-white text-xs sm:text-sm font-semibold py-2.5 rounded-lg transition shadow-2xs flex items-center justify-center">
-                    <i class="fa-solid fa-key mr-1.5"></i> 驗證密碼並加入雲端房間
+                    <i class="fa-solid fa-key mr-1.5"></i> <span id="joinRoomBtnText">驗證密碼並加入雲端房間</span>
                 </button>
             </div>
 
@@ -806,12 +811,22 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, setDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
         window.currentChartDimension = 'category';
         window.chartSelectedFilter = null;
+
+        // Suppress background analytics network errors and unhandled rejections
+        window.addEventListener('unhandledrejection', function(event) {
+            if (event.reason && (
+                event.reason.code === 'analytics/config-fetch-failed' || 
+                (event.reason.message && event.reason.message.includes('analytics')) ||
+                (event.reason.toString && event.reason.toString().includes('analytics'))
+            )) {
+                event.preventDefault();
+            }
+        });
 
         // Tag Normalizer Helper to guarantee uniform hashtag format and non-empty tag keys
         function normalizeTag(rawTag) {
@@ -903,32 +918,51 @@
         // Device Instance ID for identifying changes from other devices vs current page
         const sessionInstanceId = 'inst_' + Math.random().toString(36).substring(2, 9);
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAOZlps6ZR2tOyepBT_NZbgDP1EhDTTRFA",
-            authDomain: "homely-49359.firebaseapp.com",
-            projectId: "homely-49359",
-            storageBucket: "homely-49359.firebasestorage.app",
-            messagingSenderId: "167403968077",
-            appId: "1:167403968077:web:bd175bd1c82fda41912e04",
-            measurementId: "G-SGQZ58G9WD"
-        };
+        // Dynamic Firebase Configuration & App ID binding
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'homely-49359';
+        const firebaseConfig = typeof __firebase_config !== 'undefined'
+            ? JSON.parse(__firebase_config)
+            : {
+                apiKey: "AIzaSyAOZlps6ZR2tOyepBT_NZbgDP1EhDTTRFA",
+                authDomain: "homely-49359.firebaseapp.com",
+                projectId: "homely-49359",
+                storageBucket: "homely-49359.firebasestorage.app",
+                messagingSenderId: "167403968077",
+                appId: "1:167403968077:web:bd175bd1c82fda41912e04",
+                measurementId: "G-SGQZ58G9WD"
+            };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Catch background analytics network errors
-        window.addEventListener('unhandledrejection', function(event) {
-            if (event.reason && (event.reason.code === 'analytics/config-fetch-failed' || (event.reason.message && event.reason.message.includes('analytics')))) {
-                event.preventDefault();
+        // Helper function for Firebase Authentication
+        async function authenticateFirebase() {
+            if (auth.currentUser) return auth.currentUser;
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    const cred = await signInWithCustomToken(auth, __initial_auth_token);
+                    return cred.user;
+                } else {
+                    const cred = await signInAnonymously(auth);
+                    return cred.user;
+                }
+            } catch (e) {
+                console.warn("Custom auth token failed, falling back to anonymous auth:", e);
+                try {
+                    const cred = await signInAnonymously(auth);
+                    return cred.user;
+                } catch (err) {
+                    console.error("Firebase Auth completely failed:", err);
+                    return null;
+                }
             }
-        });
+        }
 
-        isSupported().then(supported => {
-            if (supported) {
-                getAnalytics(app);
-            }
-        }).catch(() => {});
+        // Helper function to build correct Firestore path conforming to RULE 1
+        function getRoomDocRef(roomId) {
+            return doc(db, 'artifacts', appId, 'public', 'data', 'household_rooms', roomId);
+        }
 
         // Application State (ZERO DEFAULT DATA)
         let config = {
@@ -989,7 +1023,7 @@
             setTimeout(() => {
                 toast.classList.remove('translate-y-0', 'opacity-100');
                 toast.classList.add('-translate-y-20', 'opacity-0');
-            }, 3000);
+            }, 3500);
         }
 
         function loadLocalStorage() {
@@ -1027,7 +1061,13 @@
             saveLocalStorage();
 
             try {
-                const roomDocRef = doc(db, 'artifacts', 'homely-49359', 'public', 'data', 'household_rooms', currentRoomId);
+                const user = await authenticateFirebase();
+                if (!user) {
+                    showToast("尚未通過 Auth 驗證，無法推送到雲端", true);
+                    return;
+                }
+
+                const roomDocRef = getRoomDocRef(currentRoomId);
                 const payload = {
                     config,
                     recurringTemplates,
@@ -1040,20 +1080,27 @@
                 await setDoc(roomDocRef, payload, { merge: true });
             } catch (e) {
                 console.error("Cloud push failed:", e);
-                showToast("雲端同步失敗，請檢查網路連線", true);
+                showToast("雲端同步失敗: " + (e.message || "連線逾時"), true);
             }
         }
 
         async function initCloudRoom(roomId, inputPin) {
-            if (!roomId) return;
+            if (!roomId) return false;
             const cleanedRoom = roomId.trim().toUpperCase();
 
+            const joinBtnText = document.getElementById('joinRoomBtnText');
+            if (joinBtnText) joinBtnText.textContent = "連線驗證中...";
+
             try {
-                await signInAnonymously(auth);
+                const user = await authenticateFirebase();
+                if (!user) {
+                    showToast("Firebase 認證失敗，請檢查網路狀態", true);
+                    if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
+                    return false;
+                }
 
-                const roomDocRef = doc(db, 'artifacts', 'homely-49359', 'public', 'data', 'household_rooms', cleanedRoom);
+                const roomDocRef = getRoomDocRef(cleanedRoom);
                 const snapshot = await getDoc(roomDocRef);
-
                 const thisDeviceId = getDeviceId();
 
                 if (snapshot.exists()) {
@@ -1062,6 +1109,7 @@
 
                     if (storedPin && storedPin !== inputPin) {
                         showToast("房間安全密碼錯誤！無法加入", true);
+                        if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
                         return false;
                     }
 
@@ -1098,7 +1146,6 @@
                 roomUnsubscribe = onSnapshot(roomDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const remoteData = docSnap.data();
-
                         roomCreatorDeviceId = remoteData.creatorDeviceId || '';
 
                         if (remoteData.updatedByInstance !== sessionInstanceId) {
@@ -1112,17 +1159,22 @@
                             showToast("☁️ 房間資料已被家人更新！", false);
                         }
                     }
+                }, (error) => {
+                    console.error("Firestore onSnapshot error:", error);
+                    showToast("雲端同步中斷: " + (error.message || "權限不足"), true);
                 });
 
                 isCloudConnected = true;
                 updateCloudStatusUI();
                 renderAllViews();
                 showToast(`已成功連線至房間 [${cleanedRoom}]`, false);
+                if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
                 return true;
 
             } catch (err) {
                 console.error("Room connection error:", err);
-                showToast("連線房間發生錯誤，請稍後重試", true);
+                showToast("連線發生錯誤: " + (err.message || "未知錯誤"), true);
+                if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
                 return false;
             }
         }
@@ -1314,7 +1366,6 @@
                 const labels = Object.keys(targetObj);
                 const dataVals = Object.values(targetObj);
 
-                // Extended Palette generator to handle any number of tags without color truncation
                 const basePalette = ['#D98A76', '#E2AD63', '#8A9A86', '#A8927E', '#6E5A4B', '#C8B198', '#524337', '#8C5237', '#6B8E8E', '#9B7260'];
                 const dynamicColors = labels.map((_, idx) => basePalette[idx % basePalette.length]);
 
@@ -1648,7 +1699,6 @@
 
             if (!daysGrid) return;
 
-            // Calculate calendar grid days
             const firstDay = new Date(year, month - 1, 1);
             const lastDay = new Date(year, month, 0);
 
@@ -1659,7 +1709,6 @@
 
             let gridCellsHtml = '';
 
-            // Blank lead cells
             for (let i = 0; i < startingDay; i++) {
                 gridCellsHtml += `<div class="bg-milktea-50/50 rounded-xl p-1 min-h-[70px] border border-transparent"></div>`;
             }
@@ -1690,7 +1739,6 @@
 
             daysGrid.innerHTML = gridCellsHtml;
 
-            // Render Events List
             if (eventsList) {
                 if (monthEvents.length === 0) {
                     eventsList.innerHTML = `<div class="text-center text-xs text-milktea-400 py-4">本月份尚無安排行程</div>`;
@@ -1967,10 +2015,7 @@
                 const targetId = document.getElementById('quickTarget').value;
                 const category = document.getElementById('quickCategory').value;
                 let rawTag = document.getElementById('quickTag').value.trim();
-                if (rawTag && !rawTag.startsWith('#')) {
-                    rawTag = '#' + rawTag;
-                }
-                const tag = rawTag;
+                const tag = normalizeTag(rawTag);
                 const item = document.getElementById('quickItem').value.trim();
                 const amount = parseFloat(document.getElementById('quickAmount').value);
 
@@ -2274,7 +2319,7 @@
                 if (!currentRoomId) return;
                 const shareUrl = `${window.location.origin}${window.location.pathname}?room=${currentRoomId}`;
                 navigator.clipboard.writeText(shareUrl).then(() => {
-                    showToast("已複製家人邀請連結！（不含房間密碼）", false);
+                    showToast("已複製家人邀請連結！（不含房間密碼，需要輸入密碼加入）", false);
                 });
             });
 
@@ -2289,14 +2334,15 @@
             document.getElementById('confirmDeleteRoomBtn')?.addEventListener('click', async () => {
                 if (!currentRoomId) return;
                 try {
-                    const roomDocRef = doc(db, 'artifacts', 'homely-49359', 'public', 'data', 'household_rooms', currentRoomId);
+                    await authenticateFirebase();
+                    const roomDocRef = getRoomDocRef(currentRoomId);
                     await deleteDoc(roomDocRef);
                     disconnectCloudRoom();
                     document.getElementById('deleteRoomConfirmModal').classList.add('hidden');
                     document.getElementById('cloudModal').classList.add('hidden');
                     showToast("已刪除雲端房間記錄", false);
                 } catch (e) {
-                    showToast("刪除房間失敗，請重試", true);
+                    showToast("刪除房間失敗: " + (e.message || "權限不足"), true);
                 }
             });
 
@@ -2337,13 +2383,13 @@
                 }
             });
 
-            // Auto connect if URL has room param
+            // Auto connect if URL has room param or room saved in localStorage
             const urlParams = new URLSearchParams(window.location.search);
             const queryRoom = urlParams.get('room');
             if (queryRoom) {
                 document.getElementById('roomCodeInput').value = queryRoom;
                 document.getElementById('cloudModal').classList.remove('hidden');
-                showToast(`偵測到邀請連結 [${queryRoom}]，請輸入密碼加入`, false);
+                showToast(`偵測到邀請連結 [${queryRoom}]，請輸入密碼解鎖`, false);
             } else if (currentRoomId) {
                 const savedPin = localStorage.getItem('homey_room_pin') || '';
                 initCloudRoom(currentRoomId, savedPin);
