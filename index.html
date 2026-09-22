@@ -258,7 +258,7 @@
                         <span>快速記帳工具</span>
                     </div>
 
-                    <div class="flex items-center gap-1.5 w-full sm:w-auto justify-end">
+                    <div class="flex items-center gap-1.5 w-full sm:w-auto justify-end flex-wrap">
                         <label class="cursor-pointer bg-milktea-100 hover:bg-milktea-200 active:bg-milktea-200 text-milktea-800 font-medium text-xs px-2.5 py-1.5 rounded-lg transition flex items-center">
                             <i class="fa-solid fa-camera mr-1 text-milktea-600"></i>
                             <span>AI 發票辨識</span>
@@ -268,6 +268,11 @@
                         <button id="loadRecurringBtn" class="bg-milktea-100 hover:bg-milktea-200 active:bg-milktea-200 text-milktea-800 font-medium text-xs px-2.5 py-1.5 rounded-lg transition flex items-center">
                             <i class="fa-solid fa-calendar-check mr-1 text-milktea-600"></i>
                             <span>帶入固定開銷</span>
+                        </button>
+
+                        <button id="clearMonthDataBtn" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-medium text-xs px-2.5 py-1.5 rounded-lg transition flex items-center">
+                            <i class="fa-solid fa-trash-can mr-1"></i>
+                            <span>清空當月</span>
                         </button>
                     </div>
                 </div>
@@ -424,13 +429,13 @@
 
                     <!-- WIDER MOBILE TABLE WITH RESPONSIVE COLUMNS -->
                     <div class="overflow-x-auto rounded-xl border border-milktea-200 bg-white">
-                        <table class="w-full min-w-[340px] text-left text-xs sm:text-sm">
+                        <table class="w-full min-w-[560px] text-left text-xs sm:text-sm">
                             <thead class="bg-milktea-100/80 text-milktea-800 font-semibold border-b border-milktea-200">
                                 <tr>
-                                    <th class="p-2.5 pl-3 w-24">歸屬</th>
-                                    <th class="p-2.5 w-32">分類</th>
-                                    <th class="p-2.5 min-w-[140px]">品項名稱</th>
-                                    <th class="p-2.5 text-right w-24">預設金額</th>
+                                    <th class="p-2.5 pl-3 w-28 min-w-[100px]">歸屬</th>
+                                    <th class="p-2.5 w-32 min-w-[110px]">分類</th>
+                                    <th class="p-2.5 min-w-[180px]">品項名稱</th>
+                                    <th class="p-2.5 text-right w-28 min-w-[100px]">預設金額</th>
                                     <th class="p-2.5 w-10 text-center"></th>
                                 </tr>
                             </thead>
@@ -452,9 +457,6 @@
                         </button>
                         <button id="recoverSnapshotBtn" class="bg-caramel/20 hover:bg-caramel/30 text-milktea-900 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center">
                             <i class="fa-solid fa-rotate-left mr-1.5"></i> 救回歷史資料快照
-                        </button>
-                        <button id="clearMonthDataBtn" class="bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center">
-                            <i class="fa-solid fa-trash-can mr-1.5"></i> 清空當月
                         </button>
                         <input type="file" id="importFileInput" accept=".json" class="hidden">
                     </div>
@@ -670,6 +672,9 @@
             </div>
 
             <div id="cloudRoomActions" class="hidden space-y-2 pt-1">
+                <button id="forceSyncCloudBtn" class="w-full bg-milktea-700 hover:bg-milktea-800 text-white text-xs font-semibold py-2.5 rounded-xl transition flex items-center justify-center shadow-2xs">
+                    <i class="fa-solid fa-rotate mr-1.5"></i> 立即上傳本地資料至雲端房間
+                </button>
                 <button id="copyShareLinkBtn" class="w-full bg-matcha hover:opacity-90 text-white text-xs font-semibold py-2.5 rounded-xl transition flex items-center justify-center">
                     <i class="fa-solid fa-share-nodes mr-1.5"></i> 複製家人邀請連結 (自動進入房間)
                 </button>
@@ -683,7 +688,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'family-budget-app';
         const firebaseConfig = typeof __firebase_config !== 'undefined' 
@@ -701,6 +706,7 @@
         let syncTimeout = null;
 
         async function initAuth() {
+            if (activeUser) return activeUser;
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     const userCred = await signInWithCustomToken(auth, __initial_auth_token);
@@ -712,19 +718,44 @@
             } catch (err) {
                 console.warn("Auth initialization fallback:", err);
             }
+            return activeUser;
         }
 
         async function connectHouseholdRoom(roomId) {
             if (!roomId) return;
-            if (!activeUser) {
-                await initAuth();
-            }
             cleanRoomSubscription();
+
+            const user = await initAuth();
+            if (!user) {
+                window.showToast && window.showToast("連線認證失敗，請重新整理頁面");
+                return;
+            }
 
             activeRoomId = roomId.trim().toUpperCase();
             const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'household_rooms', activeRoomId);
 
             updateCloudUIStatus(true, activeRoomId);
+
+            try {
+                const snapshot = await getDoc(roomDocRef);
+                if (snapshot.exists()) {
+                    const remoteData = snapshot.data();
+                    if (remoteData.state && window.setAppState) {
+                        isRemoteUpdate = true;
+                        window.setAppState(
+                            remoteData.state.config, 
+                            remoteData.state.appData, 
+                            remoteData.state.recurringTemplates, 
+                            remoteData.state.calendarEvents
+                        );
+                        setTimeout(() => { isRemoteUpdate = false; }, 300);
+                    }
+                } else {
+                    await syncStateToCloud(true);
+                }
+            } catch (err) {
+                console.warn("Initial room pull warning:", err);
+            }
 
             roomUnsubscribe = onSnapshot(roomDocRef, (snapshot) => {
                 if (snapshot.exists()) {
@@ -741,14 +772,11 @@
                             remoteData.state.calendarEvents
                         );
                     }
-                    setTimeout(() => { isRemoteUpdate = false; }, 250);
-                } else {
-                    syncStateToCloud();
+                    setTimeout(() => { isRemoteUpdate = false; }, 300);
                 }
             }, (error) => {
                 console.error("Cloud room sync error:", error);
-                window.showToast && window.showToast("權限不足或連線異常，已切回單機模式");
-                disconnectHouseholdRoom();
+                window.showToast && window.showToast("雲端連線異常，請檢查房間代碼");
             });
 
             try {
@@ -769,15 +797,12 @@
             }
         }
 
-        async function syncStateToCloud() {
+        async function syncStateToCloud(immediate = false) {
             if (!activeRoomId || isRemoteUpdate) return;
-            if (!activeUser) {
-                await initAuth();
-            }
-            if (!activeUser) return;
+            const user = await initAuth();
+            if (!user) return;
 
-            if (syncTimeout) clearTimeout(syncTimeout);
-            syncTimeout = setTimeout(async () => {
+            const performPush = async () => {
                 try {
                     const state = window.getAppState ? window.getAppState() : null;
                     if (!state) return;
@@ -790,12 +815,20 @@
                             calendarEvents: state.calendarEvents
                         },
                         updatedAt: new Date().toISOString(),
-                        lastUpdatedBy: activeUser.uid
+                        lastUpdatedBy: user.uid
                     }, { merge: true });
                 } catch (err) {
                     console.error("Failed to sync to cloud:", err);
                 }
-            }, 400);
+            };
+
+            if (immediate) {
+                await performPush();
+                return;
+            }
+
+            if (syncTimeout) clearTimeout(syncTimeout);
+            syncTimeout = setTimeout(performPush, 400);
         }
 
         function disconnectHouseholdRoom() {
@@ -824,7 +857,7 @@
                 if (syncIcon) syncIcon.className = "fa-solid fa-circle text-matcha text-xs mr-1.5 animate-pulse shrink-0";
                 if (syncText) syncText.textContent = `房間: ${roomId}`;
                 if (roomDisplay) {
-                    roomDisplay.innerHTML = `<span>🟢 已連線：${roomId}</span><span class="text-[10px] text-matcha font-normal">總覽/月見/家曆/家計 同步中</span>`;
+                    roomDisplay.innerHTML = `<span>🟢 已連線：${roomId}</span><span class="text-[10px] text-matcha font-normal">總覽/月見/家曆/家計 即時同步</span>`;
                 }
                 if (roomActions) roomActions.classList.remove('hidden');
             } else {
@@ -856,6 +889,13 @@
                 }
             });
 
+            document.getElementById('forceSyncCloudBtn')?.addEventListener('click', async () => {
+                if (activeRoomId) {
+                    await syncStateToCloud(true);
+                    window.showToast && window.showToast("已將最新資料推送到雲端房間！");
+                }
+            });
+
             document.getElementById('disconnectRoomBtn')?.addEventListener('click', () => {
                 disconnectHouseholdRoom();
                 cloudModal?.classList.add('hidden');
@@ -864,7 +904,7 @@
             document.getElementById('copyShareLinkBtn')?.addEventListener('click', () => {
                 if (!activeRoomId) return;
                 const shareUrl = `${window.location.origin}${window.location.pathname}?room=${activeRoomId}`;
-                copyTextToClipboard(shareUrl, "已複製家人專屬邀請連結！");
+                window.copyTextToClipboard && window.copyTextToClipboard(shareUrl, "已複製家人專屬邀請連結！");
             });
 
             try {
@@ -1951,21 +1991,21 @@
 
                 html += `
                     <tr class="hover:bg-milktea-50/50 transition">
-                        <td class="p-2.5 pl-3 border-r border-milktea-150">
-                            <select onchange="updateRecurringSetting(${idx}, 'target', this.value)" class="bg-milktea-50 border border-milktea-200 text-xs rounded p-1.5 text-milktea-800 w-full">
+                        <td class="p-2.5 pl-3 border-r border-milktea-150 min-w-[100px]">
+                            <select onchange="updateRecurringSetting(${idx}, 'target', this.value)" class="bg-milktea-50 border border-milktea-200 text-xs rounded p-2 text-milktea-800 w-full focus:ring-1 focus:ring-milktea-500">
                                 ${optionsHtml}
                             </select>
                         </td>
-                        <td class="p-2.5 border-r border-milktea-150">
+                        <td class="p-2.5 border-r border-milktea-150 min-w-[110px]">
                             ${renderCategorySelect(tpl.category || '居住', `updateRecurringSetting(${idx}, 'category', this.value)`)}
                         </td>
-                        <td class="p-2.5 border-r border-milktea-150">
-                            <input type="text" value="${escapeHtml(tpl.item || '')}" onchange="updateRecurringSetting(${idx}, 'item', this.value)" placeholder="品項名稱" class="w-full bg-transparent border border-milktea-200 rounded p-1.5 text-xs text-milktea-800">
+                        <td class="p-2.5 border-r border-milktea-150 min-w-[180px]">
+                            <input type="text" value="${escapeHtml(tpl.item || '')}" onchange="updateRecurringSetting(${idx}, 'item', this.value)" placeholder="品項名稱" class="w-full bg-white border border-milktea-200 rounded p-2 text-xs text-milktea-800 focus:ring-1 focus:ring-milktea-500">
                         </td>
-                        <td class="p-2.5 border-r border-milktea-150 text-right">
-                            <input type="number" step="any" value="${tpl.amount !== undefined ? tpl.amount : ''}" onchange="updateRecurringSetting(${idx}, 'amount', this.value)" placeholder="0" class="w-full bg-transparent border border-milktea-200 rounded p-1.5 text-xs text-right font-mono text-milktea-900">
+                        <td class="p-2.5 border-r border-milktea-150 text-right min-w-[100px]">
+                            <input type="number" step="any" value="${tpl.amount !== undefined ? tpl.amount : ''}" onchange="updateRecurringSetting(${idx}, 'amount', this.value)" placeholder="0" class="w-full bg-white border border-milktea-200 rounded p-2 text-xs text-right font-mono text-milktea-900 focus:ring-1 focus:ring-milktea-500">
                         </td>
-                        <td class="p-2.5 text-center">
+                        <td class="p-2.5 text-center w-10">
                             <button onclick="deleteRecurringSetting(${idx})" class="text-milktea-400 hover:text-rose-500 transition p-1">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
