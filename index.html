@@ -90,7 +90,7 @@
                 <!-- Month Selector & Global Actions -->
                 <div class="flex flex-wrap items-center justify-between sm:justify-end gap-2">
                     <!-- Cloud Room Co-maintenance Button -->
-                    <button id="cloudSyncBtn" class="inline-flex items-center px-2.5 py-1.5 bg-milktea-100 hover:bg-milktea-200 text-milktea-800 border border-milktea-300 text-xs font-semibold rounded-lg transition shadow-2xs truncate max-w-[160px] sm:max-w-none">
+                    <button id="cloudSyncBtn" class="inline-flex items-center px-3 py-1.5 bg-milktea-100 hover:bg-milktea-200 text-milktea-800 border border-milktea-300 text-xs font-semibold rounded-lg transition shadow-2xs truncate max-w-[170px] sm:max-w-none">
                         <i id="cloudSyncIcon" class="fa-solid fa-cloud text-milktea-500 mr-1.5 shrink-0"></i>
                         <span id="cloudSyncText" class="truncate">成員共同維護</span>
                     </button>
@@ -105,14 +105,14 @@
                         </button>
                     </div>
 
-                    <!-- LINE Copy Summary Button (Consolidated Single Button) -->
+                    <!-- LINE Copy Summary Button -->
                     <button id="copyLineBtn" class="hidden inline-flex items-center px-3 py-1.5 bg-[#06C755] hover:bg-[#05b34c] text-white text-xs font-semibold rounded-lg transition shadow-2xs shrink-0">
                         <i class="fa-brands fa-line mr-1.5 text-sm"></i> LINE 對帳單
                     </button>
                 </div>
             </div>
 
-            <!-- Desktop Navigation Tabs (總覽 | 月見 | 家曆 | 家計) -->
+            <!-- Desktop Navigation Tabs -->
             <div class="hidden md:flex space-x-8 border-t border-milktea-100 -mb-px">
                 <button id="tabDashboard" class="nav-tab active flex items-center py-3 px-1 border-b-2 border-milktea-700 font-medium text-sm text-milktea-800">
                     <i class="fa-solid fa-chart-pie mr-2 text-milktea-600"></i> 總覽
@@ -431,7 +431,6 @@
                         </button>
                     </div>
 
-                    <!-- WIDER MOBILE TABLE WITH RESPONSIVE COLUMNS -->
                     <div class="overflow-x-auto rounded-xl border border-milktea-200 bg-white">
                         <table class="w-full min-w-[560px] text-left text-xs sm:text-sm">
                             <thead class="bg-milktea-100/80 text-milktea-800 font-semibold border-b border-milktea-200">
@@ -476,7 +475,7 @@
 
     </main>
 
-    <!-- Mobile Floating Action Button (FAB) -->
+    <!-- Mobile FAB -->
     <div class="sm:hidden fixed bottom-20 right-4 z-40">
         <button id="mobileFabBtn" class="w-13 h-13 rounded-full bg-milktea-700 active:bg-milktea-800 text-white shadow-lg flex items-center justify-center text-xl transition transform active:scale-95">
             <i class="fa-solid fa-plus"></i>
@@ -619,7 +618,7 @@
         </div>
     </div>
 
-    <!-- Mobile Bottom Tab Navigation -->
+    <!-- Mobile Bottom Navigation Bar -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[#FDFBF7] border-t border-milktea-200 z-30 flex justify-around py-2.5 shadow-lg">
         <button id="mobileNavDashboard" class="flex flex-col items-center text-milktea-800 font-semibold text-[11px] px-3 py-1">
             <i class="fa-solid fa-chart-pie text-base mb-0.5"></i>
@@ -694,6 +693,9 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // Generate unique instance ID for current browser session to prevent self-trigger loop
+        const sessionInstanceId = 'inst_' + Math.random().toString(36).substring(2, 11);
+
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'family-budget-app';
         const hasFirebaseConfig = typeof __firebase_config !== 'undefined' && __firebase_config;
         const firebaseConfig = hasFirebaseConfig ? JSON.parse(__firebase_config) : null;
@@ -746,22 +748,30 @@
                 try {
                     broadcastChannel = new BroadcastChannel('homey_room_' + roomId);
                     broadcastChannel.onmessage = (event) => {
-                        if (event.data && event.data.type === 'STATE_UPDATE') {
-                            isRemoteUpdate = true;
-                            if (window.setAppState && event.data.state) {
-                                window.setAppState(
-                                    event.data.state.config,
-                                    event.data.state.appData,
-                                    event.data.state.recurringTemplates,
-                                    event.data.state.calendarEvents
-                                );
-                            }
-                            setTimeout(() => { isRemoteUpdate = false; }, 300);
+                        if (event.data && event.data.type === 'STATE_UPDATE' && event.data.instanceId !== sessionInstanceId) {
+                            applyRemoteState(event.data.state, "收到近場分頁同步更新");
                         }
                     };
                 } catch(e) {
                     console.warn("BroadcastChannel error:", e);
                 }
+            }
+        }
+
+        function applyRemoteState(state, message) {
+            if (!state) return;
+            isRemoteUpdate = true;
+            if (window.setAppState) {
+                window.setAppState(
+                    state.config,
+                    state.appData,
+                    state.recurringTemplates,
+                    state.calendarEvents
+                );
+            }
+            isRemoteUpdate = false;
+            if (message && window.showToast) {
+                window.showToast(message);
             }
         }
 
@@ -775,6 +785,7 @@
             const user = await initAuth();
 
             if (db && user && user.uid && !user.uid.startsWith('local_user_')) {
+                // Strict path requirement: /artifacts/{appId}/public/data/household_rooms/{roomId}
                 const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'household_rooms', activeRoomId);
                 updateCloudUIStatus(true, activeRoomId, 'cloud');
 
@@ -782,41 +793,31 @@
                     const snapshot = await getDoc(roomDocRef);
                     if (snapshot.exists()) {
                         const remoteData = snapshot.data();
-                        if (remoteData.state && window.setAppState) {
-                            isRemoteUpdate = true;
-                            window.setAppState(
-                                remoteData.state.config, 
-                                remoteData.state.appData, 
-                                remoteData.state.recurringTemplates, 
-                                remoteData.state.calendarEvents
-                            );
-                            setTimeout(() => { isRemoteUpdate = false; }, 300);
+                        if (remoteData.state) {
+                            applyRemoteState(remoteData.state, `已切換至房間：${activeRoomId} 並載入最新資料`);
                         }
                     } else {
+                        // Room does not exist yet, push initial local data to cloud
                         await syncStateToCloud(true);
+                        window.showToast && window.showToast(`已成功創建家庭房間：${activeRoomId}`);
                     }
                 } catch (err) {
                     console.warn("Firestore initial read issue:", err);
                     updateCloudUIStatus(true, activeRoomId, 'local');
-                    window.showToast && window.showToast(`已進入房間：${activeRoomId} (近場/本機模式)`);
+                    window.showToast && window.showToast(`已進入房間：${activeRoomId} (離線/近場模式)`);
                 }
 
+                // Listen for real-time cloud updates
                 roomUnsubscribe = onSnapshot(roomDocRef, (snapshot) => {
                     if (snapshot.exists()) {
                         const remoteData = snapshot.data();
-                        if (remoteData.lastUpdatedBy && activeUser && remoteData.lastUpdatedBy === activeUser.uid) {
+                        // Ignore updates sent by this exact browser instance
+                        if (remoteData.updatedByInstance && remoteData.updatedByInstance === sessionInstanceId) {
                             return;
                         }
-                        isRemoteUpdate = true;
-                        if (window.setAppState && remoteData.state) {
-                            window.setAppState(
-                                remoteData.state.config, 
-                                remoteData.state.appData, 
-                                remoteData.state.recurringTemplates, 
-                                remoteData.state.calendarEvents
-                            );
+                        if (remoteData.state) {
+                            applyRemoteState(remoteData.state, "☁️ 房間資料已被家人更新！");
                         }
-                        setTimeout(() => { isRemoteUpdate = false; }, 300);
                     }
                 }, (error) => {
                     console.warn("Cloud listener error:", error);
@@ -858,6 +859,7 @@
                     try {
                         broadcastChannel.postMessage({
                             type: 'STATE_UPDATE',
+                            instanceId: sessionInstanceId,
                             state: state,
                             timestamp: Date.now()
                         });
@@ -875,6 +877,7 @@
                                 calendarEvents: state.calendarEvents
                             },
                             updatedAt: new Date().toISOString(),
+                            updatedByInstance: sessionInstanceId,
                             lastUpdatedBy: activeUser.uid
                         }, { merge: true });
                     } catch (err) {
@@ -961,7 +964,7 @@
             document.getElementById('forceSyncCloudBtn')?.addEventListener('click', async () => {
                 if (activeRoomId) {
                     await syncStateToCloud(true);
-                    window.showToast && window.showToast("已將最新資料推送到房間！");
+                    window.showToast && window.showToast("已將最新資料推送到雲端房間！");
                 }
             });
 
@@ -1516,7 +1519,6 @@
                 ${memberCards}
             `;
 
-            // Render Public Fund Contribution Panel
             const publicFundBox = document.getElementById('publicFundSummaryBox');
             if (publicFundBox) {
                 if (config.members.length === 0) {
