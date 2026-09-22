@@ -329,12 +329,14 @@
                 </div>
 
                 <div class="flex flex-col gap-2.5 items-stretch">
-                    <form id="quickAddForm" class="flex flex-col sm:flex-row flex-wrap items-center gap-2 w-full">
-                        <div class="grid grid-cols-2 gap-2 w-full sm:w-auto">
-                            <select id="quickTarget" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500 w-full">
+                    <form id="quickAddForm" class="grid grid-cols-2 sm:flex sm:flex-row flex-wrap items-center gap-2 w-full">
+                        <div class="col-span-1 sm:w-auto">
+                            <select id="quickTarget" class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
                                 <!-- Dynamic Member Options -->
                             </select>
-                            <select id="quickCategory" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 w-full sm:w-32 focus:ring-2 focus:ring-milktea-500">
+                        </div>
+                        <div class="col-span-1 sm:w-32">
+                            <select id="quickCategory" class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
                                 <option value="居住">居住</option>
                                 <option value="公用" selected>公用</option>
                                 <option value="飲食">飲食</option>
@@ -345,11 +347,11 @@
                                 <option value="其他">其他</option>
                             </select>
                         </div>
-                        <div class="flex items-center gap-2 w-full sm:flex-1">
-                            <input type="text" id="quickTag" placeholder="#標籤(如:#裝潢)" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 w-28 sm:w-32 shrink-0">
-                            <input type="text" id="quickItem" placeholder="品項名稱" required class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 flex-1 min-w-0">
-                            <input type="number" id="quickAmount" placeholder="金額" step="any" required class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 w-24 sm:w-28 shrink-0">
-                            <button type="submit" class="bg-milktea-700 hover:bg-milktea-800 text-white font-medium text-xs px-4 py-2.5 rounded-lg transition shadow-xs flex items-center shrink-0">
+                        <div class="col-span-2 sm:flex sm:flex-1 items-center gap-2 flex-wrap">
+                            <input type="text" id="quickTag" placeholder="#標籤(如:#裝潢)" class="w-full sm:w-32 bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 shrink-0 mb-2 sm:mb-0">
+                            <input type="text" id="quickItem" placeholder="品項名稱" required class="w-full sm:flex-1 bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 min-w-0 mb-2 sm:mb-0">
+                            <input type="number" id="quickAmount" placeholder="金額" step="any" required class="w-full sm:w-28 bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2.5 shrink-0 mb-2 sm:mb-0">
+                            <button type="submit" class="w-full sm:w-auto bg-milktea-700 hover:bg-milktea-800 text-white font-medium text-xs px-4 py-2.5 rounded-lg transition shadow-xs flex items-center justify-center shrink-0">
                                 <i class="fa-solid fa-plus mr-1"></i> 新增
                             </button>
                         </div>
@@ -718,7 +720,7 @@
             </div>
 
             <p class="text-xs text-milktea-600 leading-relaxed">
-                輸入「家庭房間代碼」與「安全密碼」。新房間將自動設定此密碼。加入時需填寫正確密碼才能同步。
+                輸入「家庭房間代碼」與「安全密碼」。若房間已存在則需輸入正確密碼加入，若為新房間將自動設定此密碼。
             </p>
 
             <div class="space-y-3 bg-milktea-50 p-3.5 rounded-xl border border-milktea-200">
@@ -1079,7 +1081,6 @@
                 broadcastChannel.postMessage(payload);
             }
 
-            // Local fallback store sync
             let localRoomStore = {};
             try {
                 const storedRooms = localStorage.getItem('homey_local_rooms');
@@ -1182,7 +1183,6 @@
                 }
             }
 
-            // Local fallback room store initialization
             let localRoomStore = {};
             try {
                 const storedRooms = localStorage.getItem('homey_local_rooms');
@@ -1927,10 +1927,12 @@
             const depositMemberSelect = document.getElementById('depositMemberSelect');
             const depositAccountSelect = document.getElementById('depositAccountSelect');
 
-            const dropdownMembersHtml = `
-                ${config.members.map(m => `<option value="${m.id}" ${m.id === boundId ? 'selected' : ''}>${m.name} 墊付</option>`).join('')}
-                <option value="public_fund">公積金帳戶</option>
-            `;
+            const dropdownMembersHtml = config.members.length === 0
+                ? `<option value="">-- 請先至家計頁新增成員 --</option>`
+                : `
+                    ${config.members.map(m => `<option value="${m.id}" ${m.id === boundId ? 'selected' : ''}>${m.name} 墊付</option>`).join('')}
+                    <option value="public_fund">公積金帳戶</option>
+                `;
 
             if (quickTarget) quickTarget.innerHTML = dropdownMembersHtml;
             if (eventMemberSelect) eventMemberSelect.innerHTML = config.members.map(m => `<option value="${m.id}" ${m.id === boundId ? 'selected' : ''}>${m.name}</option>`).join('');
@@ -2042,11 +2044,18 @@
                 const item = document.getElementById('quickItem').value.trim();
                 const amount = parseFloat(document.getElementById('quickAmount').value);
 
-                if (!item || isNaN(amount)) return;
+                if (!targetId || !item || isNaN(amount)) {
+                    showToast("請完整填寫記帳資訊並選擇歸屬成員", true);
+                    return;
+                }
 
                 if (!appData[currentActiveMonth]) {
                     appData[currentActiveMonth] = { items: [], fundDeposits: [] };
                 }
+
+                const boundId = config.boundMemberId;
+                const creatorObj = config.members.find(m => m.id === boundId);
+                const creatorName = creatorObj ? creatorObj.name : '成員';
 
                 const newItem = {
                     id: 'exp_' + Math.random().toString(36).substring(2, 9),
@@ -2055,6 +2064,7 @@
                     tag,
                     item,
                     amount,
+                    createdBy: creatorName,
                     createdAt: new Date().toISOString()
                 };
 
@@ -2093,6 +2103,7 @@
                         tag: '#固定開銷',
                         item: rec.item,
                         amount: parseFloat(rec.amount) || 0,
+                        createdBy: '固定開銷範本',
                         createdAt: new Date().toISOString()
                     });
                 });
@@ -2132,17 +2143,37 @@
                 const fundSum = fundItems.reduce((s, i) => s + (parseFloat(i.amount) || 0), 0);
                 summaryText += `🏦 公積金支付：NT$ ${Math.round(fundSum).toLocaleString()}\n`;
 
-                navigator.clipboard.writeText(summaryText).then(() => {
-                    showToast("已複製 LINE 對帳單文字至剪貼簿！", false);
-                }).catch(() => {
-                    showToast("複製失敗，請手動全選複製", true);
-                });
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(summaryText).then(() => {
+                        showToast("已複製 LINE 對帳單文字至剪貼簿！", false);
+                    }).catch(() => {
+                        fallbackCopyText(summaryText);
+                    });
+                } else {
+                    fallbackCopyText(summaryText);
+                }
             });
+
+            function fallbackCopyText(text) {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast("已複製 LINE 對帳單文字至剪貼簿！", false);
+                } catch (err) {
+                    showToast("複製失敗，請手動全選複製", true);
+                }
+                document.body.removeChild(textArea);
+            }
 
             document.getElementById('addMemberBtn')?.addEventListener('click', () => {
                 config.members.push({
                     id: 'mem_' + Math.random().toString(36).substring(2, 9),
-                    name: `新成員 ${config.members.length + 1}`,
+                    name: `成員 ${config.members.length + 1}`,
                     weight: 1
                 });
                 renderSettingsView();
@@ -2192,6 +2223,10 @@
             });
 
             document.getElementById('openDepositModalBtn')?.addEventListener('click', () => {
+                if (!config.fundAccounts || config.fundAccounts.length === 0) {
+                    showToast("請先至「家計」頁面新增公積金帳戶", true);
+                    return;
+                }
                 document.getElementById('depositModal').classList.remove('hidden');
             });
             document.getElementById('closeDepositModalBtn')?.addEventListener('click', () => {
@@ -2233,6 +2268,10 @@
             });
 
             document.getElementById('openAddEventModalBtn')?.addEventListener('click', () => {
+                if (config.members.length === 0) {
+                    showToast("請先至「家計」頁面新增家庭成員", true);
+                    return;
+                }
                 document.getElementById('eventModal').classList.remove('hidden');
             });
             document.getElementById('closeEventModalBtn')?.addEventListener('click', () => {
@@ -2324,9 +2363,21 @@
             document.getElementById('copyShareLinkBtn')?.addEventListener('click', () => {
                 if (!currentRoomId) return;
                 const shareUrl = `${window.location.origin}${window.location.pathname}?room=${currentRoomId}`;
-                navigator.clipboard.writeText(shareUrl).then(() => {
-                    showToast("已複製邀請連結！（不含密碼，成員加入時需輸入安全密碼）", false);
-                });
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(shareUrl).then(() => {
+                        showToast("已複製邀請連結！（不含密碼，成員加入時需輸入安全密碼）", false);
+                    });
+                } else {
+                    showToast(`分享連結: ${shareUrl}`, false);
+                }
+            });
+
+            document.getElementById('updateRoomPinBtn')?.addEventListener('click', async () => {
+                const newPin = document.getElementById('roomPinInput').value.trim();
+                if (!currentRoomId) return;
+                localStorage.setItem('homey_room_pin', newPin);
+                await syncToCloud();
+                showToast("已成功更新房間安全密碼！", false);
             });
 
             document.getElementById('openDeleteRoomModalBtn')?.addEventListener('click', () => {
