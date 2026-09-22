@@ -65,7 +65,7 @@
         }
     </style>
 </head>
-<body class="h-full flex flex-col text-milktea-800 antialiased pb-24 md:pb-6">
+<body class="h-full flex flex-col text-milktea-800 antialiased pb-28 md:pb-6">
 
     <header class="bg-[#FDFBF7] border-b border-milktea-200 sticky top-0 z-30 shadow-xs">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -375,8 +375,8 @@
             </div>
         </div>
 
-        <!-- VIEW 4: SETTINGS (家計) - Added pb-20 for mobile bottom navigation spacing -->
-        <div id="tabSettingsView" class="hidden space-y-4 sm:space-y-6 pb-20 sm:pb-6">
+        <!-- VIEW 4: SETTINGS (家計) - Added pb-28 for mobile bottom navigation spacing -->
+        <div id="tabSettingsView" class="hidden space-y-4 sm:space-y-6 pb-28 sm:pb-6">
             <div class="max-w-3xl mx-auto bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-6">
                 <h2 class="text-base sm:text-lg font-bold text-milktea-900 border-b border-milktea-100 pb-3 flex items-center">
                     <i class="fa-solid fa-users-gear text-milktea-600 mr-2"></i> 成員與預算設定
@@ -472,9 +472,9 @@
                 </div>
 
                 <!-- Save Changes Button with generous top margin and padding for mobile viewports -->
-                <div class="pt-6 pb-4 flex justify-end">
-                    <button id="saveSettingsBtn" class="w-full sm:w-auto bg-milktea-700 hover:bg-milktea-800 active:bg-milktea-900 text-white text-sm font-semibold px-8 py-3 rounded-xl transition shadow-md">
-                        儲存變更
+                <div class="pt-8 pb-12 flex justify-end">
+                    <button id="saveSettingsBtn" class="w-full sm:w-auto bg-milktea-700 hover:bg-milktea-800 active:bg-milktea-900 text-white text-sm font-semibold px-8 py-3.5 rounded-xl transition shadow-md">
+                        儲存變更設定
                     </button>
                 </div>
             </div>
@@ -483,7 +483,7 @@
     </main>
 
     <!-- Mobile Floating Action Button (FAB) -->
-    <div class="sm:hidden fixed bottom-16 right-4 z-40">
+    <div class="sm:hidden fixed bottom-20 right-4 z-40">
         <button id="mobileFabBtn" class="w-13 h-13 rounded-full bg-milktea-700 active:bg-milktea-800 text-white shadow-lg flex items-center justify-center text-xl transition transform active:scale-95">
             <i class="fa-solid fa-plus"></i>
         </button>
@@ -491,7 +491,7 @@
 
     <!-- Mobile Quick Add Modal -->
     <div id="mobileAddModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-end justify-center sm:hidden">
-        <div class="bg-white w-full rounded-t-2xl p-5 space-y-4 animate-in slide-in-from-bottom duration-200">
+        <div class="bg-white w-full rounded-t-2xl p-5 space-y-4 animate-in slide-in-from-bottom duration-200 pb-10">
             <div class="flex justify-between items-center border-b border-milktea-100 pb-3">
                 <h3 class="font-bold text-milktea-900 text-base">快速新增記帳</h3>
                 <button id="closeMobileModalBtn" class="text-milktea-400 text-lg p-1">
@@ -528,7 +528,7 @@
                     <input type="number" id="mobileQuickAmount" step="any" placeholder="0" required class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-sm rounded-lg p-2.5">
                 </div>
 
-                <button type="submit" class="w-full bg-milktea-700 active:bg-milktea-800 text-white font-medium text-sm py-3 rounded-xl transition shadow-xs mt-2">
+                <button type="submit" class="w-full bg-milktea-700 active:bg-milktea-800 text-white font-medium text-sm py-3.5 rounded-xl transition shadow-xs mt-2">
                     確認新增
                 </button>
             </form>
@@ -626,7 +626,7 @@
     </div>
 
     <!-- Mobile Bottom Tab Navigation -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[#FDFBF7] border-t border-milktea-200 z-30 flex justify-around py-2 shadow-lg">
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[#FDFBF7] border-t border-milktea-200 z-30 flex justify-around py-2.5 shadow-lg">
         <button id="mobileNavDashboard" class="flex flex-col items-center text-milktea-800 font-semibold text-[11px] px-3 py-1">
             <i class="fa-solid fa-chart-pie text-base mb-0.5"></i>
             <span>總覽</span>
@@ -725,8 +725,11 @@
             }
         }
 
-        function connectHouseholdRoom(roomId) {
-            if (!activeUser || !roomId) return;
+        async function connectHouseholdRoom(roomId) {
+            if (!roomId) return;
+            if (!activeUser) {
+                await initAuth();
+            }
             cleanRoomSubscription();
 
             activeRoomId = roomId.trim().toUpperCase();
@@ -770,7 +773,12 @@
         }
 
         async function syncStateToCloud() {
-            if (!activeUser || !activeRoomId || isRemoteUpdate) return;
+            if (!activeRoomId || isRemoteUpdate) return;
+            if (!activeUser) {
+                await initAuth();
+            }
+            if (!activeUser) return;
+
             try {
                 const state = window.getAppState ? window.getAppState() : null;
                 if (!state) return;
@@ -785,7 +793,6 @@
                 }, { merge: true });
             } catch (err) {
                 console.error("Failed to sync to cloud:", err);
-                window.showToast && window.showToast("資料同步發生錯誤");
             }
         }
 
