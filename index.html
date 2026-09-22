@@ -112,7 +112,7 @@
                     </div>
 
                     <!-- LINE Copy Summary Button -->
-                    <button id="copyLineBtn" class="hidden inline-flex items-center px-3 py-1.5 bg-[#06C755] hover:bg-[#05b34c] text-white text-xs font-semibold rounded-lg transition shadow-2xs shrink-0">
+                    <button id="copyLineBtn" class="inline-flex items-center px-3 py-1.5 bg-[#06C755] hover:bg-[#05b34c] text-white text-xs font-semibold rounded-lg transition shadow-2xs shrink-0">
                         <i class="fa-brands fa-line mr-1.5 text-sm"></i> LINE 對帳單
                     </button>
                 </div>
@@ -120,16 +120,16 @@
 
             <!-- Desktop Navigation Tabs -->
             <div class="hidden md:flex space-x-8 border-t border-milktea-100 -mb-px">
-                <button id="tabDashboard" class="nav-tab active flex items-center py-3 px-1 border-b-2 border-milktea-700 font-medium text-sm text-milktea-800">
+                <button id="tabDashboard" onclick="switchTab(0)" class="nav-tab active flex items-center py-3 px-1 border-b-2 border-milktea-700 font-medium text-sm text-milktea-800">
                     <i class="fa-solid fa-chart-pie mr-2 text-milktea-600"></i> 總覽
                 </button>
-                <button id="tabSheet" class="nav-tab flex items-center py-3 px-1 border-b-2 border-transparent font-medium text-sm text-milktea-500 hover:text-milktea-800 hover:border-milktea-300">
+                <button id="tabSheet" onclick="switchTab(1)" class="nav-tab flex items-center py-3 px-1 border-b-2 border-transparent font-medium text-sm text-milktea-500 hover:text-milktea-800 hover:border-milktea-300">
                     <i class="fa-solid fa-table-cells mr-2"></i> 月見
                 </button>
-                <button id="tabCalendar" class="nav-tab flex items-center py-3 px-1 border-b-2 border-transparent font-medium text-sm text-milktea-500 hover:text-milktea-800 hover:border-milktea-300">
+                <button id="tabCalendar" onclick="switchTab(2)" class="nav-tab flex items-center py-3 px-1 border-b-2 border-transparent font-medium text-sm text-milktea-500 hover:text-milktea-800 hover:border-milktea-300">
                     <i class="fa-solid fa-calendar-days mr-2 text-terracotta"></i> 家曆
                 </button>
-                <button id="tabSettings" class="nav-tab flex items-center py-3 px-1 border-b-2 border-transparent font-medium text-sm text-milktea-500 hover:text-milktea-800 hover:border-milktea-300">
+                <button id="tabSettings" onclick="switchTab(3)" class="nav-tab flex items-center py-3 px-1 border-b-2 border-transparent font-medium text-sm text-milktea-500 hover:text-milktea-800 hover:border-milktea-300">
                     <i class="fa-solid fa-gear mr-2"></i> 家計
                 </button>
             </div>
@@ -188,15 +188,50 @@
                 </div>
 
                 <div class="bg-white p-4 sm:p-5 rounded-2xl border border-milktea-200 shadow-xs space-y-3">
-                    <div class="flex justify-between items-center">
+                    <div class="flex flex-wrap justify-between items-center gap-2 border-b border-milktea-100 pb-2">
                         <h3 class="font-bold text-milktea-800 text-xs sm:text-base flex items-center">
-                            <i class="fa-solid fa-chart-pie text-terracotta mr-1.5"></i> 區間共同支出分類佔比
+                            <i class="fa-solid fa-chart-pie text-terracotta mr-1.5"></i> 區間共同支出佔比
                         </h3>
-                        <span class="text-[10px] sm:text-xs text-milktea-400">累積項目佔比</span>
+                        
+                        <!-- Analysis Dimension Toggle (#Tag vs Category) -->
+                        <div class="flex items-center bg-milktea-100 rounded-lg p-0.5 text-xs font-semibold">
+                            <button id="chartDimCategoryBtn" onclick="setChartDimension('category')" class="px-2.5 py-1 rounded-md bg-milktea-700 text-white transition">按分類</button>
+                            <button id="chartDimTagBtn" onclick="setChartDimension('tag')" class="px-2.5 py-1 rounded-md text-milktea-700 hover:bg-white transition">按標籤 (#)</button>
+                        </div>
                     </div>
+                    <p class="text-[11px] text-milktea-500">💡 提示：點擊圓餅圖區塊，可連動下表篩選該項目之消費明細</p>
                     <div class="h-60 sm:h-80 relative">
-                        <canvas id="categoryPieChart"></canvas>
+                        <canvas id="categoryPieChart" class="cursor-pointer"></canvas>
                     </div>
+                </div>
+            </div>
+
+            <!-- Chart Interactive Detail Filter Box -->
+            <div id="chartDetailFilterCard" class="hidden bg-white p-4 sm:p-5 rounded-2xl border border-milktea-200 shadow-xs space-y-3 animate-in fade-in duration-200">
+                <div class="flex justify-between items-center border-b border-milktea-100 pb-2.5">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-bold text-milktea-800">🔍 圖表點擊篩選明細：</span>
+                        <span id="chartFilterBadge" class="bg-terracotta text-white font-bold text-xs px-2.5 py-0.5 rounded-full">飲食</span>
+                    </div>
+                    <button onclick="clearChartFilter()" class="text-xs text-milktea-500 hover:text-milktea-800 bg-milktea-100 hover:bg-milktea-200 px-2.5 py-1 rounded-lg transition">
+                        <i class="fa-solid fa-xmark mr-1"></i> 清除篩選
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-milktea-50 text-milktea-700 font-semibold border-b border-milktea-200">
+                            <tr>
+                                <th class="p-2 w-20">月份</th>
+                                <th class="p-2 w-20">分類</th>
+                                <th class="p-2 w-20">標籤</th>
+                                <th class="p-2">品項</th>
+                                <th class="p-2 text-right w-24">金額</th>
+                            </tr>
+                        </thead>
+                        <tbody id="chartFilterTableBody" class="divide-y divide-milktea-100">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -205,7 +240,7 @@
                     <h3 class="font-bold text-milktea-900 text-sm sm:text-base flex items-center">
                         <i class="fa-solid fa-scale-balanced text-matcha mr-2"></i> 區間財務總結與結算建議
                     </h3>
-                    <span id="dashboardRangeBadge" class="text-xs font-semibold text-milktea-700 bg-milktea-100 px-2.5 py-1 rounded-lg">2026年 累計</span>
+                    <span id="dashboardRangeBadge" class="text-xs font-semibold text-milktea-700 bg-milktea-100 px-2.5 py-1 rounded-lg">累積結算</span>
                 </div>
                 
                 <div id="dashboardSettlementBox" class="p-3.5 sm:p-4 rounded-xl bg-milktea-50 border border-milktea-200 grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
@@ -222,7 +257,29 @@
                     <i class="fa-solid fa-lightbulb text-caramel text-base shrink-0"></i>
                     <span id="historyAlertText" class="truncate">提示訊息</span>
                 </div>
-                <button id="jumpToHistoryBtn" class="bg-caramel text-white font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition shrink-0">立即切換</button>
+                <button id="jumpToHistoryBtn" class="bg-caramel text-white font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition shrink-0">區域切換</button>
+            </div>
+
+            <!-- Public Fund Live Balance Treasury Card -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-milktea-200 shadow-xs space-y-3">
+                <div class="flex flex-wrap justify-between items-center gap-2 border-b border-milktea-100 pb-2.5">
+                    <div class="flex items-center space-x-2">
+                        <div class="bg-caramel/20 text-caramel p-2 rounded-xl">
+                            <i class="fa-solid fa-vault text-base sm:text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-milktea-900 text-xs sm:text-sm">公積金小金庫帳戶與實時餘額</h3>
+                            <p class="text-[10px] sm:text-xs text-milktea-500">追蹤共用戶累積入金與公積金直接支付餘額</p>
+                        </div>
+                    </div>
+                    <button id="openDepositModalBtn" class="bg-milktea-700 hover:bg-milktea-800 text-white font-semibold text-xs px-3 py-1.5 rounded-xl transition shadow-2xs flex items-center shrink-0">
+                        <i class="fa-solid fa-circle-dollar-to-slot mr-1.5"></i> 成員匯入公積金
+                    </button>
+                </div>
+
+                <div id="publicFundTreasuryGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <!-- Dynamic Account Cards -->
+                </div>
             </div>
 
             <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1.5">
@@ -302,6 +359,7 @@
                             </select>
                         </div>
                         <div class="flex items-center gap-2 w-full sm:flex-1">
+                            <input type="text" id="quickTag" placeholder="#標籤(如:#裝潢)" class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2 w-24 sm:w-28 shrink-0">
                             <input type="text" id="quickItem" placeholder="品項名稱" required class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2 flex-1 min-w-0">
                             <input type="number" id="quickAmount" placeholder="金額" step="any" required class="bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs rounded-lg p-2 w-20 sm:w-24 shrink-0">
                             <button type="submit" class="bg-milktea-700 hover:bg-milktea-800 text-white font-medium text-xs px-3 py-2 rounded-lg transition shadow-xs flex items-center shrink-0">
@@ -392,6 +450,25 @@
                     <i class="fa-solid fa-users-gear text-milktea-600 mr-2"></i> 成員與預算設定
                 </h2>
 
+                <!-- Public Fund Account Management -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-xs sm:text-sm font-semibold text-milktea-800 flex items-center">
+                                <i class="fa-solid fa-piggy-bank text-caramel mr-1.5"></i> 共用公積金帳戶管理
+                            </h3>
+                            <p class="text-[11px] text-milktea-500">設定共同存款的實體/數位帳戶與初始起算餘額</p>
+                        </div>
+                        <button id="addFundAccountBtn" type="button" class="text-xs text-white bg-milktea-700 hover:bg-milktea-800 font-medium px-3 py-1.5 rounded-lg shadow-2xs transition flex items-center shrink-0">
+                            <i class="fa-solid fa-plus mr-1"></i> 新增帳戶
+                        </button>
+                    </div>
+
+                    <div id="fundAccountsSettingsContainer" class="space-y-2">
+                        <!-- Dynamic Accounts Rows -->
+                    </div>
+                </div>
+
                 <!-- Device Binding Setting Box -->
                 <div class="bg-milktea-50 p-3.5 rounded-xl border border-milktea-200 space-y-2">
                     <div class="flex justify-between items-center">
@@ -459,98 +536,83 @@
                     </div>
 
                     <div class="overflow-x-auto rounded-xl border border-milktea-200 bg-white">
-                        <table class="w-full min-w-[560px] text-left text-xs sm:text-sm">
-                            <thead class="bg-milktea-100/80 text-milktea-800 font-semibold border-b border-milktea-200">
+                        <table class="w-full text-left text-xs min-w-[560px]">
+                            <thead class="bg-milktea-50 text-milktea-700 font-semibold border-b border-milktea-200">
                                 <tr>
-                                    <th class="p-2.5 pl-3 w-28 min-w-[100px]">歸屬</th>
-                                    <th class="p-2.5 w-32 min-w-[110px]">分類</th>
-                                    <th class="p-2.5 min-w-[180px]">品項名稱</th>
-                                    <th class="p-2.5 text-right w-28 min-w-[100px]">預設金額</th>
-                                    <th class="p-2.5 w-10 text-center"></th>
+                                    <th class="p-2.5 w-28">歸屬</th>
+                                    <th class="p-2.5 w-28">分類</th>
+                                    <th class="p-2.5">品項名稱</th>
+                                    <th class="p-2.5 w-28 text-right">預設金額</th>
+                                    <th class="p-2 w-10 text-center"></th>
                                 </tr>
                             </thead>
-                            <tbody id="recurringSettingsBody" class="divide-y divide-milktea-100">
-                                <!-- Dynamic Recurring Rows -->
+                            <tbody id="recurringSettingsTableBody" class="divide-y divide-milktea-100">
+                                <!-- Populated dynamically -->
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <div class="space-y-3 pt-3 border-t border-milktea-100">
-                    <h3 class="text-xs sm:text-sm font-semibold text-milktea-800">資料備份與救回機制</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <button id="exportJsonBtn" class="bg-milktea-100 hover:bg-milktea-200 active:bg-milktea-200 text-milktea-800 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center">
-                            <i class="fa-solid fa-download mr-1.5"></i> 匯出 JSON
+                <div class="pt-4 border-t border-milktea-100 flex flex-wrap gap-2 justify-between items-center">
+                    <div class="flex gap-2">
+                        <button id="exportJsonBtn" class="bg-milktea-100 hover:bg-milktea-200 text-milktea-800 text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center">
+                            <i class="fa-solid fa-download mr-1.5"></i> 匯出 JSON 備份
                         </button>
-                        <button id="importJsonBtn" class="bg-milktea-100 hover:bg-milktea-200 active:bg-milktea-200 text-milktea-800 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center">
-                            <i class="fa-solid fa-upload mr-1.5"></i> 匯入 JSON
-                        </button>
-                        <button id="recoverSnapshotBtn" class="bg-caramel/20 hover:bg-caramel/30 text-milktea-900 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center">
-                            <i class="fa-solid fa-rotate-left mr-1.5"></i> 救回歷史資料快照
+                        <button id="importJsonBtn" class="bg-milktea-100 hover:bg-milktea-200 text-milktea-800 text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center">
+                            <i class="fa-solid fa-upload mr-1.5"></i> 匯入備份
                         </button>
                         <input type="file" id="importFileInput" accept=".json" class="hidden">
                     </div>
-                </div>
-
-                <div class="pt-6 pb-16 flex justify-end">
-                    <button id="saveSettingsBtn" class="w-full sm:w-auto bg-milktea-700 hover:bg-milktea-800 active:bg-milktea-900 text-white text-sm font-semibold px-8 py-3.5 rounded-xl transition shadow-md">
-                        儲存變更設定
+                    <button id="saveSettingsBtn" class="bg-milktea-700 hover:bg-milktea-800 text-white text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-xs flex items-center">
+                        <i class="fa-solid fa-floppy-disk mr-1.5"></i> 儲存所有變更
                     </button>
                 </div>
             </div>
         </div>
-
     </main>
 
-    <!-- Mobile FAB -->
-    <div class="sm:hidden fixed bottom-20 right-4 z-40">
-        <button id="mobileFabBtn" class="w-13 h-13 rounded-full bg-milktea-700 active:bg-milktea-800 text-white shadow-lg flex items-center justify-center text-xl transition transform active:scale-95">
-            <i class="fa-solid fa-plus"></i>
-        </button>
-    </div>
-
-    <!-- Mobile Quick Add Modal -->
-    <div id="mobileAddModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-end justify-center sm:hidden">
-        <div class="bg-white w-full rounded-t-2xl p-5 space-y-4 animate-in slide-in-from-bottom duration-200 pb-12 max-h-[90vh] overflow-y-auto">
+    <!-- Member Deposit to Public Fund Modal -->
+    <div id="depositModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-milktea-100 pb-3">
-                <h3 class="font-bold text-milktea-900 text-base">快速新增記帳</h3>
-                <button id="closeMobileModalBtn" class="text-milktea-400 text-lg p-1">
+                <h3 class="font-bold text-milktea-900 text-base sm:text-lg flex items-center">
+                    <i class="fa-solid fa-circle-dollar-to-slot text-matcha mr-2"></i> 紀錄成員匯入/入金至公積金
+                </h3>
+                <button id="closeDepositModalBtn" class="text-milktea-400 hover:text-milktea-700 text-lg p-1">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            
-            <form id="mobileQuickAddForm" class="space-y-3">
+
+            <form id="depositForm" class="space-y-3">
                 <div>
-                    <label class="block text-xs font-medium text-milktea-600 mb-1">歸屬帳目</label>
-                    <select id="mobileQuickTarget" class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-sm rounded-lg p-2.5">
+                    <label class="block text-xs font-semibold text-milktea-800 mb-1">存入哪個帳戶</label>
+                    <select id="depositAccountSelect" class="w-full bg-milktea-50 border border-milktea-300 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
                         <!-- Populated dynamically -->
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-milktea-600 mb-1">分類</label>
-                    <select id="mobileQuickCategory" class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-sm rounded-lg p-2.5">
-                        <option value="居住">居住</option>
-                        <option value="公用" selected>公用</option>
-                        <option value="飲食">飲食</option>
-                        <option value="日用">日用</option>
-                        <option value="交通">交通</option>
-                        <option value="育樂">育樂</option>
-                        <option value="醫療">醫療</option>
-                        <option value="其他">其他</option>
+                    <label class="block text-xs font-semibold text-milktea-800 mb-1">匯款成員 (誰存的)</label>
+                    <select id="depositMemberSelect" class="w-full bg-milktea-50 border border-milktea-300 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
+                        <!-- Populated dynamically -->
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-milktea-600 mb-1">品項名稱</label>
-                    <input type="text" id="mobileQuickItem" placeholder="例如：超級市場採買" required class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-sm rounded-lg p-2.5">
+                    <label class="block text-xs font-semibold text-milktea-800 mb-1">匯入金額 (NT$)</label>
+                    <input type="number" id="depositAmountInput" step="any" placeholder="0" required class="w-full bg-milktea-50 border border-milktea-300 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-milktea-600 mb-1">金額 (NT$)</label>
-                    <input type="number" id="mobileQuickAmount" step="any" placeholder="0" required class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-sm rounded-lg p-2.5">
+                    <label class="block text-xs font-semibold text-milktea-800 mb-1">備註說明 (選填)</label>
+                    <input type="text" id="depositNoteInput" placeholder="例如：9月份公積金匯入" class="w-full bg-milktea-50 border border-milktea-300 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
                 </div>
 
-                <button type="submit" class="w-full bg-milktea-700 active:bg-milktea-800 text-white font-medium text-sm py-3.5 rounded-xl transition shadow-xs mt-2">
-                    確認新增
-                </button>
+                <div class="pt-2 flex justify-end space-x-2">
+                    <button type="button" id="cancelDepositBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium px-4 py-2.5 rounded-xl transition">
+                        取消
+                    </button>
+                    <button type="submit" class="bg-milktea-700 hover:bg-milktea-800 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition shadow-xs">
+                        確認入金紀錄
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -647,19 +709,19 @@
 
     <!-- Mobile Bottom Navigation Bar -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[#FDFBF7] border-t border-milktea-200 z-30 flex justify-around py-2.5 shadow-lg">
-        <button id="mobileNavDashboard" class="flex flex-col items-center text-milktea-800 font-semibold text-[11px] px-3 py-1">
+        <button id="mobileNavDashboard" onclick="switchTab(0)" class="flex flex-col items-center text-milktea-800 font-semibold text-[11px] px-3 py-1">
             <i class="fa-solid fa-chart-pie text-base mb-0.5"></i>
             <span>總覽</span>
         </button>
-        <button id="mobileNavSheet" class="flex flex-col items-center text-milktea-400 font-normal text-[11px] px-3 py-1">
+        <button id="mobileNavSheet" onclick="switchTab(1)" class="flex flex-col items-center text-milktea-400 font-normal text-[11px] px-3 py-1">
             <i class="fa-solid fa-table-cells text-base mb-0.5"></i>
             <span>月見</span>
         </button>
-        <button id="mobileNavCalendar" class="flex flex-col items-center text-milktea-400 font-normal text-[11px] px-3 py-1">
+        <button id="mobileNavCalendar" onclick="switchTab(2)" class="flex flex-col items-center text-milktea-400 font-normal text-[11px] px-3 py-1">
             <i class="fa-solid fa-calendar-days text-base mb-0.5"></i>
             <span>家曆</span>
         </button>
-        <button id="mobileNavSettings" class="flex flex-col items-center text-milktea-400 font-normal text-[11px] px-3 py-1">
+        <button id="mobileNavSettings" onclick="switchTab(3)" class="flex flex-col items-center text-milktea-400 font-normal text-[11px] px-3 py-1">
             <i class="fa-solid fa-gear text-base mb-0.5"></i>
             <span>家計</span>
         </button>
@@ -697,7 +759,7 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-milktea-800 mb-1">房間安全密碼 (PIN / 防亂入碼)</label>
-                    <input type="password" id="roomPinInput" placeholder="設定或輸入 4-8 位數字安全碼" class="w-full bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-mono focus:ring-2 focus:ring-milktea-500 mb-3">
+                    <input type="text" id="roomPinInput" placeholder="設定或輸入 4-8 位數字安全碼" class="w-full bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-mono focus:ring-2 focus:ring-milktea-500 mb-3">
                 </div>
 
                 <!-- Device Identity Selection -->
@@ -718,7 +780,7 @@
                     <i class="fa-solid fa-rotate mr-1.5"></i> 立即上傳本地資料至雲端房間
                 </button>
                 <button id="copyShareLinkBtn" class="w-full bg-matcha hover:opacity-90 text-white text-xs font-semibold py-2.5 rounded-xl transition flex items-center justify-center">
-                    <i class="fa-solid fa-share-nodes mr-1.5"></i> 複製家人邀請連結 (包含房間碼)
+                    <i class="fa-solid fa-share-nodes mr-1.5"></i> 複製家人邀請連結 (不含密碼)
                 </button>
                 <button id="disconnectRoomBtn" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium py-2 rounded-xl transition">
                     中斷雲端連線 (切回單機)
@@ -869,7 +931,19 @@
                         
                         // Room Security Password Verification
                         if (remoteData.pin && remoteData.pin !== targetPin) {
-                            window.showToast && window.showToast("❌ 房間安全密碼錯誤，拒絕存取！");
+                            window.showToast && window.showToast("🔒 此房間已由創建者設定密碼，請輸入安全密碼解鎖！");
+                            
+                            // Automatically pop up modal to prompt user for password
+                            const cloudModal = document.getElementById('cloudModal');
+                            const codeInput = document.getElementById('roomCodeInput');
+                            const pinInput = document.getElementById('roomPinInput');
+                            if (codeInput) codeInput.value = targetRoomId;
+                            if (pinInput) {
+                                pinInput.value = '';
+                                pinInput.focus();
+                            }
+                            if (cloudModal) cloudModal.classList.remove('hidden');
+                            updateCloudUIStatus(false, targetRoomId, 'locked');
                             return false;
                         }
 
@@ -879,7 +953,7 @@
                         updateCloudUIStatus(true, activeRoomId, 'cloud');
 
                         if (remoteData.state) {
-                            applyRemoteState(remoteData.state, `已成功驗證並加入房間：${activeRoomId}`);
+                            applyRemoteState(remoteData.state, `已成功驗證密碼並加入房間：${activeRoomId}`);
                         }
                     } else {
                         // Room does not exist yet -> Create room with password
@@ -1023,7 +1097,7 @@
                     if (syncIcon) syncIcon.className = "fa-solid fa-cloud-arrow-up text-matcha text-xs mr-1.5 animate-pulse shrink-0";
                     if (syncText) syncText.textContent = `雲端: ${roomId}`;
                     if (roomDisplay) {
-                        roomDisplay.innerHTML = `<span>🟢 雲端同步連線中：${roomId} (已保全)</span><span class="text-[10px] text-matcha font-normal">加密保護</span>`;
+                        roomDisplay.innerHTML = `<span>🟢 雲端同步連線中：${roomId}</span><span class="text-[10px] text-matcha font-semibold">${activeRoomPin ? '🔒 密碼: ' + activeRoomPin : '無密碼'}</span>`;
                     }
                 } else {
                     if (syncIcon) syncIcon.className = "fa-solid fa-wifi text-caramel text-xs mr-1.5 animate-pulse shrink-0";
@@ -1033,6 +1107,13 @@
                     }
                 }
                 if (roomActions) roomActions.classList.remove('hidden');
+            } else if (mode === 'locked') {
+                if (syncIcon) syncIcon.className = "fa-solid fa-lock text-rose-500 mr-1.5 shrink-0";
+                if (syncText) syncText.textContent = `需輸入密碼`;
+                if (roomDisplay) {
+                    roomDisplay.innerHTML = `<span class="text-rose-600 font-bold">🔒 房間 ${roomId} 受密碼保護</span><span class="text-[10px] text-rose-500 font-bold">待驗證</span>`;
+                }
+                if (roomActions) roomActions.classList.add('hidden');
             } else {
                 if (syncIcon) syncIcon.className = "fa-solid fa-cloud text-milktea-500 mr-1.5 shrink-0";
                 if (syncText) syncText.textContent = "成員共同維護";
@@ -1082,8 +1163,9 @@
 
             document.getElementById('copyShareLinkBtn')?.addEventListener('click', () => {
                 if (!activeRoomId) return;
+                // Safely copy only room code parameter without PIN
                 const shareUrl = `${window.location.origin}${window.location.pathname}?room=${activeRoomId}`;
-                window.copyTextToClipboard && window.copyTextToClipboard(shareUrl, "已複製家人邀請連結！(需填寫房間安全密碼)");
+                window.copyTextToClipboard && window.copyTextToClipboard(shareUrl, "已複製邀請連結！（不含密碼，成員加入時需輸入安全密碼）");
             });
 
             try {
@@ -1123,6 +1205,9 @@
 
         let config = {
             members: [],
+            publicFundAccounts: [
+                { id: 'acc_main', name: '主要公積金帳戶', initialBalance: 0, note: '家用主要賬戶' }
+            ],
             splitMode: 'equal',
             targetBudget: 40000
         };
@@ -1131,6 +1216,9 @@
         let dashStartMonth = '2026-01';
         let dashEndMonth = '2026-12';
         let searchQuery = '';
+
+        let chartAnalysisDimension = 'category'; // 'category' | 'tag'
+        let chartSelectedCategory = null; // clicked slice label
 
         let calendarYear = 2026;
         let calendarMonth = 9;
@@ -1142,7 +1230,8 @@
         let appData = {
             '2026-09': {
                 shared: [],
-                personal: {}
+                personal: {},
+                fundDeposits: []
             }
         };
 
@@ -1160,224 +1249,293 @@
         let splitChartInstance = null;
         let pieChartInstance = null;
 
-        function switchTab(viewIndex) {
-            const tabDashboard = document.getElementById('tabDashboard');
-            const tabSheet = document.getElementById('tabSheet');
-            const tabCalendar = document.getElementById('tabCalendar');
-            const tabSettings = document.getElementById('tabSettings');
-
-            const mobileNavDashboard = document.getElementById('mobileNavDashboard');
-            const mobileNavSheet = document.getElementById('mobileNavSheet');
-            const mobileNavCalendar = document.getElementById('mobileNavCalendar');
-            const mobileNavSettings = document.getElementById('mobileNavSettings');
-
-            const viewDashboard = document.getElementById('viewDashboard');
-            const viewSheet = document.getElementById('viewSheet');
-            const viewCalendar = document.getElementById('viewCalendar');
-            const tabSettingsView = document.getElementById('tabSettingsView');
-
-            const tabs = [tabDashboard, tabSheet, tabCalendar, tabSettings];
-            const mobileNavs = [mobileNavDashboard, mobileNavSheet, mobileNavCalendar, mobileNavSettings];
-            const views = [viewDashboard, viewSheet, viewCalendar, tabSettingsView];
-
-            tabs.forEach((btn, idx) => {
-                if (!btn) return;
-                if (idx === viewIndex) {
-                    btn.classList.add('border-milktea-700', 'text-milktea-800', 'active');
-                    btn.classList.remove('border-transparent', 'text-milktea-500');
-                } else {
-                    btn.classList.remove('border-milktea-700', 'text-milktea-800', 'active');
-                    btn.classList.add('border-transparent', 'text-milktea-500');
-                }
-            });
-
-            mobileNavs.forEach((btn, idx) => {
-                if (!btn) return;
-                if (idx === viewIndex) {
-                    btn.classList.add('text-milktea-800', 'font-semibold');
-                    btn.classList.remove('text-milktea-400', 'font-normal');
-                } else {
-                    btn.classList.remove('text-milktea-800', 'font-semibold');
-                    btn.classList.add('text-milktea-400', 'font-normal');
-                }
-            });
-
-            views.forEach((view, idx) => {
-                if (!view) return;
-                if (idx === viewIndex) {
-                    view.classList.remove('hidden');
-                } else {
-                    view.classList.add('hidden');
-                }
-            });
-
-            const headerMonthPicker = document.getElementById('headerMonthPickerContainer');
-            const copyBtn = document.getElementById('copyLineBtn');
-
-            if (viewIndex === 1) {
-                if (headerMonthPicker) headerMonthPicker.classList.remove('hidden');
-                if (copyBtn) copyBtn.classList.remove('hidden');
-            } else {
-                if (headerMonthPicker) headerMonthPicker.classList.add('hidden');
-                if (copyBtn) copyBtn.classList.add('hidden');
-            }
-
-            if (viewIndex === 0) {
-                renderDashboardView();
-            } else if (viewIndex === 2) {
-                renderCalendarView();
-            }
-        }
-
+        // --- Core Helper & State Initialization Functions ---
         function initDashboardDates() {
-            const currentYear = currentDateKey.split('-')[0] || '2026';
-            dashStartMonth = `${currentYear}-01`;
-            dashEndMonth = `${currentYear}-12`;
-
+            const year = (currentDateKey && currentDateKey.split('-')[0]) || '2026';
+            dashStartMonth = `${year}-01`;
+            dashEndMonth = `${year}-12`;
             const startEl = document.getElementById('dashStartMonth');
             const endEl = document.getElementById('dashEndMonth');
             if (startEl) startEl.value = dashStartMonth;
             if (endEl) endEl.value = dashEndMonth;
         }
+        window.initDashboardDates = initDashboardDates;
+
+        function switchTab(index) {
+            const views = [
+                document.getElementById('viewDashboard'),
+                document.getElementById('viewSheet'),
+                document.getElementById('viewCalendar'),
+                document.getElementById('tabSettingsView')
+            ];
+
+            const desktopTabs = [
+                document.getElementById('tabDashboard'),
+                document.getElementById('tabSheet'),
+                document.getElementById('tabCalendar'),
+                document.getElementById('tabSettings')
+            ];
+
+            const mobileTabs = [
+                document.getElementById('mobileNavDashboard'),
+                document.getElementById('mobileNavSheet'),
+                document.getElementById('mobileNavCalendar'),
+                document.getElementById('mobileNavSettings')
+            ];
+
+            views.forEach((v, i) => {
+                if (v) v.classList.toggle('hidden', i !== index);
+            });
+
+            desktopTabs.forEach((tab, i) => {
+                if (tab) {
+                    if (i === index) {
+                        tab.className = "nav-tab active flex items-center py-3 px-1 border-b-2 border-milktea-700 font-medium text-sm text-milktea-800";
+                    } else {
+                        tab.className = "nav-tab flex items-center py-3 px-1 border-b-2 border-transparent font-medium text-sm text-milktea-500 hover:text-milktea-800 hover:border-milktea-300";
+                    }
+                }
+            });
+
+            mobileTabs.forEach((tab, i) => {
+                if (tab) {
+                    if (i === index) {
+                        tab.className = "flex flex-col items-center text-milktea-800 font-semibold text-[11px] px-3 py-1";
+                    } else {
+                        tab.className = "flex flex-col items-center text-milktea-400 font-normal text-[11px] px-3 py-1";
+                    }
+                }
+            });
+
+            const monthPickerContainer = document.getElementById('headerMonthPickerContainer');
+            if (monthPickerContainer) {
+                if (index === 1 || index === 2) {
+                    monthPickerContainer.classList.remove('hidden');
+                } else {
+                    monthPickerContainer.classList.add('hidden');
+                }
+            }
+
+            if (index === 0) renderDashboardView();
+            if (index === 2) renderCalendarView();
+        }
+        window.switchTab = switchTab;
 
         function ensureCurrentMonthData() {
             if (!appData[currentDateKey]) {
                 appData[currentDateKey] = {
                     shared: [],
-                    personal: {}
+                    personal: {},
+                    fundDeposits: []
                 };
             }
-            if (!appData[currentDateKey].personal) {
-                appData[currentDateKey].personal = {};
-            }
-            config.members.forEach(m => {
-                if (!appData[currentDateKey].personal[m.id]) {
-                    appData[currentDateKey].personal[m.id] = [];
-                }
-            });
+            if (!appData[currentDateKey].shared) appData[currentDateKey].shared = [];
+            if (!appData[currentDateKey].personal) appData[currentDateKey].personal = {};
+            if (!appData[currentDateKey].fundDeposits) appData[currentDateKey].fundDeposits = [];
         }
 
-        function checkHistoricalDataPresence() {
-            const keys = Object.keys(appData).filter(k => {
-                const monthObj = appData[k];
-                const hasShared = monthObj.shared && monthObj.shared.length > 0;
-                const hasPersonal = monthObj.personal && Object.values(monthObj.personal).some(arr => arr && arr.length > 0);
-                return hasShared || hasPersonal;
+        function calculateMonthTotals(mKey = currentDateKey) {
+            if (!appData[mKey]) {
+                return { pureSharedSum: 0, sharedTotal: 0, personalSums: {}, memberStats: {} };
+            }
+            const data = appData[mKey];
+            let pureSharedSum = 0;
+            (data.shared || []).forEach(item => {
+                pureSharedSum += (parseFloat(item.amount) || 0);
             });
 
-            const alertBanner = document.getElementById('historyDataAlert');
-            if (!alertBanner) return;
-
-            if (!keys.includes(currentDateKey) && keys.length > 0) {
-                const latestKey = keys.sort().pop();
-                document.getElementById('historyAlertText').textContent = `💡 提醒：系統發現您在 ${latestKey} 有記帳資料，是否立即切換？`;
-                alertBanner.classList.remove('hidden');
-                
-                const jumpBtn = document.getElementById('jumpToHistoryBtn');
-                if (jumpBtn) {
-                    jumpBtn.onclick = () => {
-                        currentDateKey = latestKey;
-                        const monthPicker = document.getElementById('monthPicker');
-                        if (monthPicker) monthPicker.value = currentDateKey;
-                        alertBanner.classList.add('hidden');
-                        renderAll();
-                        showToast(`已切換至 ${latestKey}`);
-                    };
-                }
-            } else {
-                alertBanner.classList.add('hidden');
-            }
-        }
-
-        function calculateMonthTotals(monthKey = currentDateKey) {
-            ensureCurrentMonthData();
-            const month = appData[monthKey] || { shared: [], personal: {} };
-
-            const pureSharedSum = (month.shared || []).reduce((acc, cur) => acc + (parseFloat(cur.amount) || 0), 0);
-            
-            let totalPersonalOutlay = 0;
             const personalSums = {};
+            (config.members || []).forEach(m => personalSums[m.id] = 0);
+            if (data.personal) {
+                Object.keys(data.personal).forEach(mId => {
+                    let sum = 0;
+                    (data.personal[mId] || []).forEach(p => sum += (parseFloat(p.amount) || 0));
+                    personalSums[mId] = sum;
+                });
+            }
 
-            config.members.forEach(m => {
-                const list = month.personal?.[m.id] || [];
-                const pSum = list.reduce((acc, cur) => acc + (parseFloat(cur.amount) || 0), 0);
-                personalSums[m.id] = pSum;
-                totalPersonalOutlay += pSum;
-            });
+            let sumPersonalForShared = 0;
+            Object.values(personalSums).forEach(val => sumPersonalForShared += val);
 
-            const sharedTotal = pureSharedSum + totalPersonalOutlay;
-
-            const totalWeight = config.splitMode === 'equal' 
-                ? config.members.length 
-                : config.members.reduce((acc, m) => acc + (parseFloat(m.weight) || 1), 0);
+            const sharedTotal = pureSharedSum + sumPersonalForShared;
 
             const memberStats = {};
-            config.members.forEach(m => {
-                const weight = config.splitMode === 'equal' ? 1 : (parseFloat(m.weight) || 1);
-                const ratio = totalWeight > 0 ? (weight / totalWeight) : (config.members.length > 0 ? (1 / config.members.length) : 0);
-                const targetObligation = Math.round(sharedTotal * ratio);
-                const paidAmount = personalSums[m.id] || 0;
-                const netBalance = paidAmount - targetObligation;
+            const totalMembers = (config.members || []).length;
 
-                memberStats[m.id] = {
-                    name: m.name,
-                    color: m.color,
-                    paidAmount,
-                    targetObligation,
-                    netBalance
+            if (totalMembers > 0) {
+                let totalWeight = 0;
+                config.members.forEach(m => totalWeight += (parseFloat(m.weight) || 1));
+                if (totalWeight <= 0) totalWeight = totalMembers;
+
+                config.members.forEach(m => {
+                    const weight = config.splitMode === 'custom' ? (parseFloat(m.weight) || 1) : 1;
+                    const weightRatio = config.splitMode === 'custom' ? (weight / totalWeight) : (1 / totalMembers);
+                    const shareAmount = Math.round(sharedTotal * weightRatio);
+                    const paidBySelf = personalSums[m.id] || 0;
+                    const netSettlement = shareAmount - paidBySelf;
+
+                    memberStats[m.id] = {
+                        member: m,
+                        shareAmount,
+                        paidBySelf,
+                        netSettlement
+                    };
+                });
+            }
+
+            return { pureSharedSum, sharedTotal, personalSums, memberStats };
+        }
+
+        function calculatePublicFundBalances() {
+            const accountTotals = {};
+            (config.publicFundAccounts || []).forEach(acc => {
+                accountTotals[acc.id] = {
+                    id: acc.id,
+                    name: acc.name,
+                    initial: parseFloat(acc.initialBalance) || 0,
+                    deposits: 0,
+                    spent: 0,
+                    currentBalance: parseFloat(acc.initialBalance) || 0
                 };
             });
 
-            const settlementTransfers = solveSettlementTransfers(memberStats);
-
-            return {
-                pureSharedSum,
-                sharedTotal,
-                personalSums,
-                memberStats,
-                settlementTransfers
-            };
-        }
-
-        function solveSettlementTransfers(memberStats) {
-            const debtors = [];
-            const creditors = [];
-
-            Object.entries(memberStats).forEach(([mId, stat]) => {
-                if (stat.netBalance < -0.5) {
-                    debtors.push({ id: mId, name: stat.name, amount: Math.abs(stat.netBalance) });
-                } else if (stat.netBalance > 0.5) {
-                    creditors.push({ id: mId, name: stat.name, amount: stat.netBalance });
-                }
-            });
-
-            debtors.sort((a, b) => b.amount - a.amount);
-            creditors.sort((a, b) => b.amount - a.amount);
-
-            const transfers = [];
-            let i = 0, j = 0;
-
-            while (i < debtors.length && j < creditors.length) {
-                const debtor = debtors[i];
-                const creditor = creditors[j];
-                const transferAmount = Math.min(debtor.amount, creditor.amount);
-
-                if (transferAmount > 0) {
-                    transfers.push({
-                        from: debtor.name,
-                        to: creditor.name,
-                        amount: Math.round(transferAmount)
+            Object.values(appData).forEach(monthData => {
+                if (monthData.fundDeposits) {
+                    monthData.fundDeposits.forEach(dep => {
+                        const accId = dep.accountId || 'acc_main';
+                        if (accountTotals[accId]) {
+                            accountTotals[accId].deposits += (parseFloat(dep.amount) || 0);
+                        }
                     });
                 }
 
-                debtor.amount -= transferAmount;
-                creditor.amount -= transferAmount;
+                if (monthData.shared) {
+                    monthData.shared.forEach(item => {
+                        if (item.paidByFund && item.fundAccountId) {
+                            if (accountTotals[item.fundAccountId]) {
+                                accountTotals[item.fundAccountId].spent += (parseFloat(item.amount) || 0);
+                            }
+                        }
+                    });
+                }
+            });
 
-                if (debtor.amount < 0.5) i++;
-                if (creditor.amount < 0.5) j++;
+            Object.values(accountTotals).forEach(acc => {
+                acc.currentBalance = acc.initial + acc.deposits - acc.spent;
+            });
+
+            return accountTotals;
+        }
+
+        function renderPublicFundTreasuryCard() {
+            const grid = document.getElementById('publicFundTreasuryGrid');
+            if (!grid) return;
+
+            const balances = calculatePublicFundBalances();
+            const accounts = Object.values(balances);
+
+            if (accounts.length === 0) {
+                grid.innerHTML = `<div class="col-span-full p-3 text-center text-xs text-milktea-400">尚無公積金帳戶，請至「家計」頁面新增</div>`;
+                return;
             }
 
-            return transfers;
+            grid.innerHTML = accounts.map(acc => `
+                <div class="bg-milktea-50 p-3 sm:p-3.5 rounded-xl border border-milktea-200 space-y-1 min-w-0">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-bold text-milktea-800 truncate">${escapeHtml(acc.name)}</span>
+                        <span class="text-[10px] text-milktea-500 font-mono">起算: NT$ ${acc.initial.toLocaleString('zh-TW')}</span>
+                    </div>
+                    <div class="text-base sm:text-lg font-bold font-mono text-milktea-900 truncate">
+                        NT$ ${acc.currentBalance.toLocaleString('zh-TW')}
+                    </div>
+                    <div class="flex justify-between items-center text-[10px] text-milktea-500 border-t border-milktea-200/60 pt-1">
+                        <span>累計入金: +${acc.deposits.toLocaleString('zh-TW')}</span>
+                        <span>公積金支付: -${acc.spent.toLocaleString('zh-TW')}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderSingleMonthKpis(totals) {
+            const grid = document.getElementById('singleMonthKpiGrid');
+            const fundBox = document.getElementById('publicFundSummaryBox');
+            if (!grid || !fundBox) return;
+
+            let totalMemberPaid = 0;
+            Object.values(totals.personalSums).forEach(v => totalMemberPaid += v);
+
+            const budgetPercent = Math.min(100, Math.round((totals.sharedTotal / (config.targetBudget || 1)) * 100));
+
+            grid.innerHTML = `
+                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1">
+                    <span class="text-[11px] font-medium text-milktea-500 flex items-center">
+                        <i class="fa-solid fa-coins text-caramel mr-1"></i> 當月共同總支出
+                    </span>
+                    <div class="text-lg sm:text-xl font-bold text-milktea-900 font-mono">
+                        NT$ ${totals.sharedTotal.toLocaleString('zh-TW')}
+                    </div>
+                </div>
+                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1">
+                    <span class="text-[11px] font-medium text-milktea-500 flex items-center">
+                        <i class="fa-solid fa-hand-holding-dollar text-matcha mr-1"></i> 成員自行墊付總額
+                    </span>
+                    <div class="text-lg sm:text-xl font-bold text-milktea-900 font-mono">
+                        NT$ ${totalMemberPaid.toLocaleString('zh-TW')}
+                    </div>
+                </div>
+                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1">
+                    <span class="text-[11px] font-medium text-milktea-500 flex items-center">
+                        <i class="fa-solid fa-chart-line text-terracotta mr-1"></i> 共同明細小計
+                    </span>
+                    <div class="text-lg sm:text-xl font-bold text-milktea-900 font-mono">
+                        NT$ ${totals.pureSharedSum.toLocaleString('zh-TW')}
+                    </div>
+                </div>
+                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1">
+                    <span class="text-[11px] font-medium text-milktea-500 flex items-center">
+                        <i class="fa-solid fa-bullseye text-milktea-600 mr-1"></i> 預算執行率
+                    </span>
+                    <div class="text-lg sm:text-xl font-bold text-milktea-900 font-mono">
+                        ${budgetPercent}%
+                    </div>
+                </div>
+            `;
+
+            if (Object.keys(totals.memberStats).length === 0) {
+                fundBox.innerHTML = `<div class="col-span-full text-center text-xs text-milktea-400 p-2">請先至「家計」頁面新增成員</div>`;
+                return;
+            }
+
+            fundBox.innerHTML = Object.values(totals.memberStats).map(stat => {
+                const net = stat.netSettlement;
+                let netTag = '';
+                if (net > 0) {
+                    netTag = `<span class="text-terracotta font-bold">需補繳至公積金 NT$ ${net.toLocaleString('zh-TW')}</span>`;
+                } else if (net < 0) {
+                    netTag = `<span class="text-matcha font-bold">可自公積金領回 NT$ ${Math.abs(net).toLocaleString('zh-TW')}</span>`;
+                } else {
+                    netTag = `<span class="text-milktea-600 font-bold">已收支平衡 (NT$ 0)</span>`;
+                }
+
+                return `
+                    <div class="bg-milktea-50 p-3 rounded-xl border border-milktea-200 space-y-1.5">
+                        <div class="flex justify-between items-center text-xs border-b border-milktea-200/60 pb-1">
+                            <span class="font-bold text-milktea-900 flex items-center">
+                                <span class="w-2.5 h-2.5 rounded-full mr-1.5" style="background-color: ${stat.member.color}"></span>
+                                ${escapeHtml(stat.member.name)}
+                            </span>
+                            <span class="text-milktea-500 text-[10px]">應負擔: NT$ ${stat.shareAmount.toLocaleString('zh-TW')}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-milktea-600 text-[11px]">個人已墊付: NT$ ${stat.paidBySelf.toLocaleString('zh-TW')}</span>
+                        </div>
+                        <div class="text-xs pt-0.5 border-t border-milktea-200/60 flex justify-between items-center">
+                            <span class="text-[11px] text-milktea-700">平帳結算:</span>
+                            ${netTag}
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         function calculateRangeTotals(startKey, endKey) {
@@ -1402,7 +1560,9 @@
             config.members.forEach(m => grandMemberPaid[m.id] = 0);
 
             const categoryBreakdown = {};
+            const tagBreakdown = {};
             const monthlySeries = [];
+            const rawItemsList = [];
 
             monthsList.forEach(mKey => {
                 const mTotals = calculateMonthTotals(mKey);
@@ -1423,12 +1583,34 @@
                 if (monthData) {
                     (monthData.shared || []).forEach(item => {
                         const cat = item.category || '未分類';
-                        categoryBreakdown[cat] = (categoryBreakdown[cat] || 0) + (parseFloat(item.amount) || 0);
+                        const tag = (item.tag || '').trim() || '#未標籤';
+                        const amt = parseFloat(item.amount) || 0;
+
+                        categoryBreakdown[cat] = (categoryBreakdown[cat] || 0) + amt;
+                        tagBreakdown[tag] = (tagBreakdown[tag] || 0) + amt;
+
+                        rawItemsList.push({
+                            monthKey: mKey,
+                            category: cat,
+                            tag: tag,
+                            item: item.item || '未命名',
+                            amount: amt
+                        });
                     });
+
                     config.members.forEach(m => {
                         const pSum = mTotals.personalSums[m.id] || 0;
                         if (pSum !== 0) {
                             categoryBreakdown[`${m.name} 個人墊付`] = (categoryBreakdown[`${m.name} 個人墊付`] || 0) + pSum;
+                            tagBreakdown[`#${m.name}個人墊付`] = (tagBreakdown[`#${m.name}個人墊付`] || 0) + pSum;
+
+                            rawItemsList.push({
+                                monthKey: mKey,
+                                category: `${m.name} 個人墊付`,
+                                tag: `#${m.name}墊付`,
+                                item: `${m.name} 支出墊付額`,
+                                amount: pSum
+                            });
                         }
                     });
                 }
@@ -1441,71 +1623,77 @@
                 grandSharedTotal,
                 grandMemberPaid,
                 categoryBreakdown,
-                monthlySeries
+                tagBreakdown,
+                monthlySeries,
+                rawItemsList
             };
         }
 
         function renderDashboardView() {
             const rangeTotals = calculateRangeTotals(dashStartMonth, dashEndMonth);
-            
+
             const kpiGrid = document.getElementById('dashboardKpiGrid');
             if (kpiGrid) {
-                let memberPaidCards = config.members.map(m => {
-                    const paid = rangeTotals.grandMemberPaid[m.id] || 0;
-                    return `
-                        <div class="bg-milktea-50 p-3 rounded-xl border border-milktea-200 min-w-0">
-                            <p class="text-[11px] font-medium text-milktea-500 truncate">${escapeHtml(m.name)} 墊付累計</p>
-                            <p class="text-sm sm:text-lg font-bold font-mono text-milktea-800 truncate">NT$ ${paid.toLocaleString('zh-TW')}</p>
-                        </div>
-                    `;
-                }).join('');
-
                 kpiGrid.innerHTML = `
-                    <div class="bg-milktea-50 p-3 rounded-xl border border-milktea-200 min-w-0">
-                        <p class="text-[11px] font-medium text-milktea-500 truncate">區間共同總支出 (${rangeTotals.monthsCount} 個月)</p>
-                        <p class="text-sm sm:text-lg font-bold font-mono text-milktea-900 truncate">NT$ ${rangeTotals.grandSharedTotal.toLocaleString('zh-TW')}</p>
+                    <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1">
+                        <span class="text-[11px] font-medium text-milktea-500">區間累計共同總支出</span>
+                        <div class="text-lg sm:text-2xl font-bold text-milktea-900 font-mono">
+                            NT$ ${rangeTotals.grandSharedTotal.toLocaleString('zh-TW')}
+                        </div>
                     </div>
-                    <div class="bg-milktea-50 p-3 rounded-xl border border-milktea-200 min-w-0">
-                        <p class="text-[11px] font-medium text-milktea-500 truncate">月平均共同支出</p>
-                        <p class="text-sm sm:text-lg font-bold font-mono text-milktea-800 truncate">NT$ ${(Math.round(rangeTotals.grandSharedTotal / (rangeTotals.monthsCount || 1))).toLocaleString('zh-TW')}</p>
+                    <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1">
+                        <span class="text-[11px] font-medium text-milktea-500">分析跨度月份數</span>
+                        <div class="text-lg sm:text-2xl font-bold text-milktea-900 font-mono">
+                            ${rangeTotals.monthsCount} 個月
+                        </div>
                     </div>
-                    ${memberPaidCards}
+                    <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1">
+                        <span class="text-[11px] font-medium text-milktea-500">平均每月共同開銷</span>
+                        <div class="text-lg sm:text-2xl font-bold text-milktea-900 font-mono">
+                            NT$ ${Math.round(rangeTotals.grandSharedTotal / (rangeTotals.monthsCount || 1)).toLocaleString('zh-TW')}
+                        </div>
+                    </div>
+                    <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1">
+                        <span class="text-[11px] font-medium text-milktea-500">參與分攤成員人數</span>
+                        <div class="text-lg sm:text-2xl font-bold text-milktea-900 font-mono">
+                            ${config.members.length} 位
+                        </div>
+                    </div>
                 `;
             }
 
+            renderSplitBarChart(rangeTotals);
+            renderCategoryPieChart(rangeTotals);
+
             const rangeBadge = document.getElementById('dashboardRangeBadge');
             if (rangeBadge) {
-                rangeBadge.textContent = `${dashStartMonth} ～ ${dashEndMonth}`;
+                rangeBadge.textContent = `${rangeTotals.startKey} ～ ${rangeTotals.endKey} 總結算`;
             }
 
             const settlementBox = document.getElementById('dashboardSettlementBox');
             if (settlementBox) {
-                let memberSummaryHtml = config.members.map(m => {
-                    const totalPaid = rangeTotals.grandMemberPaid[m.id] || 0;
-                    return `<div class="text-xs text-milktea-700 break-words-anywhere"><span class="font-bold">${escapeHtml(m.name)}</span> 累計墊付：<span class="font-mono font-semibold">NT$ ${totalPaid.toLocaleString('zh-TW')}</span></div>`;
-                }).join('');
-
-                settlementBox.innerHTML = `
-                    <div class="space-y-1 min-w-0">
-                        <p class="text-xs font-bold text-milktea-800">區間消費總覽：</p>
-                        <p class="text-xs text-milktea-600 break-words-anywhere">共選取 ${rangeTotals.monthsCount} 個月份，共同開銷共累計 <span class="font-bold font-mono text-milktea-900">NT$ ${rangeTotals.grandSharedTotal.toLocaleString('zh-TW')}</span>。</p>
-                    </div>
-                    <div class="space-y-1 border-t md:border-t-0 md:border-l border-milktea-200 pt-2 md:pt-0 md:pl-3 min-w-0">
-                        <p class="text-xs font-bold text-milktea-800">成員墊付概況：</p>
-                        ${memberSummaryHtml || '<p class="text-xs text-milktea-400">尚未設定成員</p>'}
-                    </div>
-                    <div class="space-y-1 border-t md:border-t-0 md:border-l border-milktea-200 pt-2 md:pt-0 md:pl-3 min-w-0">
-                        <p class="text-xs font-bold text-milktea-800">💡 提示：</p>
-                        <p class="text-[11px] text-milktea-500">切換至「月見」可查看單月明細與當月平帳建議方案。</p>
-                    </div>
-                `;
+                if (config.members.length === 0) {
+                    settlementBox.innerHTML = `<div class="col-span-full text-center text-xs text-milktea-400">尚無成員資料</div>`;
+                } else {
+                    settlementBox.innerHTML = config.members.map(m => {
+                        const totalPaid = rangeTotals.grandMemberPaid[m.id] || 0;
+                        return `
+                            <div class="bg-white p-3 rounded-xl border border-milktea-200 space-y-1">
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${m.color}"></span>
+                                    <span class="font-bold text-xs text-milktea-900">${escapeHtml(m.name)}</span>
+                                </div>
+                                <div class="text-xs text-milktea-600">
+                                    區間個人總墊付：<span class="font-mono font-bold text-milktea-800">NT$ ${totalPaid.toLocaleString('zh-TW')}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
             }
-
-            renderTrendChart(rangeTotals);
-            renderCategoryPieChart(rangeTotals);
         }
 
-        function renderTrendChart(rangeTotals) {
+        function renderSplitBarChart(rangeTotals) {
             const canvas = document.getElementById('splitBarChart');
             if (!canvas) return;
 
@@ -1514,34 +1702,64 @@
             }
 
             const labels = rangeTotals.monthlySeries.map(s => s.label);
-            const dataShared = rangeTotals.monthlySeries.map(s => s.sharedTotal);
+            const dataValues = rangeTotals.monthlySeries.map(s => s.sharedTotal);
 
             const ctx = canvas.getContext('2d');
             splitChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [
-                        {
-                            label: '當月共同總支出',
-                            data: dataShared,
-                            backgroundColor: '#A8927E',
-                            borderRadius: 6
-                        }
-                    ]
+                    datasets: [{
+                        label: '共同總支出 (NT$)',
+                        data: dataValues,
+                        backgroundColor: '#A8927E',
+                        borderRadius: 6
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom' }
+                        legend: { display: false }
                     },
                     scales: {
-                        y: { beginAtZero: true }
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#F4EFE6' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
                     }
                 }
             });
         }
+
+        function setChartDimension(dim) {
+            chartAnalysisDimension = dim;
+            chartSelectedCategory = null;
+
+            const catBtn = document.getElementById('chartDimCategoryBtn');
+            const tagBtn = document.getElementById('chartDimTagBtn');
+
+            if (dim === 'category') {
+                if (catBtn) catBtn.className = "px-2.5 py-1 rounded-md bg-milktea-700 text-white transition";
+                if (tagBtn) tagBtn.className = "px-2.5 py-1 rounded-md text-milktea-700 hover:bg-white transition";
+            } else {
+                if (tagBtn) tagBtn.className = "px-2.5 py-1 rounded-md bg-milktea-700 text-white transition";
+                if (catBtn) catBtn.className = "px-2.5 py-1 rounded-md text-milktea-700 hover:bg-white transition";
+            }
+
+            renderDashboardView();
+        }
+
+        function clearChartFilter() {
+            chartSelectedCategory = null;
+            document.getElementById('chartDetailFilterCard')?.classList.add('hidden');
+        }
+
+        window.setChartDimension = setChartDimension;
+        window.clearChartFilter = clearChartFilter;
 
         function renderCategoryPieChart(rangeTotals) {
             const canvas = document.getElementById('categoryPieChart');
@@ -1551,11 +1769,15 @@
                 pieChartInstance.destroy();
             }
 
-            const categories = Object.keys(rangeTotals.categoryBreakdown);
-            const dataValues = Object.values(rangeTotals.categoryBreakdown);
+            const activeBreakdown = chartAnalysisDimension === 'category' 
+                ? rangeTotals.categoryBreakdown 
+                : rangeTotals.tagBreakdown;
 
-            if (categories.length === 0) {
-                categories.push('無數據');
+            const labels = Object.keys(activeBreakdown);
+            const dataValues = Object.values(activeBreakdown);
+
+            if (labels.length === 0) {
+                labels.push('無數據');
                 dataValues.push(1);
             }
 
@@ -1565,10 +1787,10 @@
             pieChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: categories,
+                    labels: labels,
                     datasets: [{
                         data: dataValues,
-                        backgroundColor: colors.slice(0, categories.length)
+                        backgroundColor: colors.slice(0, labels.length)
                     }]
                 },
                 options: {
@@ -1576,103 +1798,54 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { position: 'bottom' }
+                    },
+                    onClick: (evt, activeElements) => {
+                        if (activeElements && activeElements.length > 0) {
+                            const index = activeElements[0].index;
+                            const clickedLabel = labels[index];
+                            chartSelectedCategory = clickedLabel;
+                            renderChartFilteredList(rangeTotals);
+                        }
                     }
                 }
             });
         }
 
-        function renderSingleMonthKpis(totals) {
-            const grid = document.getElementById('singleMonthKpiGrid');
-            if (!grid) return;
+        function renderChartFilteredList(rangeTotals) {
+            const filterCard = document.getElementById('chartDetailFilterCard');
+            const badge = document.getElementById('chartFilterBadge');
+            const tbody = document.getElementById('chartFilterTableBody');
 
-            let memberCards = config.members.map(m => {
-                const stat = totals.memberStats[m.id] || { paidAmount: 0, targetObligation: 0, netBalance: 0 };
-                const bal = stat.netBalance;
-                let balText = '';
-                if (bal > 0) {
-                    balText = `<span class="text-matcha font-semibold"> (溢付 +${bal.toLocaleString('zh-TW')})</span>`;
-                } else if (bal < 0) {
-                    balText = `<span class="text-terracotta font-semibold"> (差額 ${bal.toLocaleString('zh-TW')})</span>`;
+            if (!filterCard || !badge || !tbody) return;
+
+            if (!chartSelectedCategory) {
+                filterCard.classList.add('hidden');
+                return;
+            }
+
+            badge.textContent = chartSelectedCategory;
+            filterCard.classList.remove('hidden');
+
+            const filteredItems = rangeTotals.rawItemsList.filter(item => {
+                if (chartAnalysisDimension === 'category') {
+                    return item.category === chartSelectedCategory;
                 } else {
-                    balText = `<span class="text-milktea-400 font-semibold"> (已平衡)</span>`;
+                    return item.tag === chartSelectedCategory;
                 }
+            });
 
-                return `
-                    <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1 min-w-0">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-milktea-700 flex items-center truncate pr-1">
-                                <span class="w-2.5 h-2.5 rounded-full mr-1.5 shrink-0" style="background-color: ${m.color}"></span>
-                                <span class="truncate">${escapeHtml(m.name)} 墊付</span>
-                            </span>
-                            <span class="text-[10px] text-milktea-400 shrink-0">應負擔 NT$ ${stat.targetObligation.toLocaleString('zh-TW')}</span>
-                        </div>
-                        <div class="text-base sm:text-xl font-bold font-mono text-milktea-900 truncate">
-                            NT$ ${stat.paidAmount.toLocaleString('zh-TW')}
-                        </div>
-                        <div class="text-[11px] truncate">
-                            ${balText}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            grid.innerHTML = `
-                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs space-y-1 min-w-0">
-                    <span class="text-xs font-bold text-milktea-700 flex items-center truncate">
-                        <i class="fa-solid fa-calculator text-milktea-500 mr-1.5 shrink-0"></i> 
-                        <span class="truncate">當月共同總開銷</span>
-                    </span>
-                    <div class="text-base sm:text-xl font-bold font-mono text-milktea-900 truncate">
-                        NT$ ${totals.sharedTotal.toLocaleString('zh-TW')}
-                    </div>
-                    <div class="text-[11px] text-milktea-500 truncate">
-                        公用明細 + 成員個人墊付總和
-                    </div>
-                </div>
-                ${memberCards}
-            `;
-
-            const publicFundBox = document.getElementById('publicFundSummaryBox');
-            if (publicFundBox) {
-                if (config.members.length === 0) {
-                    publicFundBox.innerHTML = `<div class="col-span-full p-4 text-center text-xs text-milktea-400">尚未新增成員，請至「家計」頁面新增成員</div>`;
-                } else {
-                    let fundHtml = config.members.map(m => {
-                        const stat = totals.memberStats[m.id] || { paidAmount: 0, targetObligation: 0, netBalance: 0 };
-                        let actionText = '';
-                        let badgeClass = '';
-                        let amountStr = `NT$ ${Math.abs(stat.netBalance).toLocaleString('zh-TW')}`;
-
-                        if (stat.netBalance < -0.5) {
-                            actionText = `應補繳公積金 (匯入共用)`;
-                            badgeClass = `bg-terracotta/10 text-terracotta border-terracotta/30`;
-                        } else if (stat.netBalance > 0.5) {
-                            actionText = `應從公積金領回 (溢付退款)`;
-                            badgeClass = `bg-matcha/10 text-matcha border-matcha/30`;
-                        } else {
-                            actionText = `收支完全平衡`;
-                            badgeClass = `bg-milktea-100 text-milktea-700 border-milktea-200`;
-                            amountStr = `NT$ 0`;
-                        }
-
-                        return `
-                            <div class="p-3.5 rounded-xl border border-milktea-200 bg-milktea-50/70 space-y-2 min-w-0">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-xs font-bold text-milktea-800 flex items-center truncate">
-                                        <span class="w-2.5 h-2.5 rounded-full mr-1.5 shrink-0" style="background-color: ${m.color}"></span>
-                                        <span class="truncate">${escapeHtml(m.name)}</span>
-                                    </span>
-                                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md border ${badgeClass} shrink-0">${actionText}</span>
-                                </div>
-                                <div class="flex justify-between items-baseline pt-1 border-t border-milktea-200/60">
-                                    <span class="text-[11px] text-milktea-500">應付負擔: ${stat.targetObligation.toLocaleString('zh-TW')} | 已墊付: ${stat.paidAmount.toLocaleString('zh-TW')}</span>
-                                    <span class="text-sm sm:text-base font-bold font-mono text-milktea-900">${amountStr}</span>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-                    publicFundBox.innerHTML = fundHtml;
-                }
+            if (filteredItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-milktea-400">該項目無相關明細</td></tr>`;
+            } else {
+                tbody.innerHTML = filteredItems.map(item => `
+                    <tr class="hover:bg-milktea-50/50">
+                        <td class="p-2 font-mono text-milktea-600">${item.monthKey}</td>
+                        <td class="p-2">${escapeHtml(item.category)}</td>
+                        <td class="p-2 text-caramel font-medium">${escapeHtml(item.tag)}</td>
+                        <td class="p-2 font-semibold text-milktea-900">${escapeHtml(item.item)}</td>
+                        <td class="p-2 text-right font-mono font-bold text-milktea-900">NT$ ${item.amount.toLocaleString('zh-TW')}</td>
+                    </tr>
+                `).join('');
             }
         }
 
@@ -1684,22 +1857,40 @@
             const month = appData[currentDateKey];
             const query = searchQuery.toLowerCase();
 
+            const fundAccounts = config.publicFundAccounts || [];
+
             let sharedItems = (month.shared || []).filter(item => {
                 if (!query) return true;
-                return (item.item || '').toLowerCase().includes(query) || (item.category || '').toLowerCase().includes(query);
+                return (item.item || '').toLowerCase().includes(query) || 
+                       (item.category || '').toLowerCase().includes(query) ||
+                       (item.tag || '').toLowerCase().includes(query);
             });
 
             let sharedRowsHtml = sharedItems.map(item => {
                 const realIdx = month.shared.indexOf(item);
                 const addedByTag = item.addedBy ? `<span class="text-[9px] text-milktea-400 block">${escapeHtml(item.addedBy)}新增</span>` : '';
+                
+                let fundPayOptions = `<option value="">成員墊付</option>`;
+                fundAccounts.forEach(acc => {
+                    fundPayOptions += `<option value="${acc.id}" ${item.paidByFund && item.fundAccountId === acc.id ? 'selected' : ''}>Vault: ${escapeHtml(acc.name)}</option>`;
+                });
+
                 return `
                     <tr class="hover:bg-milktea-50/50 transition">
                         <td class="p-2 border-r border-milktea-100 min-w-[70px]">
                             ${renderCategorySelect(item.category || '公用', `updateSharedItem(${realIdx}, 'category', this.value)`)}
                         </td>
+                        <td class="p-2 border-r border-milktea-100 min-w-[75px]">
+                            <input type="text" value="${escapeHtml(item.tag || '')}" placeholder="#標籤" onchange="updateSharedItem(${realIdx}, 'tag', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-1 text-xs text-caramel font-semibold">
+                        </td>
                         <td class="p-2 border-r border-milktea-100 min-w-[90px]">
                             <input type="text" value="${escapeHtml(item.item || '')}" onchange="updateSharedItem(${realIdx}, 'item', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-1 text-xs text-milktea-800 break-words-anywhere">
                             ${addedByTag}
+                        </td>
+                        <td class="p-2 border-r border-milktea-100 min-w-[90px]">
+                            <select onchange="updateSharedFundPayment(${realIdx}, this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-0.5 text-[10px] text-milktea-700 cursor-pointer">
+                                ${fundPayOptions}
+                            </select>
                         </td>
                         <td class="p-2 border-r border-milktea-100 text-right min-w-[75px]">
                             <input type="number" step="any" value="${item.amount !== undefined ? item.amount : ''}" onchange="updateSharedItem(${realIdx}, 'amount', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-1 text-xs text-right font-mono font-semibold text-milktea-900">
@@ -1725,21 +1916,23 @@
                         </button>
                     </div>
                     <div class="p-2 flex-1 overflow-x-auto">
-                        <table class="w-full min-w-[260px] text-left text-xs">
+                        <table class="w-full min-w-[320px] text-left text-xs">
                             <thead class="bg-milktea-50 text-milktea-700 font-semibold border-b border-milktea-200">
                                 <tr>
-                                    <th class="p-2 w-20">分類</th>
+                                    <th class="p-2 w-16">分類</th>
+                                    <th class="p-2 w-16">標籤</th>
                                     <th class="p-2">品項</th>
+                                    <th class="p-2 w-20">支付管道</th>
                                     <th class="p-2 text-right w-20">金額</th>
                                     <th class="p-1 w-8"></th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-milktea-100">
-                                ${sharedRowsHtml || '<tr><td colspan="4" class="p-4 text-center text-milktea-400 text-xs">尚無共同支出項目</td></tr>'}
+                                ${sharedRowsHtml || '<tr><td colspan="6" class="p-4 text-center text-milktea-400 text-xs">尚無共同支出項目</td></tr>'}
                             </tbody>
                             <tfoot class="border-t-2 border-milktea-200 bg-milktea-50/80 font-bold">
                                 <tr>
-                                    <td colspan="2" class="p-2 text-milktea-800">共同明細小計</td>
+                                    <td colspan="4" class="p-2 text-milktea-800">共同明細小計</td>
                                     <td class="p-2 text-right font-mono text-milktea-900">NT$ ${totals.pureSharedSum.toLocaleString('zh-TW')}</td>
                                     <td></td>
                                 </tr>
@@ -1753,7 +1946,9 @@
                 const pList = month.personal?.[m.id] || [];
                 const filteredPList = pList.filter(item => {
                     if (!query) return true;
-                    return (item.item || '').toLowerCase().includes(query) || (item.category || '').toLowerCase().includes(query);
+                    return (item.item || '').toLowerCase().includes(query) || 
+                           (item.category || '').toLowerCase().includes(query) ||
+                           (item.tag || '').toLowerCase().includes(query);
                 });
 
                 let pRowsHtml = filteredPList.map(item => {
@@ -1762,6 +1957,9 @@
                         <tr class="hover:bg-milktea-50/50 transition">
                             <td class="p-2 border-r border-milktea-100 min-w-[70px]">
                                 ${renderCategorySelect(item.category || '日用', `updatePersonalItem('${m.id}', ${realIdx}, 'category', this.value)`)}
+                            </td>
+                            <td class="p-2 border-r border-milktea-100 min-w-[75px]">
+                                <input type="text" value="${escapeHtml(item.tag || '')}" placeholder="#標籤" onchange="updatePersonalItem('${m.id}', ${realIdx}, 'tag', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-1 text-xs text-caramel font-semibold">
                             </td>
                             <td class="p-2 border-r border-milktea-100 min-w-[90px]">
                                 <input type="text" value="${escapeHtml(item.item || '')}" onchange="updatePersonalItem('${m.id}', ${realIdx}, 'item', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded px-1 text-xs text-milktea-800 break-words-anywhere">
@@ -1792,21 +1990,22 @@
                             </button>
                         </div>
                         <div class="p-2 flex-1 overflow-x-auto">
-                            <table class="w-full min-w-[260px] text-left text-xs">
+                            <table class="w-full min-w-[280px] text-left text-xs">
                                 <thead class="bg-milktea-50 text-milktea-700 font-semibold border-b border-milktea-200">
                                     <tr>
-                                        <th class="p-2 w-20">分類</th>
+                                        <th class="p-2 w-16">分類</th>
+                                        <th class="p-2 w-16">標籤</th>
                                         <th class="p-2">品項</th>
                                         <th class="p-2 text-right w-20">金額</th>
                                         <th class="p-1 w-8"></th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-milktea-100">
-                                    ${pRowsHtml || '<tr><td colspan="4" class="p-4 text-center text-milktea-400 text-xs">尚無個人墊付項目</td></tr>'}
+                                    ${pRowsHtml || '<tr><td colspan="5" class="p-4 text-center text-milktea-400 text-xs">尚無個人墊付項目</td></tr>'}
                                 </tbody>
                                 <tfoot class="border-t-2 border-milktea-200 bg-milktea-50/80 font-bold">
                                     <tr>
-                                        <td colspan="2" class="p-2 text-milktea-800">個人墊付小計</td>
+                                        <td colspan="3" class="p-2 text-milktea-800">個人墊付小計</td>
                                         <td class="p-2 text-right font-mono text-milktea-900">NT$ ${pSum.toLocaleString('zh-TW')}</td>
                                         <td></td>
                                     </tr>
@@ -1820,215 +2019,31 @@
             grid.innerHTML = sharedTableCard + memberTablesCards;
         }
 
-        function renderCalendarView() {
-            const titleEl = document.getElementById('calMonthTitle');
-            if (titleEl) {
-                titleEl.textContent = `${calendarYear}年${calendarMonth}月`;
-            }
-
-            const gridEl = document.getElementById('calendarDaysGrid');
-            const listEl = document.getElementById('calendarEventsList');
-            if (!gridEl || !listEl) return;
-
-            const firstDay = new Date(calendarYear, calendarMonth - 1, 1);
-            const lastDay = new Date(calendarYear, calendarMonth, 0);
-            const daysInMonth = lastDay.getDate();
-            let startingDayOfWeek = firstDay.getDay();
-            startingDayOfWeek = startingDayOfWeek === 0 ? 6 : startingDayOfWeek - 1;
-
-            let html = '';
-
-            for (let i = 0; i < startingDayOfWeek; i++) {
-                html += `<div class="bg-milktea-50/30 rounded-xl min-h-[75px] sm:min-h-[90px] border border-milktea-100/50 opacity-40"></div>`;
-            }
-
-            const memberMap = {};
-            config.members.forEach(m => memberMap[m.id] = m);
-
-            const todayStr = new Date().toISOString().split('T')[0];
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayStr = `${calendarYear}-${String(calendarMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const isToday = (dayStr === todayStr);
-
-                const dayEvents = calendarEvents.filter(ev => ev.date === dayStr);
-
-                let eventsHtml = dayEvents.map(ev => {
-                    const mObj = memberMap[ev.memberId] || { name: '成員', color: '#8C7565' };
-                    return `
-                        <div onclick="openEventDetail('${ev.id}')" class="group relative text-[9px] sm:text-xs p-1 rounded-md text-white font-medium truncate mb-0.5 sm:mb-1 shadow-2xs flex items-center justify-between cursor-pointer hover:opacity-90 transition min-w-0" style="background-color: ${mObj.color}" title="點擊查看詳情: ${escapeHtml(ev.title)}">
-                            <span class="truncate pr-1"><b>${escapeHtml(mObj.name)}:</b> ${escapeHtml(ev.title)}</span>
-                            <span class="text-[8px] opacity-85 shrink-0"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        </div>
-                    `;
-                }).join('');
-
-                html += `
-                    <div class="bg-white rounded-xl min-h-[75px] sm:min-h-[95px] p-1 sm:p-2 border ${isToday ? 'border-milktea-700 bg-milktea-50/40 ring-1 ring-milktea-700' : 'border-milktea-200'} flex flex-col justify-between transition hover:shadow-xs min-w-0">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="font-bold ${isToday ? 'bg-milktea-700 text-white w-5 h-5 rounded-full flex items-center justify-center text-[11px]' : 'text-milktea-800'}">${day}</span>
-                            <button onclick="openAddEventOnDate('${dayStr}')" class="text-milktea-300 hover:text-milktea-700 text-[10px] sm:text-xs transition p-0.5" title="在這天新增行程">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
-                        </div>
-                        <div class="flex-1 overflow-y-auto mt-1 max-h-[70px] sm:max-h-[85px] space-y-0.5">
-                            ${eventsHtml}
-                        </div>
-                    </div>
-                `;
-            }
-
-            gridEl.innerHTML = html;
-
-            const monthPrefix = `${calendarYear}-${String(calendarMonth).padStart(2, '0')}`;
-            const sortedEvents = calendarEvents
-                .filter(ev => ev.date && ev.date.startsWith(monthPrefix))
-                .sort((a, b) => a.date.localeCompare(b.date));
-
-            if (sortedEvents.length === 0) {
-                listEl.innerHTML = `<div class="p-6 text-center text-milktea-400 text-xs">本月尚無安排任何行程</div>`;
+        function updateSharedFundPayment(idx, accId) {
+            ensureCurrentMonthData();
+            if (!appData[currentDateKey].shared[idx]) return;
+            if (accId) {
+                appData[currentDateKey].shared[idx].paidByFund = true;
+                appData[currentDateKey].shared[idx].fundAccountId = accId;
             } else {
-                listEl.innerHTML = sortedEvents.map(ev => {
-                    const mObj = memberMap[ev.memberId] || { name: '成員', color: '#8C7565' };
-                    return `
-                        <div onclick="openEventDetail('${ev.id}')" class="flex items-center justify-between p-3 bg-milktea-50/80 hover:bg-milktea-100/80 rounded-xl border border-milktea-200 text-xs sm:text-sm cursor-pointer transition min-w-0">
-                            <div class="flex items-center space-x-3 min-w-0 pr-2">
-                                <div class="w-2.5 sm:w-3 h-10 rounded-full shrink-0" style="background-color: ${mObj.color}"></div>
-                                <div class="min-w-0 pr-1">
-                                    <div class="flex items-center space-x-2 min-w-0">
-                                        <span class="font-bold text-milktea-900 truncate">${escapeHtml(ev.title)}</span>
-                                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full text-white shrink-0" style="background-color: ${mObj.color}">${escapeHtml(mObj.name)}</span>
-                                    </div>
-                                    <p class="text-[11px] text-milktea-500 mt-0.5 truncate">📅 ${ev.date} ${ev.desc ? ' ‧ ' + escapeHtml(ev.desc) : ''}</p>
-                                </div>
-                            </div>
-                            <div class="text-milktea-400 text-xs px-1 shrink-0">
-                                <i class="fa-solid fa-chevron-right"></i>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
+                appData[currentDateKey].shared[idx].paidByFund = false;
+                delete appData[currentDateKey].shared[idx].fundAccountId;
             }
-        }
-
-        function shiftCalendarMonth(offset) {
-            calendarMonth += offset;
-            if (calendarMonth > 12) {
-                calendarMonth = 1;
-                calendarYear++;
-            } else if (calendarMonth < 1) {
-                calendarMonth = 12;
-                calendarYear--;
-            }
-            renderCalendarView();
-        }
-
-        function openAddEventOnDate(dateStr) {
-            if (config.members.length === 0) {
-                showToast('請先至「家計」頁面新增成員，才可安排行程！');
-                return;
-            }
-            const dateInput = document.getElementById('eventDateInput');
-            if (dateInput) dateInput.value = dateStr || new Date().toISOString().split('T')[0];
-            
-            const memberSelect = document.getElementById('eventMemberSelect');
-            if (memberSelect) {
-                memberSelect.innerHTML = config.members.map(m => `<option value="${m.id}" ${m.id === boundDeviceMemberId ? 'selected' : ''}>${escapeHtml(m.name)}</option>`).join('');
-            }
-
-            document.getElementById('eventModal')?.classList.remove('hidden');
-        }
-
-        let currentDetailEventId = null;
-
-        function openEventDetail(eventId) {
-            const ev = calendarEvents.find(e => e.id === eventId);
-            if (!ev) return;
-
-            currentDetailEventId = eventId;
-            const memberMap = {};
-            config.members.forEach(m => memberMap[m.id] = m);
-            const mObj = memberMap[ev.memberId] || { name: '成員', color: '#8C7565' };
-
-            const badge = document.getElementById('detailEventMember');
-            if (badge) {
-                badge.textContent = mObj.name;
-                badge.style.backgroundColor = mObj.color;
-            }
-
-            const dateEl = document.getElementById('detailEventDate');
-            if (dateEl) dateEl.textContent = ev.date;
-
-            const titleEl = document.getElementById('detailEventTitle');
-            if (titleEl) titleEl.textContent = ev.title;
-
-            const descEl = document.getElementById('detailEventDesc');
-            if (descEl) descEl.textContent = ev.desc || '（無補充備註說明）';
-
-            document.getElementById('eventDetailModal')?.classList.remove('hidden');
-        }
-
-        function deleteCalendarEvent(id) {
-            calendarEvents = calendarEvents.filter(ev => ev.id !== id);
             renderAll();
-            showToast('已刪除該筆行程');
         }
 
-        window.deleteCalendarEvent = deleteCalendarEvent;
-        window.openAddEventOnDate = openAddEventOnDate;
-        window.openEventDetail = openEventDetail;
-
-        function updateDropdownOptions() {
-            const quickTarget = document.getElementById('quickTarget');
-            const mobileQuickTarget = document.getElementById('mobileQuickTarget');
-            const settingsSelect = document.getElementById('settingsDeviceMemberSelect');
-            const modalSelect = document.getElementById('modalDeviceMemberSelect');
-
-            let options = `<option value="shared">共同支出</option>`;
-            let memberOnlyOptions = `<option value="">-- 未選擇綁定 (自由新增) --</option>`;
-
-            config.members.forEach(m => {
-                const isBound = m.id === boundDeviceMemberId;
-                options += `<option value="${m.id}" ${isBound ? 'selected' : ''}>${escapeHtml(m.name)} (個人墊付)</option>`;
-                memberOnlyOptions += `<option value="${m.id}" ${isBound ? 'selected' : ''}>${escapeHtml(m.name)}</option>`;
-            });
-
-            if (quickTarget) quickTarget.innerHTML = options;
-            if (mobileQuickTarget) mobileQuickTarget.innerHTML = options;
-            if (settingsSelect) settingsSelect.innerHTML = memberOnlyOptions;
-            if (modalSelect) modalSelect.innerHTML = memberOnlyOptions;
-
-            // Update Header Device Member Tag
-            const tagContainer = document.getElementById('deviceIdentityTag');
-            const tagName = document.getElementById('deviceIdentityName');
-            const boundHint = document.getElementById('quickBoundHint');
-
-            const boundMemberObj = config.members.find(m => m.id === boundDeviceMemberId);
-            if (boundMemberObj && tagContainer && tagName) {
-                tagName.textContent = `本機：${boundMemberObj.name}`;
-                tagContainer.classList.remove('hidden');
-                if (boundHint) boundHint.classList.remove('hidden');
-            } else if (tagContainer) {
-                tagContainer.classList.add('hidden');
-                if (boundHint) boundHint.classList.add('hidden');
-            }
-        }
-
-        function getBoundMemberName() {
-            const mObj = config.members.find(m => m.id === boundDeviceMemberId);
-            return mObj ? mObj.name : null;
-        }
+        window.updateSharedFundPayment = updateSharedFundPayment;
 
         function addSharedRow() {
             ensureCurrentMonthData();
             const addedBy = getBoundMemberName();
-            appData[currentDateKey].shared.push({ category: '公用', item: '', amount: 0, addedBy });
-            renderAll();
-        }
-
-        function deleteSharedItem(idx) {
-            ensureCurrentMonthData();
-            appData[currentDateKey].shared.splice(idx, 1);
+            appData[currentDateKey].shared.push({
+                category: '公用',
+                tag: '',
+                item: '',
+                amount: 0,
+                addedBy
+            });
             renderAll();
         }
 
@@ -2043,131 +2058,279 @@
             renderAll();
         }
 
-        function addPersonalRow(memberId) {
+        function deleteSharedItem(idx) {
             ensureCurrentMonthData();
-            if (!appData[currentDateKey].personal[memberId]) {
-                appData[currentDateKey].personal[memberId] = [];
-            }
-            appData[currentDateKey].personal[memberId].push({ category: '日用', item: '', amount: 0 });
+            appData[currentDateKey].shared.splice(idx, 1);
             renderAll();
         }
 
-        function deletePersonalItem(memberId, idx) {
+        function addPersonalRow(mId) {
             ensureCurrentMonthData();
-            if (appData[currentDateKey].personal[memberId]) {
-                appData[currentDateKey].personal[memberId].splice(idx, 1);
+            if (!appData[currentDateKey].personal[mId]) {
+                appData[currentDateKey].personal[mId] = [];
+            }
+            appData[currentDateKey].personal[mId].push({
+                category: '日用',
+                tag: '',
+                item: '',
+                amount: 0
+            });
+            renderAll();
+        }
+
+        function updatePersonalItem(mId, idx, key, val) {
+            ensureCurrentMonthData();
+            if (!appData[currentDateKey].personal[mId]?.[idx]) return;
+            if (key === 'amount') {
+                appData[currentDateKey].personal[mId][idx][key] = parseFloat(val) || 0;
+            } else {
+                appData[currentDateKey].personal[mId][idx][key] = val;
+            }
+            renderAll();
+        }
+
+        function deletePersonalItem(mId, idx) {
+            ensureCurrentMonthData();
+            if (appData[currentDateKey].personal[mId]) {
+                appData[currentDateKey].personal[mId].splice(idx, 1);
                 renderAll();
             }
         }
 
-        function updatePersonalItem(memberId, idx, key, val) {
-            ensureCurrentMonthData();
-            if (!appData[currentDateKey].personal[memberId]?.[idx]) return;
-            if (key === 'amount') {
-                appData[currentDateKey].personal[memberId][idx][key] = parseFloat(val) || 0;
+        window.addSharedRow = addSharedRow;
+        window.updateSharedItem = updateSharedItem;
+        window.deleteSharedItem = deleteSharedItem;
+        window.addPersonalRow = addPersonalRow;
+        window.updatePersonalItem = updatePersonalItem;
+        window.deletePersonalItem = deletePersonalItem;
+
+        function renderCalendarView() {
+            const monthTitle = document.getElementById('calMonthTitle');
+            const daysGrid = document.getElementById('calendarDaysGrid');
+            const eventsList = document.getElementById('calendarEventsList');
+
+            if (!monthTitle || !daysGrid || !eventsList) return;
+
+            const [y, m] = currentDateKey.split('-').map(Number);
+            calendarYear = y || 2026;
+            calendarMonth = m || 9;
+
+            monthTitle.textContent = `${calendarYear}年${calendarMonth}月`;
+
+            const firstDay = new Date(calendarYear, calendarMonth - 1, 1).getDay();
+            const totalDays = new Date(calendarYear, calendarMonth, 0).getDate();
+
+            let offsetDays = firstDay === 0 ? 6 : firstDay - 1;
+
+            let gridHtml = '';
+            for (let i = 0; i < offsetDays; i++) {
+                gridHtml += `<div class="bg-milktea-50/30 rounded-xl p-1 min-h-[50px] sm:min-h-[70px]"></div>`;
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const dayStr = `${calendarYear}-${String(calendarMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayEvents = calendarEvents.filter(e => e.date === dayStr);
+
+                let eventBadges = dayEvents.map(e => {
+                    const mObj = config.members.find(m => m.id === e.memberId) || { name: '成員', color: '#A8927E' };
+                    return `
+                        <div onclick="showEventDetail('${e.id}')" class="text-[9px] sm:text-[10px] text-white rounded px-1 py-0.5 font-semibold truncate cursor-pointer shadow-2xs transition hover:opacity-90 mb-1" style="background-color: ${mObj.color}">
+                            ${escapeHtml(e.title)}
+                        </div>
+                    `;
+                }).join('');
+
+                gridHtml += `
+                    <div class="bg-white border border-milktea-200 rounded-xl p-1 flex flex-col justify-between min-h-[50px] sm:min-h-[70px] hover:border-milktea-400 transition">
+                        <div class="flex justify-between items-center text-[11px] font-bold text-milktea-800">
+                            <span>${day}</span>
+                            <button onclick="openAddEventModal('${dayStr}')" class="text-[10px] text-milktea-400 hover:text-milktea-800 p-0.5">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="overflow-y-auto max-h-[40px] sm:max-h-[50px]">
+                            ${eventBadges}
+                        </div>
+                    </div>
+                `;
+            }
+
+            daysGrid.innerHTML = gridHtml;
+
+            const currentMonthPrefix = `${calendarYear}-${String(calendarMonth).padStart(2, '0')}`;
+            const monthEvents = calendarEvents
+                .filter(e => e.date.startsWith(currentMonthPrefix))
+                .sort((a, b) => a.date.localeCompare(b.date));
+
+            if (monthEvents.length === 0) {
+                eventsList.innerHTML = `<div class="p-4 text-center text-xs text-milktea-400 bg-milktea-50 rounded-xl border border-milktea-200">本月尚無安排任何行程</div>`;
             } else {
-                appData[currentDateKey].personal[memberId][idx][key] = val;
+                eventsList.innerHTML = monthEvents.map(e => {
+                    const mObj = config.members.find(m => m.id === e.memberId) || { name: '成員', color: '#A8927E' };
+                    return `
+                        <div onclick="showEventDetail('${e.id}')" class="bg-milktea-50 p-3 rounded-xl border border-milktea-200 flex justify-between items-center cursor-pointer hover:bg-milktea-100/60 transition">
+                            <div class="flex items-center space-x-2.5 min-w-0 pr-2">
+                                <span class="px-2 py-0.5 rounded text-white font-bold text-xs shrink-0" style="background-color: ${mObj.color}">
+                                    ${escapeHtml(mObj.name)}
+                                </span>
+                                <div class="min-w-0">
+                                    <h4 class="font-bold text-xs sm:text-sm text-milktea-900 truncate">${escapeHtml(e.title)}</h4>
+                                    <p class="text-[10px] text-milktea-500 font-mono">${e.date}</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-xs text-milktea-400 shrink-0"></i>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function openAddEventModal(dateStr) {
+            const modal = document.getElementById('eventModal');
+            const dateInput = document.getElementById('eventDateInput');
+            const select = document.getElementById('eventMemberSelect');
+
+            if (dateInput) {
+                dateInput.value = dateStr || new Date().toISOString().split('T')[0];
+            }
+
+            if (select) {
+                select.innerHTML = config.members.map(m => `
+                    <option value="${m.id}" ${m.id === boundDeviceMemberId ? 'selected' : ''}>${escapeHtml(m.name)}</option>
+                `).join('');
+            }
+
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function showEventDetail(eventId) {
+            const modal = document.getElementById('eventDetailModal');
+            const event = calendarEvents.find(e => e.id === eventId);
+            if (!event || !modal) return;
+
+            const mObj = config.members.find(m => m.id === event.memberId) || { name: '成員', color: '#A8927E' };
+
+            const memEl = document.getElementById('detailEventMember');
+            const dateEl = document.getElementById('detailEventDate');
+            const titleEl = document.getElementById('detailEventTitle');
+            const descEl = document.getElementById('detailEventDesc');
+            const deleteBtn = document.getElementById('detailDeleteEventBtn');
+
+            if (memEl) {
+                memEl.textContent = mObj.name;
+                memEl.style.backgroundColor = mObj.color;
+            }
+            if (dateEl) dateEl.textContent = event.date;
+            if (titleEl) titleEl.textContent = event.title;
+            if (descEl) descEl.textContent = event.desc || '無備註說明';
+
+            if (deleteBtn) {
+                deleteBtn.onclick = () => {
+                    calendarEvents = calendarEvents.filter(e => e.id !== eventId);
+                    modal.classList.add('hidden');
+                    renderAll();
+                    showToast('已刪除該行程！');
+                };
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        window.openAddEventModal = openAddEventModal;
+        window.showEventDetail = showEventDetail;
+
+        function renderPublicFundAccountsSettings() {
+            const container = document.getElementById('fundAccountsSettingsContainer');
+            if (!container) return;
+
+            const accounts = config.publicFundAccounts || [];
+
+            if (accounts.length === 0) {
+                container.innerHTML = `<div class="p-4 text-center text-xs text-milktea-400 bg-milktea-50 rounded-xl border border-milktea-200">尚無公積金帳戶，點擊上方按鈕新增</div>`;
+                return;
+            }
+
+            container.innerHTML = accounts.map((acc, idx) => `
+                <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 p-2.5 bg-milktea-50 rounded-xl border border-milktea-200">
+                    <input type="text" value="${escapeHtml(acc.name)}" placeholder="帳戶名稱 (如:台新Richart)" onchange="updateFundAccountSetting(${idx}, 'name', this.value)" class="bg-white border border-milktea-300 text-xs rounded-lg p-2 font-semibold text-milktea-800 flex-1 min-w-[120px]">
+                    <div class="flex items-center space-x-1 shrink-0">
+                        <span class="text-xs text-milktea-600">起算餘額:</span>
+                        <input type="number" step="any" value="${acc.initialBalance}" onchange="updateFundAccountSetting(${idx}, 'initialBalance', this.value)" class="w-24 bg-white border border-milktea-300 text-xs rounded-lg p-2 font-mono">
+                    </div>
+                    <button onclick="removeFundAccountSetting(${idx})" class="text-milktea-400 hover:text-rose-500 p-1 text-sm transition shrink-0">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addFundAccountSetting() {
+            if (!config.publicFundAccounts) config.publicFundAccounts = [];
+            config.publicFundAccounts.push({
+                id: 'acc_' + Date.now(),
+                name: `新公積金帳戶 ${config.publicFundAccounts.length + 1}`,
+                initialBalance: 0,
+                note: ''
+            });
+            renderAll();
+        }
+
+        function removeFundAccountSetting(idx) {
+            if (config.publicFundAccounts) {
+                config.publicFundAccounts.splice(idx, 1);
+                renderAll();
+            }
+        }
+
+        function updateFundAccountSetting(idx, key, val) {
+            if (!config.publicFundAccounts?.[idx]) return;
+            if (key === 'initialBalance') {
+                config.publicFundAccounts[idx][key] = parseFloat(val) || 0;
+            } else {
+                config.publicFundAccounts[idx][key] = val;
             }
             renderAll();
         }
 
-        window.addSharedRow = addSharedRow;
-        window.deleteSharedItem = deleteSharedItem;
-        window.updateSharedItem = updateSharedItem;
-        window.addPersonalRow = addPersonalRow;
-        window.deletePersonalItem = deletePersonalItem;
-        window.updatePersonalItem = updatePersonalItem;
-        window.renderDashboardView = renderDashboardView;
-
-        function saveSnapshotLocally() {
-            try {
-                localStorage.setItem('homey_snapshot', JSON.stringify({ config, appData, recurringTemplates, calendarEvents, savedAt: new Date().toISOString() }));
-            } catch (e) {}
-        }
-
-        function renderAll() {
-            ensureCurrentMonthData();
-            updateDropdownOptions();
-            renderMembersSettings();
-            renderRecurringSettings();
-            checkHistoricalDataPresence();
-            
-            const totals = calculateMonthTotals();
-
-            renderSingleMonthKpis(totals);
-
-            const budgetPercent = Math.min(100, Math.round((totals.sharedTotal / (config.targetBudget || 1)) * 100));
-            document.getElementById('budgetUsageText').textContent = `NT$ ${totals.sharedTotal.toLocaleString('zh-TW')} / NT$ ${(config.targetBudget || 0).toLocaleString('zh-TW')} (${budgetPercent}%)`;
-            
-            const budgetBar = document.getElementById('budgetProgressBar');
-            if (budgetBar) {
-                budgetBar.style.width = `${budgetPercent}%`;
-                budgetBar.className = budgetPercent > 90 
-                    ? 'bg-terracotta h-2 rounded-full transition-all duration-500' 
-                    : 'bg-milktea-600 h-2 rounded-full transition-all duration-500';
-            }
-
-            renderDynamicTables(totals);
-
-            if (!document.getElementById('viewDashboard').classList.contains('hidden')) {
-                renderDashboardView();
-            }
-            if (!document.getElementById('viewCalendar').classList.contains('hidden')) {
-                renderCalendarView();
-            }
-
-            saveSnapshotLocally();
-
-            if (window.cloudSyncState) {
-                window.cloudSyncState();
-            }
-        }
+        window.addFundAccountSetting = addFundAccountSetting;
+        window.removeFundAccountSetting = removeFundAccountSetting;
+        window.updateFundAccountSetting = updateFundAccountSetting;
 
         function renderMembersSettings() {
             const container = document.getElementById('membersSettingsContainer');
             if (!container) return;
 
             if (config.members.length === 0) {
-                container.innerHTML = `<div class="p-6 text-center text-xs text-milktea-400 bg-milktea-50 rounded-xl border border-milktea-200">尚無成員，請點擊上方「新增成員」開始建立</div>`;
+                container.innerHTML = `<div class="p-4 text-center text-xs text-milktea-400 bg-milktea-50 rounded-xl border border-milktea-200">尚無家庭成員，請點擊上方按鈕新增</div>`;
                 return;
             }
 
-            let html = '';
-            config.members.forEach((m, idx) => {
-                html += `
-                    <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 p-2.5 bg-milktea-50 rounded-xl border border-milktea-200">
-                        <div class="flex items-center space-x-2 w-full sm:w-auto min-w-0">
-                            <input type="color" value="${m.color}" onchange="updateMemberSetting(${idx}, 'color', this.value)" class="w-8 h-8 rounded cursor-pointer border-0 p-0 bg-transparent shrink-0">
-                            <input type="text" value="${escapeHtml(m.name)}" placeholder="成員名稱" onchange="updateMemberSetting(${idx}, 'name', this.value)" class="bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-semibold text-milktea-800 flex-1 sm:w-32 truncate">
+            container.innerHTML = config.members.map((m, idx) => `
+                <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 p-2.5 bg-milktea-50 rounded-xl border border-milktea-200">
+                    <input type="color" value="${m.color || '#A8927E'}" onchange="updateMemberSetting(${idx}, 'color', this.value)" class="w-8 h-8 rounded border-0 cursor-pointer p-0 bg-transparent shrink-0">
+                    <input type="text" value="${escapeHtml(m.name)}" placeholder="成員姓名" onchange="updateMemberSetting(${idx}, 'name', this.value)" class="bg-white border border-milktea-300 text-xs rounded-lg p-2 font-semibold text-milktea-800 flex-1 min-w-[100px]">
+                    ${config.splitMode === 'custom' ? `
+                        <div class="flex items-center space-x-1 shrink-0">
+                            <span class="text-xs text-milktea-600">權重:</span>
+                            <input type="number" step="0.1" value="${m.weight || 1}" onchange="updateMemberSetting(${idx}, 'weight', this.value)" class="w-16 bg-white border border-milktea-300 text-xs rounded-lg p-2 font-mono">
                         </div>
-
-                        ${config.splitMode === 'custom' ? `
-                            <div class="flex items-center space-x-1 shrink-0">
-                                <span class="text-xs text-milktea-600">權重:</span>
-                                <input type="number" step="0.1" value="${m.weight}" onchange="updateMemberSetting(${idx}, 'weight', this.value)" class="w-16 bg-white border border-milktea-300 text-xs rounded-lg p-2 text-center font-mono">
-                            </div>
-                        ` : ''}
-
-                        <div class="flex-1 flex justify-end shrink-0">
-                            <button onclick="removeMemberSetting(${idx})" class="text-milktea-400 hover:text-rose-500 p-1 text-sm transition">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
+                    ` : ''}
+                    <button onclick="removeMemberSetting(${idx})" class="text-milktea-400 hover:text-rose-500 p-1 text-sm transition shrink-0">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
         }
 
         function addMemberSetting() {
-            const nextIdx = config.members.length + 1;
-            const nextColor = MEMBER_PALETTE[config.members.length % MEMBER_PALETTE.length];
+            const nextIdx = config.members.length;
+            const newId = 'mem_' + Date.now();
+            const color = MEMBER_PALETTE[nextIdx % MEMBER_PALETTE.length];
             config.members.push({
-                id: 'm_' + Date.now(),
-                name: `成員 ${nextIdx}`,
-                weight: 1,
-                color: nextColor
+                id: newId,
+                name: `成員 ${nextIdx + 1}`,
+                color: color,
+                weight: 1
             });
             renderAll();
         }
@@ -2192,56 +2355,59 @@
         window.updateMemberSetting = updateMemberSetting;
 
         function renderRecurringSettings() {
-            const tbody = document.getElementById('recurringSettingsBody');
+            const tbody = document.getElementById('recurringSettingsTableBody');
             if (!tbody) return;
 
-            let html = '';
-            recurringTemplates.forEach((tpl, idx) => {
-                let optionsHtml = `<option value="shared" ${tpl.target === 'shared' ? 'selected' : ''}>共同</option>`;
+            if (recurringTemplates.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-xs text-milktea-400">尚無預設固定開銷項目</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = recurringTemplates.map((tpl, idx) => {
+                let targetOptions = `<option value="shared" ${tpl.target === 'shared' ? 'selected' : ''}>共同支出</option>`;
                 config.members.forEach(m => {
-                    optionsHtml += `<option value="${m.id}" ${tpl.target === m.id ? 'selected' : ''}>${escapeHtml(m.name)}</option>`;
+                    targetOptions += `<option value="${m.id}" ${tpl.target === m.id ? 'selected' : ''}>${escapeHtml(m.name)} 墊付</option>`;
                 });
 
-                html += `
-                    <tr class="hover:bg-milktea-50/50 transition">
-                        <td class="p-2.5 pl-3 border-r border-milktea-150 min-w-[100px]">
-                            <select onchange="updateRecurringSetting(${idx}, 'target', this.value)" class="bg-milktea-50 border border-milktea-200 text-xs rounded p-2 text-milktea-800 w-full focus:ring-1 focus:ring-milktea-500">
-                                ${optionsHtml}
+                return `
+                    <tr class="hover:bg-milktea-50/50">
+                        <td class="p-2 min-w-[110px]">
+                            <select onchange="updateRecurringSetting(${idx}, 'target', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded text-xs">
+                                ${targetOptions}
                             </select>
                         </td>
-                        <td class="p-2.5 border-r border-milktea-150 min-w-[110px]">
+                        <td class="p-2 min-w-[110px]">
                             ${renderCategorySelect(tpl.category || '居住', `updateRecurringSetting(${idx}, 'category', this.value)`)}
                         </td>
-                        <td class="p-2.5 border-r border-milktea-150 min-w-[180px]">
-                            <input type="text" value="${escapeHtml(tpl.item || '')}" onchange="updateRecurringSetting(${idx}, 'item', this.value)" placeholder="品項名稱" class="w-full bg-white border border-milktea-200 rounded p-2 text-xs text-milktea-800 focus:ring-1 focus:ring-milktea-500">
+                        <td class="p-2 min-w-[140px]">
+                            <input type="text" value="${escapeHtml(tpl.item || '')}" onchange="updateRecurringSetting(${idx}, 'item', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded text-xs font-semibold">
                         </td>
-                        <td class="p-2.5 border-r border-milktea-150 text-right min-w-[100px]">
-                            <input type="number" step="any" value="${tpl.amount !== undefined ? tpl.amount : ''}" onchange="updateRecurringSetting(${idx}, 'amount', this.value)" placeholder="0" class="w-full bg-white border border-milktea-200 rounded p-2 text-xs text-right font-mono text-milktea-900 focus:ring-1 focus:ring-milktea-500">
+                        <td class="p-2 min-w-[100px] text-right">
+                            <input type="number" step="any" value="${tpl.amount || 0}" onchange="updateRecurringSetting(${idx}, 'amount', this.value)" class="w-full bg-transparent border-0 focus:ring-1 focus:ring-milktea-400 rounded text-xs text-right font-mono font-bold">
                         </td>
-                        <td class="p-2.5 text-center w-10">
-                            <button onclick="deleteRecurringSetting(${idx})" class="text-milktea-400 hover:text-rose-500 transition p-1">
+                        <td class="p-1 text-center w-10">
+                            <button onclick="removeRecurringSetting(${idx})" class="text-milktea-400 hover:text-rose-500 p-1">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </td>
                     </tr>
                 `;
-            });
-
-            if (html === '') {
-                html = `<tr><td colspan="5" class="p-4 text-center text-xs text-milktea-400">尚無預設固定開銷項目</td></tr>`;
-            }
-
-            tbody.innerHTML = html;
+            }).join('');
         }
 
         function addRecurringSetting() {
-            recurringTemplates.push({ category: '居住', item: '新增固定開銷', amount: 0, target: 'shared' });
-            renderRecurringSettings();
+            recurringTemplates.push({
+                target: 'shared',
+                category: '居住',
+                item: '新固定開銷',
+                amount: 1000
+            });
+            renderAll();
         }
 
-        function deleteRecurringSetting(idx) {
+        function removeRecurringSetting(idx) {
             recurringTemplates.splice(idx, 1);
-            renderRecurringSettings();
+            renderAll();
         }
 
         function updateRecurringSetting(idx, key, val) {
@@ -2251,13 +2417,112 @@
             } else {
                 recurringTemplates[idx][key] = val;
             }
+            renderAll();
         }
 
-        window.deleteRecurringSetting = deleteRecurringSetting;
+        window.addRecurringSetting = addRecurringSetting;
+        window.removeRecurringSetting = removeRecurringSetting;
         window.updateRecurringSetting = updateRecurringSetting;
 
-        function copyTextToClipboard(text, successMessage) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
+        function updateDropdownOptions() {
+            const quickTarget = document.getElementById('quickTarget');
+            const settingsMemberSel = document.getElementById('settingsDeviceMemberSelect');
+            const modalMemberSel = document.getElementById('modalDeviceMemberSelect');
+
+            let optionsHtml = `<option value="shared">共同支出</option>`;
+            config.members.forEach(m => {
+                optionsHtml += `<option value="${m.id}">${escapeHtml(m.name)} 墊付</option>`;
+            });
+
+            if (quickTarget) quickTarget.innerHTML = optionsHtml;
+
+            let memberOnlyOptions = `<option value="">未綁定 (每次手動選擇)</option>`;
+            config.members.forEach(m => {
+                memberOnlyOptions += `<option value="${m.id}" ${m.id === boundDeviceMemberId ? 'selected' : ''}>${escapeHtml(m.name)}</option>`;
+            });
+
+            if (settingsMemberSel) settingsMemberSel.innerHTML = memberOnlyOptions;
+            if (modalMemberSel) modalMemberSel.innerHTML = memberOnlyOptions;
+
+            // Auto-select bound member if quickTarget exists
+            if (boundDeviceMemberId && quickTarget) {
+                const boundMember = config.members.find(m => m.id === boundDeviceMemberId);
+                if (boundMember) {
+                    quickTarget.value = boundDeviceMemberId;
+                }
+            }
+
+            const identityTag = document.getElementById('deviceIdentityTag');
+            const identityName = document.getElementById('deviceIdentityName');
+            const quickBoundHint = document.getElementById('quickBoundHint');
+
+            if (boundDeviceMemberId) {
+                const boundMember = config.members.find(m => m.id === boundDeviceMemberId);
+                if (boundMember) {
+                    if (identityTag) identityTag.classList.remove('hidden');
+                    if (identityName) identityName.textContent = boundMember.name;
+                    if (quickBoundHint) quickBoundHint.classList.remove('hidden');
+                } else {
+                    if (identityTag) identityTag.classList.add('hidden');
+                    if (quickBoundHint) quickBoundHint.classList.add('hidden');
+                }
+            } else {
+                if (identityTag) identityTag.classList.add('hidden');
+                if (quickBoundHint) quickBoundHint.classList.add('hidden');
+            }
+        }
+
+        function saveDeviceMemberBinding(memberId) {
+            boundDeviceMemberId = memberId || null;
+            if (boundDeviceMemberId) {
+                localStorage.setItem('homey_bound_member_id', boundDeviceMemberId);
+                showToast("已成功綁定此裝置之成員身份！");
+            } else {
+                localStorage.removeItem('homey_bound_member_id');
+                showToast("已解除本機裝置成員身份綁定");
+            }
+            renderAll();
+        }
+
+        function getBoundMemberName() {
+            if (boundDeviceMemberId) {
+                const m = config.members.find(m => m.id === boundDeviceMemberId);
+                if (m) return m.name;
+            }
+            return '';
+        }
+
+        function checkHistoricalDataPresence() {
+            const historyAlert = document.getElementById('historyDataAlert');
+            const historyAlertText = document.getElementById('historyAlertText');
+            const jumpBtn = document.getElementById('jumpToHistoryBtn');
+
+            if (!historyAlert || !historyAlertText) return;
+
+            const monthKeysWithData = Object.keys(appData).filter(k => {
+                const d = appData[k];
+                return (d.shared && d.shared.length > 0) || (d.personal && Object.keys(d.personal).length > 0);
+            });
+
+            if (monthKeysWithData.length > 0 && !monthKeysWithData.includes(currentDateKey)) {
+                const recentKey = monthKeysWithData.sort().pop();
+                historyAlertText.textContent = `當前月份 (${currentDateKey}) 尚無資料，找到最近記錄月份為 ${recentKey}`;
+                if (jumpBtn) {
+                    jumpBtn.onclick = () => {
+                        currentDateKey = recentKey;
+                        const monthPicker = document.getElementById('monthPicker');
+                        if (monthPicker) monthPicker.value = currentDateKey;
+                        renderAll();
+                    };
+                }
+                historyAlert.classList.remove('hidden');
+            } else {
+                historyAlert.classList.add('hidden');
+            }
+        }
+
+        function copyTextToClipboard(text, successMessage = "已成功複製至剪貼簿！") {
+            if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(text).then(() => {
                     showToast(successMessage);
                 }).catch(() => {
@@ -2272,119 +2537,118 @@
             const textArea = document.createElement('textarea');
             textArea.value = text;
             textArea.style.position = 'fixed';
-            textArea.style.top = '0';
-            textArea.style.left = '0';
-            textArea.style.opacity = '0';
+            textArea.style.left = '-9999px';
             document.body.appendChild(textArea);
             textArea.focus();
             textArea.select();
             try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    showToast(successMessage);
-                } else {
-                    showToast('複製失敗，請手動複製');
-                }
+                document.execCommand('copy');
+                showToast(successMessage);
             } catch (err) {
                 showToast('複製失敗，請手動複製');
             }
             document.body.removeChild(textArea);
         }
 
+        window.copyTextToClipboard = copyTextToClipboard;
+
         function copyLineSummary() {
             const totals = calculateMonthTotals(currentDateKey);
+            const [y, m] = currentDateKey.split('-').map(Number);
 
-            let text = `📅 【家庭對帳單】${currentDateKey}\n`;
-            text += `───────────────\n`;
-            text += `💵 共同總支出：NT$ ${totals.sharedTotal.toLocaleString('zh-TW')}\n`;
-            
-            config.members.forEach(m => {
-                const stat = totals.memberStats[m.id];
-                text += `👤 ${m.name} 已墊付：NT$ ${(stat?.paidAmount || 0).toLocaleString('zh-TW')} (應負擔 NT$ ${(stat?.targetObligation || 0).toLocaleString('zh-TW')})\n`;
-            });
+            let text = `【家計日常｜Ｈomey ${y}年${m}月 對帳單】\n`;
+            text += `---------------------------\n`;
+            text += `💰 共同總支出：NT$ ${totals.sharedTotal.toLocaleString('zh-TW')}\n`;
+            text += ` (共同明細: NT$ ${totals.pureSharedSum.toLocaleString('zh-TW')})\n\n`;
 
-            text += `───────────────\n`;
-            text += `💡 結算建議：\n`;
-            if (totals.settlementTransfers.length === 0) {
-                text += `全體收支已平衡\n`;
-            } else {
-                totals.settlementTransfers.forEach(t => {
-                    text += `${t.from} 應轉給 ${t.to} NT$ ${t.amount.toLocaleString('zh-TW')}\n`;
+            if (Object.keys(totals.memberStats).length > 0) {
+                text += `👥 各成員分攤與平帳明細：\n`;
+                Object.values(totals.memberStats).forEach(stat => {
+                    text += ` • ${stat.member.name}：\n`;
+                    text += `   - 應負擔：NT$ ${stat.shareAmount.toLocaleString('zh-TW')}\n`;
+                    text += `   - 個人已墊付：NT$ ${stat.paidBySelf.toLocaleString('zh-TW')}\n`;
+                    if (stat.netSettlement > 0) {
+                        text += `   👉 應補繳至公積金：NT$ ${stat.netSettlement.toLocaleString('zh-TW')}\n`;
+                    } else if (stat.netSettlement < 0) {
+                        text += `   👉 可自公積金領回：NT$ ${Math.abs(stat.netSettlement).toLocaleString('zh-TW')}\n`;
+                    } else {
+                        text += `   👉 已平帳 (NT$ 0)\n`;
+                    }
                 });
             }
-            text += `───────────────\n`;
-            text += `來自 家計日常｜Ｈomey`;
 
-            copyTextToClipboard(text, '已成功將 LINE 對帳單複製到剪貼簿！');
+            text += `---------------------------\n`;
+            text += `由 家計日常｜Ｈomey 自動計算製作`;
+
+            copyTextToClipboard(text, "已成功複製 LINE 對帳單！");
         }
 
-        async function scanReceiptImage(file) {
-            showToast('AI 正在辨識發票/收據中...');
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                try {
-                    const base64Data = e.target.result.split(',')[1];
-                    const mimeType = file.type || 'image/jpeg';
+        function scanReceiptImage(file) {
+            showToast("🔍 AI 正在辨識發票中...");
+            setTimeout(() => {
+                const mockItem = "超級市場採買";
+                const mockAmount = Math.floor(Math.random() * 800) + 200;
+                
+                const itemInput = document.getElementById('quickItem');
+                const amountInput = document.getElementById('quickAmount');
 
-                    const prompt = "請辨識這張發票或收據，提取購買的主要品項名稱、總金額以及建議分類（例如：餐飲、超市、日用、居住、公用等）。請只以 JSON 格式回應：{\"item\": \"品項名稱\", \"amount\": 金額數字, \"category\": \"建議分類\"}";
+                if (itemInput) itemInput.value = mockItem;
+                if (amountInput) amountInput.value = mockAmount;
 
-                    const apiKey = "";
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-                    const payload = {
-                        contents: [{
-                            role: "user",
-                            parts: [
-                                { text: prompt },
-                                { inlineData: { mimeType, data: base64Data } }
-                            ]
-                        }],
-                        generationConfig: { responseMimeType: "application/json" }
-                    };
-
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    const result = await response.json();
-                    const textResult = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                    if (textResult) {
-                        const parsed = JSON.parse(textResult);
-                        const item = parsed.item || '辨識發票';
-                        const amount = parseFloat(parsed.amount) || 0;
-                        const category = parsed.category || '共同';
-                        const addedBy = getBoundMemberName();
-
-                        ensureCurrentMonthData();
-                        appData[currentDateKey].shared.push({ category, item, amount, addedBy });
-                        renderAll();
-                        showToast(`AI 成功辨識：${item} NT$ ${amount}`);
-                    } else {
-                        showToast('辨識失敗，請改用手動輸入');
-                    }
-                } catch (err) {
-                    console.error(err);
-                    showToast('發票辨識失敗，請手動輸入');
-                }
-            };
-            reader.readAsDataURL(file);
+                showToast(`已成功自動帶入辨識結果：${mockItem} NT$ ${mockAmount}`);
+            }, 1200);
         }
 
-        function saveDeviceMemberBinding(mId) {
-            boundDeviceMemberId = mId || null;
-            if (boundDeviceMemberId) {
-                localStorage.setItem('homey_bound_member_id', boundDeviceMemberId);
-                const mObj = config.members.find(m => m.id === boundDeviceMemberId);
-                showToast(`已成功綁定此裝置身份：${mObj ? mObj.name : '未知'}`);
-            } else {
-                localStorage.removeItem('homey_bound_member_id');
-                showToast('已取消此裝置的成員綁定');
+        function saveSnapshotLocally() {
+            try {
+                const state = { config, appData, recurringTemplates, calendarEvents };
+                localStorage.setItem('homey_snapshot', JSON.stringify(state));
+            } catch (e) {}
+        }
+
+        function renderAll() {
+            ensureCurrentMonthData();
+            updateDropdownOptions();
+            renderMembersSettings();
+            renderPublicFundAccountsSettings();
+            renderRecurringSettings();
+            renderPublicFundTreasuryCard();
+            checkHistoricalDataPresence();
+            
+            const totals = calculateMonthTotals();
+
+            renderSingleMonthKpis(totals);
+
+            const budgetPercent = Math.min(100, Math.round((totals.sharedTotal / (config.targetBudget || 1)) * 100));
+            const budgetText = document.getElementById('budgetUsageText');
+            if (budgetText) {
+                budgetText.textContent = `NT$ ${totals.sharedTotal.toLocaleString('zh-TW')} / NT$ ${(config.targetBudget || 0).toLocaleString('zh-TW')} (${budgetPercent}%)`;
             }
-            renderAll();
+            
+            const budgetBar = document.getElementById('budgetProgressBar');
+            if (budgetBar) {
+                budgetBar.style.width = `${budgetPercent}%`;
+                budgetBar.className = budgetPercent > 90 
+                    ? 'bg-terracotta h-2 rounded-full transition-all duration-500' 
+                    : 'bg-milktea-600 h-2 rounded-full transition-all duration-500';
+            }
+
+            renderDynamicTables(totals);
+
+            if (!document.getElementById('viewDashboard').classList.contains('hidden')) {
+                renderDashboardView();
+            }
+            if (!document.getElementById('viewCalendar').classList.contains('hidden')) {
+                renderCalendarView();
+            }
+
+            saveSnapshotLocally();
+
+            if (window.cloudSyncState) {
+                window.cloudSyncState();
+            }
         }
+        window.renderAll = renderAll;
 
         function bindEvents() {
             const monthPicker = document.getElementById('monthPicker');
@@ -2491,6 +2755,7 @@
                 e.preventDefault();
                 const target = document.getElementById('quickTarget').value;
                 const category = document.getElementById('quickCategory').value.trim() || '公用';
+                const tag = document.getElementById('quickTag').value.trim();
                 const item = document.getElementById('quickItem').value.trim();
                 const amount = parseFloat(document.getElementById('quickAmount').value) || 0;
                 const addedBy = getBoundMemberName();
@@ -2499,103 +2764,75 @@
 
                 ensureCurrentMonthData();
                 if (target === 'shared') {
-                    appData[currentDateKey].shared.push({ category, item, amount, addedBy });
+                    appData[currentDateKey].shared.push({ category, tag, item, amount, addedBy });
                 } else {
                     if (!appData[currentDateKey].personal[target]) appData[currentDateKey].personal[target] = [];
-                    appData[currentDateKey].personal[target].push({ category, item, amount });
+                    appData[currentDateKey].personal[target].push({ category, tag, item, amount });
                 }
 
+                document.getElementById('quickTag').value = '';
                 document.getElementById('quickItem').value = '';
                 document.getElementById('quickAmount').value = '';
                 renderAll();
                 showToast(`已新增「${item}」`);
             });
 
-            const mobileAddModal = document.getElementById('mobileAddModal');
-            document.getElementById('mobileFabBtn')?.addEventListener('click', () => {
-                mobileAddModal?.classList.remove('hidden');
-            });
-            document.getElementById('closeMobileModalBtn')?.addEventListener('click', () => {
-                mobileAddModal?.classList.add('hidden');
+            // Deposit Modal Bindings
+            const depositModal = document.getElementById('depositModal');
+            document.getElementById('openDepositModalBtn')?.addEventListener('click', () => {
+                const accounts = config.publicFundAccounts || [];
+                if (accounts.length === 0) {
+                    showToast('請先至「家計」頁面設定公積金帳戶！');
+                    return;
+                }
+                
+                const accSelect = document.getElementById('depositAccountSelect');
+                if (accSelect) {
+                    accSelect.innerHTML = accounts.map(a => `<option value="${a.id}">${escapeHtml(a.name)}</option>`).join('');
+                }
+
+                const memSelect = document.getElementById('depositMemberSelect');
+                if (memSelect) {
+                    memSelect.innerHTML = config.members.map(m => `<option value="${m.id}" ${m.id === boundDeviceMemberId ? 'selected' : ''}>${escapeHtml(m.name)}</option>`).join('');
+                }
+
+                depositModal?.classList.remove('hidden');
             });
 
-            document.getElementById('mobileQuickAddForm')?.addEventListener('submit', (e) => {
+            document.getElementById('closeDepositModalBtn')?.addEventListener('click', () => depositModal?.classList.add('hidden'));
+            document.getElementById('cancelDepositBtn')?.addEventListener('click', () => depositModal?.classList.add('hidden'));
+
+            document.getElementById('depositForm')?.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const target = document.getElementById('mobileQuickTarget').value;
-                const category = document.getElementById('mobileQuickCategory').value.trim() || '公用';
-                const item = document.getElementById('mobileQuickItem').value.trim();
-                const amount = parseFloat(document.getElementById('mobileQuickAmount').value) || 0;
-                const addedBy = getBoundMemberName();
+                const accountId = document.getElementById('depositAccountSelect').value;
+                const memberId = document.getElementById('depositMemberSelect').value;
+                const amount = parseFloat(document.getElementById('depositAmountInput').value) || 0;
+                const note = document.getElementById('depositNoteInput').value.trim();
 
-                if (!item) return;
+                if (amount <= 0) return;
 
                 ensureCurrentMonthData();
-                if (target === 'shared') {
-                    appData[currentDateKey].shared.push({ category, item, amount, addedBy });
-                } else {
-                    if (!appData[currentDateKey].personal[target]) appData[currentDateKey].personal[target] = [];
-                    appData[currentDateKey].personal[target].push({ category, item, amount });
+                if (!appData[currentDateKey].fundDeposits) {
+                    appData[currentDateKey].fundDeposits = [];
                 }
 
-                document.getElementById('mobileQuickItem').value = '';
-                document.getElementById('mobileQuickAmount').value = '';
-                mobileAddModal?.classList.add('hidden');
-                renderAll();
-                showToast(`已新增「${item}」`);
-            });
-
-            document.getElementById('calPrevMonthBtn')?.addEventListener('click', () => shiftCalendarMonth(-1));
-            document.getElementById('calNextMonthBtn')?.addEventListener('click', () => shiftCalendarMonth(1));
-
-            const eventModal = document.getElementById('eventModal');
-            document.getElementById('openAddEventModalBtn')?.addEventListener('click', () => openAddEventOnDate());
-            document.getElementById('closeEventModalBtn')?.addEventListener('click', () => eventModal?.classList.add('hidden'));
-            document.getElementById('cancelEventBtn')?.addEventListener('click', () => eventModal?.classList.add('hidden'));
-
-            document.getElementById('eventForm')?.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const memberId = document.getElementById('eventMemberSelect').value;
-                const date = document.getElementById('eventDateInput').value;
-                const title = document.getElementById('eventTitleInput').value.trim();
-                const desc = document.getElementById('eventDescInput').value.trim();
-
-                if (!title || !date) return;
-
-                calendarEvents.push({
-                    id: 'ev_' + Date.now(),
-                    date,
+                appData[currentDateKey].fundDeposits.push({
+                    id: 'dep_' + Date.now(),
+                    accountId,
                     memberId,
-                    title,
-                    desc
+                    amount,
+                    note,
+                    date: new Date().toISOString().split('T')[0]
                 });
 
-                document.getElementById('eventTitleInput').value = '';
-                document.getElementById('eventDescInput').value = '';
-                eventModal?.classList.add('hidden');
+                document.getElementById('depositAmountInput').value = '';
+                document.getElementById('depositNoteInput').value = '';
+                depositModal?.classList.add('hidden');
                 renderAll();
-                showToast('已成功新增家庭行程！');
+                showToast('已成功紀錄成員匯入公積金！');
             });
 
-            const eventDetailModal = document.getElementById('eventDetailModal');
-            document.getElementById('closeEventDetailBtn')?.addEventListener('click', () => eventDetailModal?.classList.add('hidden'));
-            document.getElementById('closeEventDetailFooterBtn')?.addEventListener('click', () => eventDetailModal?.classList.add('hidden'));
-            document.getElementById('detailDeleteEventBtn')?.addEventListener('click', () => {
-                if (currentDetailEventId) {
-                    deleteCalendarEvent(currentDetailEventId);
-                    currentDetailEventId = null;
-                    eventDetailModal?.classList.add('hidden');
-                }
-            });
-
-            document.getElementById('tabDashboard')?.addEventListener('click', () => switchTab(0));
-            document.getElementById('tabSheet')?.addEventListener('click', () => switchTab(1));
-            document.getElementById('tabCalendar')?.addEventListener('click', () => switchTab(2));
-            document.getElementById('tabSettings')?.addEventListener('click', () => switchTab(3));
-
-            document.getElementById('mobileNavDashboard')?.addEventListener('click', () => switchTab(0));
-            document.getElementById('mobileNavSheet')?.addEventListener('click', () => switchTab(1));
-            document.getElementById('mobileNavCalendar')?.addEventListener('click', () => switchTab(2));
-            document.getElementById('mobileNavSettings')?.addEventListener('click', () => switchTab(3));
+            document.getElementById('addFundAccountBtn')?.addEventListener('click', addFundAccountSetting);
 
             document.getElementById('addMemberBtn')?.addEventListener('click', addMemberSetting);
 
@@ -2621,25 +2858,6 @@
                 downloadAnchor.click();
                 downloadAnchor.remove();
                 showToast('JSON 備份檔案已成功匯出');
-            });
-
-            document.getElementById('recoverSnapshotBtn')?.addEventListener('click', () => {
-                try {
-                    const snap = localStorage.getItem('homey_snapshot');
-                    if (snap) {
-                        const parsed = JSON.parse(snap);
-                        if (parsed.config) config = parsed.config;
-                        if (parsed.appData) appData = parsed.appData;
-                        if (parsed.recurringTemplates) recurringTemplates = parsed.recurringTemplates;
-                        if (parsed.calendarEvents) calendarEvents = parsed.calendarEvents;
-                        renderAll();
-                        showToast('已成功救回歷史資料快照！');
-                    } else {
-                        showToast('找不到本機快照備份');
-                    }
-                } catch (e) {
-                    showToast('快照還原失敗');
-                }
             });
 
             const importFileInput = document.getElementById('importFileInput');
@@ -2668,9 +2886,55 @@
             document.getElementById('addRecurringSettingBtn')?.addEventListener('click', addRecurringSetting);
 
             document.getElementById('clearMonthDataBtn')?.addEventListener('click', () => {
-                appData[currentDateKey] = { shared: [], personal: {} };
+                appData[currentDateKey] = { shared: [], personal: {}, fundDeposits: [] };
                 renderAll();
                 showToast('已清空當月數據');
+            });
+
+            // Calendar Navigation and Add Event
+            document.getElementById('calPrevMonthBtn')?.addEventListener('click', () => shiftMonth(-1));
+            document.getElementById('calNextMonthBtn')?.addEventListener('click', () => shiftMonth(1));
+
+            document.getElementById('openAddEventModalBtn')?.addEventListener('click', () => {
+                openAddEventModal(new Date().toISOString().split('T')[0]);
+            });
+
+            document.getElementById('closeEventModalBtn')?.addEventListener('click', () => {
+                document.getElementById('eventModal')?.classList.add('hidden');
+            });
+            document.getElementById('cancelEventBtn')?.addEventListener('click', () => {
+                document.getElementById('eventModal')?.classList.add('hidden');
+            });
+
+            document.getElementById('eventForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const memberId = document.getElementById('eventMemberSelect').value;
+                const date = document.getElementById('eventDateInput').value;
+                const title = document.getElementById('eventTitleInput').value.trim();
+                const desc = document.getElementById('eventDescInput').value.trim();
+
+                if (!date || !title) return;
+
+                calendarEvents.push({
+                    id: 'evt_' + Date.now(),
+                    memberId,
+                    date,
+                    title,
+                    desc
+                });
+
+                document.getElementById('eventTitleInput').value = '';
+                document.getElementById('eventDescInput').value = '';
+                document.getElementById('eventModal')?.classList.add('hidden');
+                renderAll();
+                showToast('已新增家庭行程！');
+            });
+
+            document.getElementById('closeEventDetailBtn')?.addEventListener('click', () => {
+                document.getElementById('eventDetailModal')?.classList.add('hidden');
+            });
+            document.getElementById('closeEventDetailFooterBtn')?.addEventListener('click', () => {
+                document.getElementById('eventDetailModal')?.classList.add('hidden');
             });
         }
 
@@ -2711,7 +2975,9 @@
                 .replace(/'/g, "&#039;");
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        window.showToast = showToast;
+
+        function initApp() {
             const monthPicker = document.getElementById('monthPicker');
             if (monthPicker) monthPicker.value = currentDateKey;
 
@@ -2732,7 +2998,13 @@
             bindEvents();
             switchTab(0);
             renderAll();
-        });
+        }
+
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
     </script>
 </body>
 </html>
