@@ -55,11 +55,11 @@
             background: #D8C7B0;
             border-radius: 4px;
         }
-        input, select, button {
+        input, select, button, textarea {
             font-size: 16px !important;
         }
         @media (min-width: 640px) {
-            input, select, button {
+            input, select, button, textarea {
                 font-size: 14px !important;
             }
         }
@@ -73,7 +73,7 @@
 
     <header class="bg-[#FDFBF7] border-b border-milktea-200 sticky top-0 z-30 shadow-xs">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 gap-3 sm:gap-0">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 gap-2.5 sm:gap-0">
                 <!-- Logo & Title -->
                 <div class="flex items-center justify-between sm:justify-start">
                     <div class="flex items-center space-x-2.5 min-w-0 pr-2">
@@ -98,7 +98,7 @@
                     <!-- Cloud Room Co-maintenance Button -->
                     <button id="cloudSyncBtn" class="inline-flex items-center px-3 py-1.5 bg-milktea-100 hover:bg-milktea-200 text-milktea-800 border border-milktea-300 text-xs font-semibold rounded-lg transition shadow-2xs truncate max-w-[170px] sm:max-w-none">
                         <i id="cloudSyncIcon" class="fa-solid fa-cloud text-milktea-500 mr-1.5 shrink-0"></i>
-                        <span id="cloudSyncText" class="truncate">成員共同維護</span>
+                        <span id="cloudSyncText" class="truncate">成員獨立房間同步</span>
                     </button>
 
                     <div id="headerMonthPickerContainer" class="hidden flex items-center bg-milktea-100 rounded-lg p-1 border border-milktea-200 transition-all">
@@ -110,11 +110,6 @@
                             <i class="fa-solid fa-chevron-right text-xs sm:text-sm"></i>
                         </button>
                     </div>
-
-                    <!-- Single LINE Copy Summary Button -->
-                    <button id="copyLineBtn" class="inline-flex items-center px-3 py-1.5 bg-[#06C755] hover:bg-[#05b34c] text-white text-xs font-semibold rounded-lg transition shadow-2xs shrink-0">
-                        <i class="fa-brands fa-line mr-1.5 text-sm"></i> LINE 對帳單
-                    </button>
                 </div>
             </div>
 
@@ -144,7 +139,7 @@
             <span id="toastMsg" class="text-xs sm:text-sm font-medium">提示訊息</span>
         </div>
 
-        <!-- 1. Dashboard View -->
+        <!-- 1. Dashboard View (總覽) -->
         <div id="viewDashboard" class="space-y-4 sm:space-y-6 pb-24 md:pb-8">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-milktea-200 shadow-xs">
                 <div>
@@ -249,7 +244,7 @@
             </div>
         </div>
 
-        <!-- 2. Sheet View -->
+        <!-- 2. Sheet View (月見) -->
         <div id="viewSheet" class="hidden space-y-4 sm:space-y-6 pb-24 md:pb-8">
 
             <!-- Public Fund Live Balance Treasury Card -->
@@ -264,9 +259,17 @@
                             <p class="text-[10px] sm:text-xs text-milktea-500">追蹤共用戶累積入金與公積金直接支付餘額</p>
                         </div>
                     </div>
-                    <button id="openDepositModalBtn" class="bg-milktea-700 hover:bg-milktea-800 text-white font-semibold text-xs px-3 py-1.5 rounded-xl transition shadow-2xs flex items-center shrink-0">
-                        <i class="fa-solid fa-circle-dollar-to-slot mr-1.5"></i> 成員匯入公積金
-                    </button>
+                    
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <!-- LINE Copy Summary Button - Displayed strictly on Sheet view -->
+                        <button id="copyLineBtn" class="inline-flex items-center px-3 py-1.5 bg-[#06C755] hover:bg-[#05b34c] text-white text-xs font-semibold rounded-xl transition shadow-2xs">
+                            <i class="fa-brands fa-line mr-1.5 text-sm"></i> LINE 對帳單
+                        </button>
+                        
+                        <button id="openDepositModalBtn" class="bg-milktea-700 hover:bg-milktea-800 text-white font-semibold text-xs px-3 py-1.5 rounded-xl transition shadow-2xs flex items-center">
+                            <i class="fa-solid fa-circle-dollar-to-slot mr-1.5"></i> 成員匯入公積金
+                        </button>
+                    </div>
                 </div>
 
                 <div id="publicFundTreasuryGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -370,18 +373,18 @@
             </div>
         </div>
 
-        <!-- 3. Calendar View -->
+        <!-- 3. Calendar View (家曆) -->
         <div id="viewCalendar" class="hidden space-y-4 sm:space-y-6 pb-24 md:pb-8">
             <div class="bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-milktea-100 pb-4">
                     <div>
                         <h2 class="text-base sm:text-lg font-bold text-milktea-900 flex items-center">
-                            <i class="fa-solid fa-calendar-days text-terracotta mr-2"></i> 家曆 ｜ 家庭共用行程表
+                            <i class="fa-solid fa-calendar-days text-terracotta mr-2"></i> 家曆 ｜ 家庭共用行程與成員請假
                         </h2>
-                        <p class="text-xs text-milktea-500 mt-0.5">成員共同維護行程、記錄大小事，隨時掌握誰安排了什麼活動</p>
+                        <p class="text-xs text-milktea-500 mt-0.5">成員共同維護行程、請假呈核、即時掌握行程與差假安排</p>
                     </div>
 
-                    <div class="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
                         <div class="flex items-center bg-milktea-100 rounded-lg p-1 border border-milktea-200">
                             <button id="calPrevMonthBtn" class="p-1.5 rounded-md text-milktea-700 hover:bg-white transition" title="上個月">
                                 <i class="fa-solid fa-chevron-left text-xs"></i>
@@ -391,9 +394,18 @@
                                 <i class="fa-solid fa-chevron-right text-xs"></i>
                             </button>
                         </div>
-                        <button id="openAddEventModalBtn" class="bg-milktea-700 hover:bg-milktea-800 active:bg-milktea-900 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-2xs flex items-center shrink-0">
-                            <i class="fa-solid fa-plus mr-1"></i> 新增行程
-                        </button>
+                        
+                        <div class="flex items-center gap-2">
+                            <!-- Leave Request Button -->
+                            <button id="openAddLeaveModalBtn" class="bg-terracotta hover:bg-terracotta/90 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-2xs flex items-center shrink-0">
+                                <i class="fa-solid fa-plane-departure mr-1.5"></i> 請假申請
+                            </button>
+                            
+                            <!-- Standard Event Modal Button -->
+                            <button id="openAddEventModalBtn" class="bg-milktea-700 hover:bg-milktea-800 active:bg-milktea-900 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-2xs flex items-center shrink-0">
+                                <i class="fa-solid fa-plus mr-1"></i> 新增行程
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -412,17 +424,57 @@
                 </div>
             </div>
 
+            <!-- Member Leave Quota & Remaining Balance Summary Card -->
             <div class="bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-3">
-                <h3 class="font-bold text-milktea-900 text-sm sm:text-base flex items-center border-b border-milktea-100 pb-2.5">
-                    <i class="fa-solid fa-list-check text-matcha mr-2"></i> 本月近期行程清單
-                </h3>
-                <div id="calendarEventsList" class="space-y-2.5">
-                    <!-- Events -->
+                <div class="flex justify-between items-center border-b border-milktea-100 pb-2.5">
+                    <h3 class="font-bold text-milktea-900 text-xs sm:text-sm flex items-center" id="leaveBalanceTitle">
+                        <i class="fa-solid fa-clock-rotate-left text-caramel mr-2"></i> 成員假額剩餘統計
+                    </h3>
+                    <span class="text-[11px] text-milktea-500">僅統計「已核准」通過之假單</span>
+                </div>
+                <div id="leaveBalanceGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <!-- Dynamic Member Leave Balances -->
+                </div>
+            </div>
+
+            <!-- Pending Leave Requests Approval Box (If Any) -->
+            <div id="pendingLeaveBox" class="bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-3">
+                <div class="flex justify-between items-center border-b border-milktea-100 pb-2.5">
+                    <h3 class="font-bold text-milktea-900 text-xs sm:text-sm flex items-center">
+                        <i class="fa-solid fa-envelope-open-text text-matcha mr-2"></i> 待審核請假申請 (呈核關卡)
+                    </h3>
+                    <span id="pendingLeaveBadge" class="text-[10px] bg-terracotta text-white font-bold px-2 py-0.5 rounded-full">0 件待審核</span>
+                </div>
+                <div id="pendingLeaveList" class="space-y-2.5">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- History Calendar Events & Leave History Log Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Standard Calendar Events -->
+                <div class="bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-3">
+                    <h3 class="font-bold text-milktea-900 text-xs sm:text-sm flex items-center border-b border-milktea-100 pb-2.5">
+                        <i class="fa-solid fa-list-check text-matcha mr-2"></i> 本月一般行程清單
+                    </h3>
+                    <div id="calendarEventsList" class="space-y-2.5">
+                        <!-- Events -->
+                    </div>
+                </div>
+
+                <!-- Complete Leave Request Records Log -->
+                <div class="bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-3">
+                    <h3 class="font-bold text-milktea-900 text-xs sm:text-sm flex items-center border-b border-milktea-100 pb-2.5">
+                        <i class="fa-solid fa-id-card-clip text-terracotta mr-2"></i> 本月請假紀錄與簽核歷史
+                    </h3>
+                    <div id="leaveRecordsList" class="space-y-2.5 max-h-[360px] overflow-y-auto">
+                        <!-- Leave History Records -->
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- 4. Settings View -->
+        <!-- 4. Settings View (家計) -->
         <div id="tabSettingsView" class="hidden space-y-4 sm:space-y-6 pb-32">
             <div class="max-w-3xl mx-auto bg-white p-4 sm:p-6 rounded-2xl border border-milktea-200 shadow-xs space-y-6">
                 <h2 class="text-base sm:text-lg font-bold text-milktea-900 border-b border-milktea-100 pb-3 flex items-center">
@@ -455,10 +507,10 @@
                             <h3 class="text-xs sm:text-sm font-semibold text-milktea-800 flex items-center">
                                 <i class="fa-solid fa-mobile-screen-button text-milktea-600 mr-1.5"></i> 本機裝置成員身份綁定
                             </h3>
-                            <p class="text-[11px] text-milktea-500">設定這台手機/電腦屬於哪位成員，快速記帳與排行程時會自動預設</p>
+                            <p class="text-[11px] text-milktea-500">設定這台手機/電腦屬於哪位成員，快速記帳、排行程與請假簽核時會自動識別與驗證</p>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2 pt-1">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
                         <select id="settingsDeviceMemberSelect" class="flex-1 bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2.5 font-semibold text-milktea-800">
                             <!-- Options -->
                         </select>
@@ -468,6 +520,7 @@
                     </div>
                 </div>
 
+                <!-- Mobile Responsive Member Settings Container -->
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
                         <div>
@@ -496,13 +549,20 @@
                     </div>
                 </div>
 
-                <div class="space-y-3 pt-3 border-t border-milktea-100">
-                    <h3 class="text-xs sm:text-sm font-semibold text-milktea-800">每月共同支出預算上限 (NT$)</h3>
-                    <div>
-                        <input type="number" id="settingTargetBudget" value="40000" class="w-full bg-milktea-50 border border-milktea-300 rounded-lg p-2.5 text-xs sm:text-sm focus:ring-2 focus:ring-milktea-500">
+                <!-- Budget & Leave Quota Parameters -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-milktea-100">
+                    <div class="space-y-2">
+                        <h3 class="text-xs sm:text-sm font-semibold text-milktea-800">每月共同支出預算上限 (NT$)</h3>
+                        <input type="number" id="settingTargetBudget" value="40000" class="w-full bg-milktea-50 border border-milktea-300 rounded-lg p-2.5 text-xs sm:text-sm focus:ring-2 focus:ring-milktea-500 font-mono">
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-xs sm:text-sm font-semibold text-milktea-800">成員預設每年假額上限 (天)</h3>
+                        <input type="number" id="settingDefaultLeaveDays" value="14" step="1" min="1" class="w-full bg-milktea-50 border border-milktea-300 rounded-lg p-2.5 text-xs sm:text-sm focus:ring-2 focus:ring-milktea-500 font-mono">
+                        <p class="text-[10px] text-milktea-500">系統自動依 $1\text{天}=8\text{小時}$ 計算每人年假總時數</p>
                     </div>
                 </div>
 
+                <!-- Recurring Expense Settings -->
                 <div class="space-y-3 pt-3 border-t border-milktea-100">
                     <div class="flex justify-between items-center">
                         <div>
@@ -533,16 +593,7 @@
                 </div>
 
                 <div class="pt-4 border-t border-milktea-100 flex flex-wrap gap-2 justify-between items-center">
-                    <div class="flex gap-2">
-                        <button id="exportJsonBtn" class="bg-milktea-100 hover:bg-milktea-200 text-milktea-800 text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center">
-                            <i class="fa-solid fa-download mr-1.5"></i> 匯出 JSON
-                        </button>
-                        <button id="importJsonBtn" class="bg-milktea-100 hover:bg-milktea-200 text-milktea-800 text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center">
-                            <i class="fa-solid fa-upload mr-1.5"></i> 匯入備份
-                        </button>
-                        <input type="file" id="importFileInput" accept=".json" class="hidden">
-                    </div>
-                    <button id="saveSettingsBtn" class="bg-milktea-700 hover:bg-milktea-800 text-white text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-xs flex items-center">
+                    <button id="saveSettingsBtn" class="w-full sm:w-auto bg-milktea-700 hover:bg-milktea-800 text-white text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-xs flex items-center justify-center">
                         <i class="fa-solid fa-floppy-disk mr-1.5"></i> 儲存所有變更
                     </button>
                 </div>
@@ -550,6 +601,82 @@
         </div>
     </main>
 
+    <!-- Leave Request Modal -->
+    <div id="leaveModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-milktea-100 pb-3">
+                <h3 class="font-bold text-milktea-900 text-base sm:text-lg flex items-center">
+                    <i class="fa-solid fa-plane-departure text-terracotta mr-2"></i> 成員請假申請表單
+                </h3>
+                <button id="closeLeaveModalBtn" class="text-milktea-400 hover:text-milktea-700 text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="leaveForm" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-milktea-800 mb-1">請假成員 (誰要請假)</label>
+                    <select id="leaveApplicantSelect" class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
+                        <!-- Dynamic Options -->
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-milktea-800 mb-1">呈核對象 (指定核准成員)</label>
+                    <select id="leaveApproverSelect" class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
+                        <!-- Dynamic Options -->
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-milktea-800 mb-1">請假日期</label>
+                        <input type="date" id="leaveDateInput" required class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-milktea-800 mb-1">假別類別</label>
+                        <select id="leaveTypeSelect" class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
+                            <option value="事假">事假</option>
+                            <option value="病假">病假</option>
+                            <option value="特休" selected>特休</option>
+                            <option value="婚喪假">婚喪假</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-milktea-800 mb-1">請假時間段</label>
+                        <input type="text" id="leaveTimeStrInput" placeholder="全天 或 09:00-13:00" required class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-milktea-800 mb-1">扣假時數 (小時, 1天=8小時)</label>
+                        <input type="number" id="leaveHoursInput" value="8" step="0.5" required class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500 font-mono">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-milktea-800 mb-1">請假原因 / 事由</label>
+                    <input type="text" id="leaveReasonInput" placeholder="例如：身體不適、出國旅遊、家庭照顧..." required class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-milktea-800 mb-1">備註說明 (選填)</label>
+                    <textarea id="leaveRemarksInput" rows="2" placeholder="補充說明細節或工作代理人..." class="w-full bg-milktea-50 border border-milktea-300 text-milktea-800 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-milktea-500"></textarea>
+                </div>
+
+                <div class="pt-2 flex justify-end space-x-2">
+                    <button type="button" id="cancelLeaveBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium px-4 py-2.5 rounded-xl transition">
+                        取消
+                    </button>
+                    <button type="submit" class="bg-terracotta hover:bg-terracotta/90 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition shadow-xs">
+                        送出請假申請呈核
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Member Deposit Modal -->
     <div id="depositModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
@@ -707,12 +834,12 @@
         </button>
     </nav>
 
-    <!-- Cloud Room Synchronization Modal with Security PIN & Creator Controls -->
+    <!-- Cloud Room Synchronization Modal with Security PIN & Passcode Validation -->
     <div id="cloudModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-milktea-100 pb-3">
                 <h3 class="font-bold text-milktea-900 text-base sm:text-lg flex items-center">
-                    <i class="fa-solid fa-shield-halved text-matcha mr-2"></i> 成員專屬房間雲端同步與安全防護
+                    <i class="fa-solid fa-shield-halved text-matcha mr-2"></i> 獨立家庭房間同步與安全防護
                 </h3>
                 <button id="closeCloudModalBtn" class="text-milktea-400 hover:text-milktea-700 text-lg p-1">
                     <i class="fa-solid fa-xmark"></i>
@@ -720,7 +847,7 @@
             </div>
 
             <p class="text-xs text-milktea-600 leading-relaxed">
-                輸入「家庭房間代碼」與「安全密碼」。若房間已存在則需輸入正確密碼加入，若為新房間將自動設定此密碼。
+                輸入您的「獨立房間代碼」與「安全密碼」。相同房間代碼且密碼正確的裝置會即時同步所有資料；不同房間代碼資料完全隔離不互通。
             </p>
 
             <div class="space-y-3 bg-milktea-50 p-3.5 rounded-xl border border-milktea-200">
@@ -733,13 +860,13 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-milktea-800 mb-1">家庭房間代碼 (Passcode)</label>
+                    <label class="block text-xs font-semibold text-milktea-800 mb-1">家庭房間代碼 (Room Code)</label>
                     <input type="text" id="roomCodeInput" placeholder="例如：OUR-HOME-88" class="w-full bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-mono font-bold focus:ring-2 focus:ring-milktea-500 uppercase mb-2">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-milktea-800 mb-1">房間安全密碼 (明碼顯示)</label>
-                    <input type="text" id="roomPinInput" placeholder="設定或輸入數字安全碼" class="w-full bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-mono focus:ring-2 focus:ring-milktea-500 mb-3">
+                    <input type="text" id="roomPinInput" placeholder="設定或輸入數字安全密碼" class="w-full bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-mono focus:ring-2 focus:ring-milktea-500 mb-3">
                 </div>
 
                 <!-- Device Identity Selection -->
@@ -757,7 +884,7 @@
 
             <div id="cloudRoomActions" class="hidden space-y-2 pt-1">
                 <button id="forceSyncCloudBtn" class="w-full bg-milktea-700 hover:bg-milktea-800 text-white text-xs font-semibold py-2.5 rounded-xl transition flex items-center justify-center shadow-2xs">
-                    <i class="fa-solid fa-rotate mr-1.5"></i> 立即上傳本地資料至雲端房間
+                    <i class="fa-solid fa-rotate mr-1.5"></i> 立即同步推送至雲端
                 </button>
                 <button id="copyShareLinkBtn" class="w-full bg-matcha hover:opacity-90 text-white text-xs font-semibold py-2.5 rounded-xl transition flex items-center justify-center">
                     <i class="fa-solid fa-share-nodes mr-1.5"></i> 複製家人邀請連結 (不含密碼)
@@ -790,7 +917,7 @@
         </div>
     </div>
 
-    <!-- Custom Confirmation Modal for Room Deletion -->
+    <!-- Confirmation Modal for Room Deletion -->
     <div id="deleteRoomConfirmModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-2xl p-5 space-y-4 shadow-xl border border-milktea-200 animate-in fade-in zoom-in duration-200">
             <div class="flex items-center space-x-2 text-rose-600">
@@ -940,6 +1067,7 @@
                     if (event.data.recurringTemplates) recurringTemplates = event.data.recurringTemplates;
                     if (event.data.appData) appData = event.data.appData;
                     if (event.data.calendarEvents) calendarEvents = event.data.calendarEvents;
+                    if (event.data.leaveRequests) leaveRequests = event.data.leaveRequests;
                     saveLocalStorage();
                     renderAllViews();
                     showToast("☁️ 房間資料已被家人更新！", false);
@@ -969,6 +1097,7 @@
             }
         }
 
+        /* Mandatory Rule 1: /artifacts/{appId}/public/data/{collectionName} */
         function getRoomDocRef(roomId) {
             if (!db) return null;
             return doc(db, 'artifacts', appId, 'public', 'data', 'household_rooms', roomId);
@@ -976,6 +1105,7 @@
 
         let config = {
             targetBudget: 40000,
+            defaultLeaveDays: 14,
             splitMode: 'equal',
             members: [],
             fundAccounts: [],
@@ -985,6 +1115,7 @@
         let recurringTemplates = [];
         let appData = {};
         let calendarEvents = [];
+        let leaveRequests = [];
 
         let currentActiveMonth = getCurrentMonthStr();
         let currentRoomId = localStorage.getItem('homey_room_id') || '';
@@ -1047,6 +1178,9 @@
 
                 const storedEvents = localStorage.getItem('homey_events');
                 if (storedEvents) calendarEvents = JSON.parse(storedEvents);
+
+                const storedLeaves = localStorage.getItem('homey_leaves');
+                if (storedLeaves) leaveRequests = JSON.parse(storedLeaves);
             } catch (e) {
                 console.error("Local storage load error", e);
             }
@@ -1058,6 +1192,7 @@
                 localStorage.setItem('homey_recurring', JSON.stringify(recurringTemplates));
                 localStorage.setItem('homey_appdata', JSON.stringify(appData));
                 localStorage.setItem('homey_events', JSON.stringify(calendarEvents));
+                localStorage.setItem('homey_leaves', JSON.stringify(leaveRequests));
             } catch (e) {
                 console.error("Local storage save error", e);
             }
@@ -1072,6 +1207,7 @@
                 recurringTemplates,
                 appData,
                 calendarEvents,
+                leaveRequests,
                 updatedAt: new Date().toISOString(),
                 updatedByInstance: sessionInstanceId,
                 roomId: currentRoomId
@@ -1091,6 +1227,7 @@
                 localRoomStore[currentRoomId].recurringTemplates = recurringTemplates;
                 localRoomStore[currentRoomId].appData = appData;
                 localRoomStore[currentRoomId].calendarEvents = calendarEvents;
+                localRoomStore[currentRoomId].leaveRequests = leaveRequests;
                 localStorage.setItem('homey_local_rooms', JSON.stringify(localRoomStore));
             }
 
@@ -1138,6 +1275,7 @@
                             if (data.recurringTemplates) recurringTemplates = data.recurringTemplates;
                             if (data.appData) appData = data.appData;
                             if (data.calendarEvents) calendarEvents = data.calendarEvents;
+                            if (data.leaveRequests) leaveRequests = data.leaveRequests;
                             saveLocalStorage();
                             loadedFromCloud = true;
                         } else {
@@ -1149,6 +1287,7 @@
                                 recurringTemplates,
                                 appData,
                                 calendarEvents,
+                                leaveRequests,
                                 createdAt: new Date().toISOString(),
                                 updatedByInstance: sessionInstanceId
                             };
@@ -1168,6 +1307,7 @@
                                     if (remoteData.recurringTemplates) recurringTemplates = remoteData.recurringTemplates;
                                     if (remoteData.appData) appData = remoteData.appData;
                                     if (remoteData.calendarEvents) calendarEvents = remoteData.calendarEvents;
+                                    if (remoteData.leaveRequests) leaveRequests = remoteData.leaveRequests;
 
                                     saveLocalStorage();
                                     renderAllViews();
@@ -1201,6 +1341,7 @@
                 if (rData.recurringTemplates) recurringTemplates = rData.recurringTemplates;
                 if (rData.appData) appData = rData.appData;
                 if (rData.calendarEvents) calendarEvents = rData.calendarEvents;
+                if (rData.leaveRequests) leaveRequests = rData.leaveRequests;
                 saveLocalStorage();
             } else if (!loadedFromCloud) {
                 roomCreatorDeviceId = thisDeviceId;
@@ -1210,7 +1351,8 @@
                     config,
                     recurringTemplates,
                     appData,
-                    calendarEvents
+                    calendarEvents,
+                    leaveRequests
                 };
                 localStorage.setItem('homey_local_rooms', JSON.stringify(localRoomStore));
                 showToast(`已建立房間 [${cleanedRoom}]`, false);
@@ -1278,7 +1420,7 @@
                         <span class="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
                     `;
                 }
-                if (cloudSyncText) cloudSyncText.textContent = "成員共同維護";
+                if (cloudSyncText) cloudSyncText.textContent = "成員獨立房間同步";
                 if (cloudSyncIcon) cloudSyncIcon.className = "fa-solid fa-cloud text-milktea-500 mr-1.5 shrink-0";
                 if (cloudRoomActions) cloudRoomActions.classList.add('hidden');
                 if (creatorControlsBox) creatorControlsBox.classList.add('hidden');
@@ -1757,7 +1899,7 @@
                         </div>
                         <div class="space-y-1 overflow-hidden mt-1">
                             ${dayEvs.slice(0, 2).map(ev => `
-                                <div onclick="event.stopPropagation(); showEventDetail('${ev.id}')" class="text-[10px] bg-milktea-100 hover:bg-milktea-200 text-milktea-900 px-1 py-0.5 rounded truncate font-medium">
+                                <div onclick="event.stopPropagation(); showEventDetail('${ev.id}')" class="text-[10px] ${ev.isLeave ? 'bg-terracotta/20 text-terracotta font-bold border border-terracotta/30' : 'bg-milktea-100 text-milktea-900'} px-1 py-0.5 rounded truncate font-medium">
                                     ${ev.title}
                                 </div>
                             `).join('')}
@@ -1780,7 +1922,7 @@
                                 <div class="space-y-0.5 min-w-0 pr-2">
                                     <div class="flex items-center space-x-2">
                                         <span class="text-xs font-bold font-mono text-terracotta">${ev.date}</span>
-                                        <span class="text-[10px] bg-milktea-700 text-white px-2 py-0.5 rounded-md font-semibold">${mObj ? mObj.name : '成員'}</span>
+                                        <span class="text-[10px] ${ev.isLeave ? 'bg-terracotta' : 'bg-milktea-700'} text-white px-2 py-0.5 rounded-md font-semibold">${mObj ? mObj.name : '成員'}</span>
                                     </div>
                                     <p class="font-bold text-xs text-milktea-900 truncate">${ev.title}</p>
                                 </div>
@@ -1790,6 +1932,213 @@
                     }).join('');
                 }
             }
+
+            renderLeaveSection();
+        };
+
+        /* Render Leave Balance, Pending Approvals and Leave History Logs */
+        function renderLeaveSection() {
+            const leaveBalanceGrid = document.getElementById('leaveBalanceGrid');
+            const pendingLeaveList = document.getElementById('pendingLeaveList');
+            const pendingLeaveBadge = document.getElementById('pendingLeaveBadge');
+            const leaveRecordsList = document.getElementById('leaveRecordsList');
+            const leaveBalanceTitle = document.getElementById('leaveBalanceTitle');
+
+            const defaultDays = parseFloat(config.defaultLeaveDays) || 14;
+            const defaultQuotaHours = defaultDays * 8; // 8小時/天
+
+            if (leaveBalanceTitle) {
+                leaveBalanceTitle.innerHTML = `<i class="fa-solid fa-clock-rotate-left text-caramel mr-2"></i> 成員假額剩餘統計 (預設 ${defaultDays} 天 / ${defaultQuotaHours} 小時)`;
+            }
+
+            /* 1. Calculate and Render Member Leave Balances */
+            if (leaveBalanceGrid) {
+                if (config.members.length === 0) {
+                    leaveBalanceGrid.innerHTML = `<div class="col-span-3 text-center text-xs text-milktea-400 py-3">尚無成員名單（請至「家計」頁面新增）</div>`;
+                } else {
+                    leaveBalanceGrid.innerHTML = config.members.map(m => {
+                        // Calculate total approved leave hours for this member
+                        const approvedHours = leaveRequests
+                            .filter(l => l.applicantId === m.id && l.status === 'approved')
+                            .reduce((sum, l) => sum + (parseFloat(l.hours) || 0), 0);
+                        
+                        const approvedDays = (approvedHours / 8).toFixed(1);
+                        const remainingHours = Math.max(0, defaultQuotaHours - approvedHours);
+                        const remainingDays = (remainingHours / 8).toFixed(1);
+
+                        return `
+                            <div class="bg-milktea-50 p-3.5 rounded-xl border border-milktea-200 space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-xs sm:text-sm text-milktea-900">${m.name}</span>
+                                    <span class="text-[10px] bg-matcha/20 text-matcha font-bold px-2 py-0.5 rounded-md">假額剩餘</span>
+                                </div>
+                                <div class="flex justify-between items-baseline">
+                                    <span class="text-xl font-bold font-mono text-terracotta">${remainingDays} 天</span>
+                                    <span class="text-xs text-milktea-500 font-mono">(${remainingHours} 小時)</span>
+                                </div>
+                                <div class="text-[10px] text-milktea-500 pt-1 border-t border-milktea-200 flex justify-between">
+                                    <span>總額: ${defaultDays}天 (${defaultQuotaHours}小時)</span>
+                                    <span>已請: ${approvedDays}天 (${approvedHours}小時)</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            /* 2. Render Pending Leave Requests Approval Queue with Strict Approver Guard */
+            const pendingList = leaveRequests.filter(l => l.status === 'pending');
+            if (pendingLeaveBadge) pendingLeaveBadge.textContent = `${pendingList.length} 件待審核`;
+
+            if (pendingLeaveList) {
+                if (pendingList.length === 0) {
+                    pendingLeaveList.innerHTML = `<div class="text-center text-xs text-milktea-400 py-3 bg-milktea-50 rounded-xl">目前沒有待審核的請假申請</div>`;
+                } else {
+                    const currentBoundId = config.boundMemberId;
+
+                    pendingLeaveList.innerHTML = pendingList.map(req => {
+                        const applicant = config.members.find(m => m.id === req.applicantId);
+                        const approver = config.members.find(m => m.id === req.approverId);
+                        
+                        // Strict check: Only the designated approver can execute action
+                        const canApprove = currentBoundId && currentBoundId === req.approverId;
+
+                        return `
+                            <div class="bg-milktea-50 p-3.5 rounded-xl border ${canApprove ? 'border-terracotta shadow-xs' : 'border-milktea-200'} space-y-2">
+                                <div class="flex justify-between items-center text-xs">
+                                    <div class="flex items-center space-x-1.5">
+                                        <span class="font-bold text-milktea-900">${applicant ? applicant.name : '成員'}</span>
+                                        <span class="text-milktea-400">呈核給</span>
+                                        <span class="font-bold text-milktea-800">${approver ? approver.name : '成員'}</span>
+                                    </div>
+                                    <span class="bg-caramel/20 text-caramel font-bold text-[10px] px-2 py-0.5 rounded-md">待審核</span>
+                                </div>
+                                <div class="text-xs space-y-1">
+                                    <div class="flex items-center text-milktea-700 font-mono">
+                                        <i class="fa-regular fa-calendar mr-1.5 text-milktea-500"></i> ${req.date} (${req.timeStr}) - <span class="font-bold text-terracotta ml-1">${req.type} ${req.hours}小時</span>
+                                    </div>
+                                    <p class="font-semibold text-milktea-900"><i class="fa-solid fa-pen-line mr-1 text-milktea-500"></i> 事由：${req.reason}</p>
+                                    ${req.remarks ? `<p class="text-[11px] text-milktea-500">備註：${req.remarks}</p>` : ''}
+                                </div>
+                                <div class="pt-2 flex justify-end items-center space-x-2 border-t border-milktea-200">
+                                    ${canApprove ? `
+                                        <button onclick="rejectLeave('${req.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                                            <i class="fa-solid fa-xmark mr-1"></i> 駁回
+                                        </button>
+                                        <button onclick="approveLeave('${req.id}')" class="bg-matcha hover:bg-matcha/90 text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition shadow-2xs">
+                                            <i class="fa-solid fa-check mr-1"></i> 核准並加入行事曆
+                                        </button>
+                                    ` : `
+                                        <span class="text-[10px] text-milktea-500 self-center mr-1">
+                                            <i class="fa-solid fa-lock mr-1 text-milktea-400"></i>僅限指定審核人 (${approver ? approver.name : '審核者'}) 操作
+                                        </span>
+                                        <button disabled class="bg-gray-100 text-gray-400 text-xs font-medium px-3 py-1.5 rounded-lg cursor-not-allowed opacity-60">
+                                            <i class="fa-solid fa-xmark mr-1"></i> 駁回
+                                        </button>
+                                        <button disabled class="bg-gray-200 text-gray-400 text-xs font-medium px-4 py-1.5 rounded-lg cursor-not-allowed opacity-60">
+                                            <i class="fa-solid fa-check mr-1"></i> 核准
+                                        </button>
+                                    `}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            /* 3. Render Approved & Rejected History Log */
+            if (leaveRecordsList) {
+                const historyList = leaveRequests.filter(l => l.status !== 'pending');
+                if (historyList.length === 0) {
+                    leaveRecordsList.innerHTML = `<div class="text-center text-xs text-milktea-400 py-3">尚無請假歷史紀錄</div>`;
+                } else {
+                    leaveRecordsList.innerHTML = historyList.map(req => {
+                        const applicant = config.members.find(m => m.id === req.applicantId);
+                        const isApproved = req.status === 'approved';
+
+                        return `
+                            <div class="bg-milktea-50 p-3 rounded-xl border border-milktea-200 text-xs space-y-1">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center space-x-1.5 font-bold">
+                                        <span class="${isApproved ? 'text-matcha' : 'text-rose-500'}">[${isApproved ? '已核准' : '已駁回'}]</span>
+                                        <span class="text-milktea-900">${applicant ? applicant.name : '成員'}</span>
+                                        <span class="font-mono text-terracotta">${req.date}</span>
+                                    </div>
+                                    <button onclick="deleteLeaveRecord('${req.id}')" class="text-milktea-400 hover:text-rose-600 p-1">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                    </button>
+                                </div>
+                                <p class="text-milktea-800"><span class="font-semibold">${req.type} (${req.hours}小時):</span> ${req.reason}</p>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+        }
+
+        /* Approve Leave Request */
+        window.approveLeave = function(reqId) {
+            const req = leaveRequests.find(l => l.id === reqId);
+            if (!req) return;
+
+            // Strict double-check permission
+            if (config.boundMemberId && req.approverId !== config.boundMemberId) {
+                showToast("您非此案件指定審核人，無法簽核", true);
+                return;
+            }
+
+            req.status = 'approved';
+            req.updatedAt = new Date().toISOString();
+
+            /* Automatically create corresponding calendar event */
+            const applicant = config.members.find(m => m.id === req.applicantId);
+            const applicantName = applicant ? applicant.name : '成員';
+
+            calendarEvents.push({
+                id: 'evt_leave_' + req.id,
+                leaveRequestId: req.id,
+                memberId: req.applicantId,
+                date: req.date,
+                title: `✈️ ${applicantName} 請假(${req.type})`,
+                description: `請假時間：${req.timeStr} (${req.hours}小時)\n請假事由：${req.reason}\n備註：${req.remarks || '無'}`,
+                isLeave: true,
+                createdAt: new Date().toISOString()
+            });
+
+            saveLocalStorage();
+            syncToCloud();
+            window.renderCalendarView();
+            showToast(`已核准 ${applicantName} 的請假申請！`, false);
+        };
+
+        /* Reject Leave Request */
+        window.rejectLeave = function(reqId) {
+            const req = leaveRequests.find(l => l.id === reqId);
+            if (!req) return;
+
+            // Strict double-check permission
+            if (config.boundMemberId && req.approverId !== config.boundMemberId) {
+                showToast("您非此案件指定審核人，無法簽核", true);
+                return;
+            }
+
+            req.status = 'rejected';
+            req.updatedAt = new Date().toISOString();
+
+            saveLocalStorage();
+            syncToCloud();
+            window.renderCalendarView();
+            showToast(`已駁回該筆請假申請`, false);
+        };
+
+        /* Delete Leave History Record */
+        window.deleteLeaveRecord = function(reqId) {
+            leaveRequests = leaveRequests.filter(l => l.id !== reqId);
+            calendarEvents = calendarEvents.filter(e => e.leaveRequestId !== reqId);
+            saveLocalStorage();
+            syncToCloud();
+            window.renderCalendarView();
+            showToast(`已刪除請假紀錄`, false);
         };
 
         window.openAddEventForDate = function(dateStr) {
@@ -1843,52 +2192,61 @@
             }
 
             const memberOptionsHtml = `
-                <option value="">-- 未選擇綁定 (每次手動選取) --</option>
+                <option value="">-- 未選擇綁定 (手動選取) --</option>
                 ${config.members.map(m => `<option value="${m.id}" ${m.id === boundId ? 'selected' : ''}>📱 ${m.name}</option>`).join('')}
             `;
 
             if (settingsSelect) settingsSelect.innerHTML = memberOptionsHtml;
             if (modalSelect) modalSelect.innerHTML = memberOptionsHtml;
 
+            /* Mobile-Optimized Responsive Member Settings Container */
             const membersContainer = document.getElementById('membersSettingsContainer');
             if (membersContainer) {
                 if (config.members.length === 0) {
                     membersContainer.innerHTML = `<div class="text-center text-xs text-milktea-400 py-3 bg-milktea-50 rounded-xl">尚未新增成員，點擊右上方「新增成員」加入</div>`;
                 } else {
                     membersContainer.innerHTML = config.members.map(m => `
-                        <div class="flex items-center space-x-2 bg-milktea-50 p-2 rounded-xl border border-milktea-200">
-                            <input type="text" value="${m.name}" onchange="updateMemberName('${m.id}', this.value)" placeholder="成員名字" class="flex-1 bg-white border border-milktea-300 text-xs rounded-lg p-2 font-semibold text-milktea-800">
-                            <div class="flex items-center space-x-1">
-                                <span class="text-xs text-milktea-500">權重:</span>
-                                <input type="number" value="${m.weight || 1}" step="any" onchange="updateMemberWeight('${m.id}', this.value)" class="w-16 bg-white border border-milktea-300 text-xs rounded-lg p-2 font-mono text-center">
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-milktea-50 p-2.5 rounded-xl border border-milktea-200">
+                            <input type="text" value="${m.name}" onchange="updateMemberName('${m.id}', this.value)" placeholder="成員名字" class="flex-1 min-w-0 bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-semibold text-milktea-800">
+                            <div class="flex items-center justify-between sm:justify-end gap-2">
+                                <div class="flex items-center space-x-1">
+                                    <span class="text-xs text-milktea-500 shrink-0">權重:</span>
+                                    <input type="number" value="${m.weight || 1}" step="any" onchange="updateMemberWeight('${m.id}', this.value)" class="w-16 bg-white border border-milktea-300 text-xs rounded-lg p-2 font-mono text-center">
+                                </div>
+                                <button onclick="removeMember('${m.id}')" class="text-rose-500 hover:text-rose-700 p-2 rounded-lg hover:bg-rose-50 transition text-sm">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
                             </div>
-                            <button onclick="removeMember('${m.id}')" class="text-rose-500 hover:text-rose-700 p-1 text-sm">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
                         </div>
                     `).join('');
                 }
             }
 
+            /* Mobile-Optimized Responsive Public Fund Accounts Settings Container */
             const fundAccountsContainer = document.getElementById('fundAccountsSettingsContainer');
             if (fundAccountsContainer) {
                 if (!config.fundAccounts || config.fundAccounts.length === 0) {
                     fundAccountsContainer.innerHTML = `<div class="text-center text-xs text-milktea-400 py-3 bg-milktea-50 rounded-xl">尚無設定公積金帳戶</div>`;
                 } else {
                     fundAccountsContainer.innerHTML = config.fundAccounts.map(acc => `
-                        <div class="flex items-center space-x-2 bg-milktea-50 p-2 rounded-xl border border-milktea-200">
-                            <input type="text" value="${acc.name}" onchange="updateFundAccountName('${acc.id}', this.value)" placeholder="帳戶名稱" class="flex-1 bg-white border border-milktea-300 text-xs rounded-lg p-2 font-semibold text-milktea-800">
-                            <div class="flex items-center space-x-1">
-                                <span class="text-xs text-milktea-500">初始餘額:</span>
-                                <input type="number" value="${acc.initialBalance || 0}" step="any" onchange="updateFundAccountBalance('${acc.id}', this.value)" class="w-24 bg-white border border-milktea-300 text-xs rounded-lg p-2 font-mono text-right">
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-milktea-50 p-2.5 rounded-xl border border-milktea-200">
+                            <input type="text" value="${acc.name}" onchange="updateFundAccountName('${acc.id}', this.value)" placeholder="帳戶名稱" class="flex-1 min-w-0 bg-white border border-milktea-300 text-xs sm:text-sm rounded-lg p-2 font-semibold text-milktea-800">
+                            <div class="flex items-center justify-between sm:justify-end gap-2">
+                                <div class="flex items-center space-x-1">
+                                    <span class="text-xs text-milktea-500 shrink-0">起算餘額:</span>
+                                    <input type="number" value="${acc.initialBalance || 0}" step="any" onchange="updateFundAccountBalance('${acc.id}', this.value)" class="w-24 bg-white border border-milktea-300 text-xs rounded-lg p-2 font-mono text-right">
+                                </div>
+                                <button onclick="removeFundAccount('${acc.id}')" class="text-rose-500 hover:text-rose-700 p-2 rounded-lg hover:bg-rose-50 transition text-sm">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
                             </div>
-                            <button onclick="removeFundAccount('${acc.id}')" class="text-rose-500 hover:text-rose-700 p-1 text-sm">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
                         </div>
                     `).join('');
                 }
             }
+
+            const leaveDaysInput = document.getElementById('settingDefaultLeaveDays');
+            if (leaveDaysInput) leaveDaysInput.value = config.defaultLeaveDays || 14;
 
             const recTableBody = document.getElementById('recurringSettingsTableBody');
             if (recTableBody) {
@@ -1926,6 +2284,8 @@
             const eventMemberSelect = document.getElementById('eventMemberSelect');
             const depositMemberSelect = document.getElementById('depositMemberSelect');
             const depositAccountSelect = document.getElementById('depositAccountSelect');
+            const leaveApplicantSelect = document.getElementById('leaveApplicantSelect');
+            const leaveApproverSelect = document.getElementById('leaveApproverSelect');
 
             const dropdownMembersHtml = config.members.length === 0
                 ? `<option value="">-- 請先至家計頁新增成員 --</option>`
@@ -1937,6 +2297,11 @@
             if (quickTarget) quickTarget.innerHTML = dropdownMembersHtml;
             if (eventMemberSelect) eventMemberSelect.innerHTML = config.members.map(m => `<option value="${m.id}" ${m.id === boundId ? 'selected' : ''}>${m.name}</option>`).join('');
             if (depositMemberSelect) depositMemberSelect.innerHTML = config.members.map(m => `<option value="${m.id}" ${m.id === boundId ? 'selected' : ''}>${m.name}</option>`).join('');
+
+            if (leaveApplicantSelect) leaveApplicantSelect.innerHTML = config.members.map(m => `<option value="${m.id}" ${m.id === boundId ? 'selected' : ''}>${m.name}</option>`).join('');
+            if (leaveApproverSelect) {
+                leaveApproverSelect.innerHTML = config.members.map((m, idx) => `<option value="${m.id}" ${idx === 1 ? 'selected' : ''}>${m.name}</option>`).join('');
+            }
 
             if (depositAccountSelect && config.fundAccounts) {
                 depositAccountSelect.innerHTML = config.fundAccounts.map(acc => `<option value="${acc.id}">${acc.name}</option>`).join('');
@@ -2124,6 +2489,7 @@
                 showToast("已清空當月份所有記帳項目", false);
             });
 
+            /* Single LINE Copy Button Event Handler in Sheet View */
             document.getElementById('copyLineBtn')?.addEventListener('click', () => {
                 const mData = appData[currentActiveMonth] || { items: [], fundDeposits: [] };
                 const items = mData.items || [];
@@ -2211,6 +2577,8 @@
 
             document.getElementById('saveSettingsBtn')?.addEventListener('click', () => {
                 config.targetBudget = parseFloat(document.getElementById('settingTargetBudget').value) || 40000;
+                config.defaultLeaveDays = parseFloat(document.getElementById('settingDefaultLeaveDays').value) || 14;
+
                 const splitRadios = document.getElementsByName('splitMode');
                 for (const r of splitRadios) {
                     if (r.checked) config.splitMode = r.value;
@@ -2219,7 +2587,7 @@
                 saveLocalStorage();
                 syncToCloud();
                 renderAllViews();
-                showToast("已儲存所有家計與成員設定", false);
+                showToast("已儲存所有家計、預算與假額設定", false);
             });
 
             document.getElementById('openDepositModalBtn')?.addEventListener('click', () => {
@@ -2265,6 +2633,64 @@
                 renderSpreadsheetView();
                 window.renderDashboardCharts();
                 showToast("已登記公積金入金紀錄", false);
+            });
+
+            /* Leave Modal Event Handlers */
+            document.getElementById('openAddLeaveModalBtn')?.addEventListener('click', () => {
+                if (config.members.length === 0) {
+                    showToast("請先至「家計」頁面新增家庭成員", true);
+                    return;
+                }
+                const todayStr = new Date().toISOString().split('T')[0];
+                document.getElementById('leaveDateInput').value = todayStr;
+                document.getElementById('leaveModal').classList.remove('hidden');
+            });
+
+            document.getElementById('closeLeaveModalBtn')?.addEventListener('click', () => {
+                document.getElementById('leaveModal').classList.add('hidden');
+            });
+            document.getElementById('cancelLeaveBtn')?.addEventListener('click', () => {
+                document.getElementById('leaveModal').classList.add('hidden');
+            });
+
+            document.getElementById('leaveForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const applicantId = document.getElementById('leaveApplicantSelect').value;
+                const approverId = document.getElementById('leaveApproverSelect').value;
+                const date = document.getElementById('leaveDateInput').value;
+                const type = document.getElementById('leaveTypeSelect').value;
+                const timeStr = document.getElementById('leaveTimeStrInput').value.trim();
+                const hours = parseFloat(document.getElementById('leaveHoursInput').value) || 8;
+                const reason = document.getElementById('leaveReasonInput').value.trim();
+                const remarks = document.getElementById('leaveRemarksInput').value.trim();
+
+                if (applicantId === approverId && config.members.length > 1) {
+                    showToast("建議呈核給其他成員審核", true);
+                }
+
+                leaveRequests.push({
+                    id: 'lvr_' + Math.random().toString(36).substring(2, 9),
+                    applicantId,
+                    approverId,
+                    date,
+                    type,
+                    timeStr,
+                    hours,
+                    reason,
+                    remarks,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                });
+
+                saveLocalStorage();
+                syncToCloud();
+                document.getElementById('leaveModal').classList.add('hidden');
+                
+                document.getElementById('leaveReasonInput').value = '';
+                document.getElementById('leaveRemarksInput').value = '';
+
+                window.renderCalendarView();
+                showToast("請假申請已送出，等待關卡審核！", false);
             });
 
             document.getElementById('openAddEventModalBtn')?.addEventListener('click', () => {
