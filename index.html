@@ -884,7 +884,7 @@
 
             <div id="cloudRoomActions" class="hidden space-y-2 pt-1">
                 <button id="forceSyncCloudBtn" class="w-full bg-milktea-700 hover:bg-milktea-800 text-white text-xs font-semibold py-2.5 rounded-xl transition flex items-center justify-center shadow-2xs">
-                    <i class="fa-solid fa-rotate mr-1.5"></i> 立即同步推送至雲端
+                    <i class="fa-solid fa-rotate mr-1.5"></i> 靜默重連 / 推送同步
                 </button>
                 <button id="copyShareLinkBtn" class="w-full bg-matcha hover:opacity-90 text-white text-xs font-semibold py-2.5 rounded-xl transition flex items-center justify-center">
                     <i class="fa-solid fa-share-nodes mr-1.5"></i> 複製家人邀請連結 (不含密碼)
@@ -1244,11 +1244,11 @@
             }
         }
 
-        async function initCloudRoom(roomId, inputPin) {
+        async function initCloudRoom(roomId, inputPin, isSilent = false) {
             if (!roomId) return false;
             const cleanedRoom = roomId.trim().toUpperCase();
             const joinBtnText = document.getElementById('joinRoomBtnText');
-            if (joinBtnText) joinBtnText.textContent = "連線驗證中...";
+            if (joinBtnText && !isSilent) joinBtnText.textContent = "連線驗證中...";
 
             const thisDeviceId = getDeviceId();
             let loadedFromCloud = false;
@@ -1265,7 +1265,7 @@
                             const storedPin = data.roomPin || '';
 
                             if (storedPin && storedPin !== inputPin) {
-                                showToast("房間安全密碼錯誤！無法加入", true);
+                                if (!isSilent) showToast("房間安全密碼錯誤！無法加入", true);
                                 if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
                                 return false;
                             }
@@ -1292,7 +1292,7 @@
                                 updatedByInstance: sessionInstanceId
                             };
                             await setDoc(roomDocRef, initialData);
-                            showToast(`已建立新雲端房間 [${cleanedRoom}]！`, false);
+                            if (!isSilent) showToast(`已建立新雲端房間 [${cleanedRoom}]！`, false);
                             loadedFromCloud = true;
                         }
 
@@ -1332,7 +1332,7 @@
             if (localRoomStore[cleanedRoom]) {
                 const rData = localRoomStore[cleanedRoom];
                 if (rData.roomPin && rData.roomPin !== inputPin) {
-                    showToast("房間安全密碼錯誤！無法加入", true);
+                    if (!isSilent) showToast("房間安全密碼錯誤！無法加入", true);
                     if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
                     return false;
                 }
@@ -1355,7 +1355,7 @@
                     leaveRequests
                 };
                 localStorage.setItem('homey_local_rooms', JSON.stringify(localRoomStore));
-                showToast(`已建立房間 [${cleanedRoom}]`, false);
+                if (!isSilent) showToast(`已建立房間 [${cleanedRoom}]`, false);
             }
 
             currentRoomId = cleanedRoom;
@@ -1365,7 +1365,7 @@
             isCloudConnected = true;
             updateCloudStatusUI();
             renderAllViews();
-            showToast(`已成功連線至房間 [${cleanedRoom}]`, false);
+            if (!isSilent) showToast(`已連線至房間 [${cleanedRoom}]`, false);
             if (joinBtnText) joinBtnText.textContent = "驗證密碼並加入雲端房間";
             return true;
         }
@@ -2779,6 +2779,11 @@
             });
 
             document.getElementById('cloudSyncBtn')?.addEventListener('click', () => {
+                const roomInput = document.getElementById('roomCodeInput');
+                const pinInput = document.getElementById('roomPinInput');
+                if (roomInput) roomInput.value = currentRoomId || '';
+                if (pinInput) pinInput.value = localStorage.getItem('homey_room_pin') || '';
+
                 document.getElementById('cloudModal').classList.remove('hidden');
                 updateCloudStatusUI();
             });
@@ -2829,11 +2834,43 @@
                 }
             });
 
+            /* Synchronize new room password directly to Firestore and localRoomStore */
             document.getElementById('updateRoomPinBtn')?.addEventListener('click', async () => {
                 const newPin = document.getElementById('roomPinInput').value.trim();
                 if (!currentRoomId) return;
+
                 localStorage.setItem('homey_room_pin', newPin);
+
+                // Update localRoomStore
+                let localRoomStore = {};
+                try {
+                    const storedRooms = localStorage.getItem('homey_local_rooms');
+                    if (storedRooms) localRoomStore = JSON.parse(storedRooms);
+                } catch(ex){}
+                if (localRoomStore[currentRoomId]) {
+                    localRoomStore[currentRoomId].roomPin = newPin;
+                    localStorage.setItem('homey_local_rooms', JSON.stringify(localRoomStore));
+                }
+
+                // Write new roomPin directly to Firestore
+                if (isFirebaseInitialized && db) {
+                    try {
+                        await authenticateFirebase();
+                        const roomDocRef = getRoomDocRef(currentRoomId);
+                        if (roomDocRef) {
+                            await setDoc(roomDocRef, {
+                                roomPin: newPin,
+                                updatedAt: new Date().toISOString(),
+                                updatedByInstance: sessionInstanceId
+                            }, { merge: true });
+                        }
+                    } catch(e) {
+                        console.warn("Update PIN cloud sync warning:", e);
+                    }
+                }
+
                 await syncToCloud();
+                updateCloudStatusUI();
                 showToast("已成功更新房間安全密碼！", false);
             });
 
@@ -2904,15 +2941,29 @@
                 }
             });
 
+            /* Intelligent Auto-Connection & URL Cleanup Logic */
             const urlParams = new URLSearchParams(window.location.search);
             const queryRoom = urlParams.get('room');
+            const savedRoom = localStorage.getItem('homey_room_id');
+            const savedPin = localStorage.getItem('homey_room_pin') || '';
+
             if (queryRoom) {
-                document.getElementById('roomCodeInput').value = queryRoom;
-                document.getElementById('cloudModal').classList.remove('hidden');
-                showToast(`偵測到邀請連結 [${queryRoom}]，請輸入密碼解鎖`, false);
+                // Clean URL ?room=... immediately after parsing
+                window.history.replaceState({}, document.title, window.location.pathname);
+
+                if (savedRoom === queryRoom && savedPin) {
+                    // Re-connecting to previously saved room silently
+                    initCloudRoom(queryRoom, savedPin, true);
+                } else {
+                    // New room invitation link -> Prompt for PIN input
+                    document.getElementById('roomCodeInput').value = queryRoom;
+                    document.getElementById('roomPinInput').value = savedPin;
+                    document.getElementById('cloudModal').classList.remove('hidden');
+                    showToast(`偵測到邀請連結 [${queryRoom}]，請輸入密碼連線`, false);
+                }
             } else if (currentRoomId) {
-                const savedPin = localStorage.getItem('homey_room_pin') || '';
-                initCloudRoom(currentRoomId, savedPin);
+                // Regular session launch -> Silent background auto-connect
+                initCloudRoom(currentRoomId, savedPin, true);
             }
 
             renderAllViews();
