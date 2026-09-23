@@ -1957,7 +1957,6 @@
                     leaveBalanceGrid.innerHTML = `<div class="col-span-3 text-center text-xs text-milktea-400 py-3">尚無成員名單（請至「家計」頁面新增）</div>`;
                 } else {
                     leaveBalanceGrid.innerHTML = config.members.map(m => {
-                        // Calculate total approved leave hours for this member
                         const approvedHours = leaveRequests
                             .filter(l => l.applicantId === m.id && l.status === 'approved')
                             .reduce((sum, l) => sum + (parseFloat(l.hours) || 0), 0);
@@ -1986,7 +1985,7 @@
                 }
             }
 
-            /* 2. Render Pending Leave Requests Approval Queue with Strict Approver Guard */
+            /* 2. Render Pending Leave Requests Approval Queue with Quick Switch & Withdraw Options */
             const pendingList = leaveRequests.filter(l => l.status === 'pending');
             if (pendingLeaveBadge) pendingLeaveBadge.textContent = `${pendingList.length} 件待審核`;
 
@@ -2000,8 +1999,8 @@
                         const applicant = config.members.find(m => m.id === req.applicantId);
                         const approver = config.members.find(m => m.id === req.approverId);
                         
-                        // Strict check: Only the designated approver can execute action
-                        const canApprove = currentBoundId && currentBoundId === req.approverId;
+                        // Strict check: Only designated approver or unbound mode can perform approval
+                        const canApprove = !currentBoundId || currentBoundId === req.approverId;
 
                         return `
                             <div class="bg-milktea-50 p-3.5 rounded-xl border ${canApprove ? 'border-terracotta shadow-xs' : 'border-milktea-200'} space-y-2">
@@ -2011,7 +2010,12 @@
                                         <span class="text-milktea-400">呈核給</span>
                                         <span class="font-bold text-milktea-800">${approver ? approver.name : '成員'}</span>
                                     </div>
-                                    <span class="bg-caramel/20 text-caramel font-bold text-[10px] px-2 py-0.5 rounded-md">待審核</span>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="bg-caramel/20 text-caramel font-bold text-[10px] px-2 py-0.5 rounded-md">待審核</span>
+                                        <button onclick="withdrawLeave('${req.id}')" title="撤回/刪除這筆請假單" class="text-rose-500 hover:text-rose-700 text-xs font-semibold px-2 py-0.5 rounded border border-rose-200 bg-rose-50 hover:bg-rose-100 transition">
+                                            <i class="fa-solid fa-trash-can mr-1"></i>撤回
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="text-xs space-y-1">
                                     <div class="flex items-center text-milktea-700 font-mono">
@@ -2020,24 +2024,32 @@
                                     <p class="font-semibold text-milktea-900"><i class="fa-solid fa-pen-line mr-1 text-milktea-500"></i> 事由：${req.reason}</p>
                                     ${req.remarks ? `<p class="text-[11px] text-milktea-500">備註：${req.remarks}</p>` : ''}
                                 </div>
-                                <div class="pt-2 flex justify-end items-center space-x-2 border-t border-milktea-200">
+                                <div class="pt-2 flex flex-wrap justify-between items-center gap-2 border-t border-milktea-200">
                                     ${canApprove ? `
-                                        <button onclick="rejectLeave('${req.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
-                                            <i class="fa-solid fa-xmark mr-1"></i> 駁回
-                                        </button>
-                                        <button onclick="approveLeave('${req.id}')" class="bg-matcha hover:bg-matcha/90 text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition shadow-2xs">
-                                            <i class="fa-solid fa-check mr-1"></i> 核准並加入行事曆
-                                        </button>
+                                        <span class="text-[10px] text-matcha font-medium"><i class="fa-solid fa-user-check mr-1"></i>可簽核身份</span>
+                                        <div class="flex space-x-2">
+                                            <button onclick="rejectLeave('${req.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                                                <i class="fa-solid fa-xmark mr-1"></i> 駁回
+                                            </button>
+                                            <button onclick="approveLeave('${req.id}')" class="bg-matcha hover:bg-matcha/90 text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition shadow-2xs">
+                                                <i class="fa-solid fa-check mr-1"></i> 核准並加入行事曆
+                                            </button>
+                                        </div>
                                     ` : `
-                                        <span class="text-[10px] text-milktea-500 self-center mr-1">
-                                            <i class="fa-solid fa-lock mr-1 text-milktea-400"></i>僅限指定審核人 (${approver ? approver.name : '審核者'}) 操作
+                                        <span class="text-[10px] text-milktea-500">
+                                            <i class="fa-solid fa-lock mr-1 text-milktea-400"></i>僅限 ${approver ? approver.name : '審核者'} 簽核
+                                            <button onclick="quickSwitchIdentity('${req.approverId}')" class="ml-1 text-terracotta font-semibold hover:underline">
+                                                (<u>切換為此身份</u>)
+                                            </button>
                                         </span>
-                                        <button disabled class="bg-gray-100 text-gray-400 text-xs font-medium px-3 py-1.5 rounded-lg cursor-not-allowed opacity-60">
-                                            <i class="fa-solid fa-xmark mr-1"></i> 駁回
-                                        </button>
-                                        <button disabled class="bg-gray-200 text-gray-400 text-xs font-medium px-4 py-1.5 rounded-lg cursor-not-allowed opacity-60">
-                                            <i class="fa-solid fa-check mr-1"></i> 核准
-                                        </button>
+                                        <div class="flex space-x-2">
+                                            <button disabled class="bg-gray-100 text-gray-400 text-xs font-medium px-3 py-1.5 rounded-lg cursor-not-allowed opacity-60">
+                                                <i class="fa-solid fa-xmark mr-1"></i> 駁回
+                                            </button>
+                                            <button disabled class="bg-gray-200 text-gray-400 text-xs font-medium px-4 py-1.5 rounded-lg cursor-not-allowed opacity-60">
+                                                <i class="fa-solid fa-check mr-1"></i> 核准
+                                            </button>
+                                        </div>
                                     `}
                                 </div>
                             </div>
@@ -2075,6 +2087,25 @@
                 }
             }
         }
+
+        /* Quick Switch Identity for Approver */
+        window.quickSwitchIdentity = function(memberId) {
+            config.boundMemberId = memberId;
+            localStorage.setItem('homey_device_bound_member', memberId);
+            saveLocalStorage();
+            renderAllViews();
+            const targetMember = config.members.find(m => m.id === memberId);
+            showToast(`已快捷切換本機身份為 [${targetMember ? targetMember.name : '審核人'}]，已解鎖簽核權限！`, false);
+        };
+
+        /* Withdraw / Cancel Pending Leave Request */
+        window.withdrawLeave = function(reqId) {
+            leaveRequests = leaveRequests.filter(l => l.id !== reqId);
+            saveLocalStorage();
+            syncToCloud();
+            window.renderCalendarView();
+            showToast("已成功撤回/刪除該筆請假申請！", false);
+        };
 
         /* Approve Leave Request */
         window.approveLeave = function(reqId) {
